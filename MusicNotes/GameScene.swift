@@ -11,6 +11,8 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    let noti = MusicNotes(imageNamed: "notiRed")  // replace SKSpriteNode with new subclass MusicNotes
+    
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
     let S1 = SKSpriteNode(imageNamed: "S1")
@@ -26,7 +28,6 @@ class GameScene: SKScene {
     var movingNoti: MusicNotes?
     var lastUpdateTime: NSTimeInterval = 0.0
     var dt: NSTimeInterval = 0.0
-    let noti = MusicNotes(imageNamed: "notiRed")  // replace SKSpriteNode with new subclass MusicNotes
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -92,18 +93,7 @@ class GameScene: SKScene {
     }
     
     func addStaffLines() {
-/*        let S0 = SKSpriteNode(imageNamed: "S0")
-        let L1 = SKSpriteNode(imageNamed: "L1")
-        let S1 = SKSpriteNode(imageNamed: "S1")
-        let L2 = SKSpriteNode(imageNamed: "L2")
-        let S2 = SKSpriteNode(imageNamed: "S2")
-        let L3 = SKSpriteNode(imageNamed: "L3")
-        let S3 = SKSpriteNode(imageNamed: "S3")
-        let L4 = SKSpriteNode(imageNamed: "L4")
-        let S4 = SKSpriteNode(imageNamed: "S4")
-        let L5 = SKSpriteNode(imageNamed: "L5")
-        let S5 = SKSpriteNode(imageNamed: "S5")
-*/
+
         S0.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 7*68*frame.width/1680)
         S0.setScale(frame.width/1680)
         self.addChild(S0)
