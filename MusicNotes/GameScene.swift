@@ -8,10 +8,13 @@
 
 import SpriteKit
 
-
 class GameScene: SKScene {
     
-    let noti = MusicNotes(imageNamed: "notiRed")  // replace SKSpriteNode with new subclass MusicNotes
+    var RoamingNoti = MusicNotes(imageNamed: "notiRed")  //replace SKSpriteNode with subclass MusicNotes
+    var draggingNoti: Bool = false
+    var movingNoti: MusicNotes?
+    var lastUpdateTime: NSTimeInterval = 0.0
+    var dt: NSTimeInterval = 0.0
     
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
@@ -25,13 +28,11 @@ class GameScene: SKScene {
     let L5 = SKSpriteNode(imageNamed: "L5")
     let S5 = SKSpriteNode(imageNamed: "S5")
     
-    var movingNoti: MusicNotes?
-    var lastUpdateTime: NSTimeInterval = 0.0
-    var dt: NSTimeInterval = 0.0
-    
     override init(size: CGSize) {
         super.init(size: size)
         
+      //  noti = MusicNotes(imageNamed: "notiRed")
+        RoamingNoti.name = "noti"
         addBackground()
         addStaffLines()
         addNoti()
@@ -43,11 +44,20 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        noti.removeAllActions()
+        RoamingNoti.removeAllActions()
+        
+        if CGRectIntersectsRect(S3.frame, self.RoamingNoti.frame) {
+            draggingNoti = false
+            return
+        }
+        
         let touch = touches.first as? UITouch
         let location = touch!.locationInNode(self)
         let node = nodeAtPoint(location)
         if node.name == "noti" {
+            
+            draggingNoti = true 
+            
             let noti = node as! MusicNotes
             noti.addMovingPoint(location)
             movingNoti = noti
@@ -55,22 +65,35 @@ class GameScene: SKScene {
     }
     
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        if (draggingNoti == false ) {
+            return
+        }
+        
         let touch = touches.first as? UITouch
         let location = touch!.locationInNode(scene)
         if let noti = movingNoti {
-            noti.addMovingPoint(location)
+        noti.addMovingPoint(location)
         }
     }
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-        //movingNoti = nil
         
-        // check collision
-        if CGRectIntersectsRect(S3.frame, self.noti.frame) {
-            noti.setScale(2.0)
+        if (draggingNoti == false ) {
+            return
         } else {
-            noti.setScale(0.5)
+            draggingNoti = false
+        }
+        // check collision
+        if CGRectIntersectsRect(S3.frame, self.RoamingNoti.frame) {
+            println("S3.frame is \(S3.frame)")
+            println("S3.position.y is \(S3.position.y)")
+            //RoamingNoti.position.y = S3.position.y - (S3.frame.size.height/2)
+            RoamingNoti.position.y = S3.position.y
+            addNoti()
+        } else {
             //noti.removeFromParent()
+            RoamingNoti.setScale(0.25)
         }
     }
     
@@ -127,31 +150,37 @@ class GameScene: SKScene {
         S5.position = CGPoint(x: frame.width/2 , y: frame.height/2 + 3*68*frame.width/1680)
         S5.setScale(frame.width/1680)
         self.addChild(S5)
+        println("S5 y.Scale is \(S5.yScale)")
     }
     
     func addNoti() {
-        //let noti = Noti(imageNamed: "notiRed")  // replace SKSpriteNode with new subclass Noti
+        let noti = MusicNotes(imageNamed: "notiRed")  // replace SKSpriteNode with new subclass MusicNotes
+        RoamingNoti = noti
         noti.name = "noti"
+        println("noti.name is \(noti.name)")
+        //childNodeWithName("noti1")
+
         noti.anchorPoint = CGPointMake(0.5, 0.25)
         //noti.physicsBody = SKPhysicsBody(circleOfRadius:noti.size.width/4)
         noti.position = CGPoint(x: size.width / 2, y: size.height / 2)
         noti.zPosition = 3
         addChild(noti)
+        followRoamingPath()
     }
     
     func followRoamingPath() {
         let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
         let pathDiameter = CGFloat(frame.height/2)
         let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 0.8)), nil)
+
         let followPath = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
-        noti.runAction(SKAction.repeatActionForever(followPath))
+        RoamingNoti.runAction(SKAction.repeatActionForever(followPath))
     }
     
     func drawLines() {
         enumerateChildNodesWithName("line", usingBlock: {node, stop in
             node.removeFromParent()  // redraw path every frame
         })
-        
         enumerateChildNodesWithName("noti", usingBlock: {node, stop in
             // for each noti, try to get a new path
             let noti = node as! MusicNotes
@@ -160,8 +189,11 @@ class GameScene: SKScene {
                 shapeNode.path = path
                 shapeNode.name = "line"
                 shapeNode.strokeColor = UIColor.yellowColor()
-                shapeNode.lineWidth = 18
-                shapeNode.zPosition = 1
+                shapeNode.lineWidth = 1
+                shapeNode.glowWidth = 18
+                shapeNode.lineCap = kCGLineCapRound
+                shapeNode.zPosition = 2
+                shapeNode.alpha = 0.3
                 self.addChild(shapeNode)
             }
         })
