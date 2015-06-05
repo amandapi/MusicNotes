@@ -10,7 +10,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    var RoamingNoti = MusicNotes(imageNamed: "notiRed")  //replace SKSpriteNode with subclass MusicNotes
+    var RoamingNoti = MusicNotes(imageNamed: "notiRedU")  //replace SKSpriteNode with subclass MusicNotes
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
     var lastUpdateTime: NSTimeInterval = 0.0
@@ -31,7 +31,7 @@ class GameScene: SKScene {
     override init(size: CGSize) {
         super.init(size: size)
         
-      //  noti = MusicNotes(imageNamed: "notiRed")
+      //  noti = MusicNotes(imageNamed: "notiRedU")
         RoamingNoti.name = "noti"
         addBackground()
         addStaffLines()
@@ -56,8 +56,7 @@ class GameScene: SKScene {
         let node = nodeAtPoint(location)
         if node.name == "noti" {
             
-            draggingNoti = true 
-            
+            draggingNoti = true
             let noti = node as! MusicNotes
             noti.addMovingPoint(location)
             movingNoti = noti
@@ -93,7 +92,8 @@ class GameScene: SKScene {
             addNoti()
         } else {
             //noti.removeFromParent()
-            RoamingNoti.setScale(0.25)
+            RoamingNoti.setScale(0.20)
+            addNoti()
         }
     }
     
@@ -154,15 +154,32 @@ class GameScene: SKScene {
     }
     
     func addNoti() {
-        let noti = MusicNotes(imageNamed: "notiRed")  // replace SKSpriteNode with new subclass MusicNotes
+        
+        var noti = MusicNotes(imageNamed: "notiRedU")  // replace SKSpriteNode with new subclass MusicNotes
+        
+    // the following block calls for random noti
+        var textures = [SKTexture]()
+        textures.append(SKTexture(imageNamed: "notiPinkU"))
+        textures.append(SKTexture(imageNamed: "notiBlueU"))
+        textures.append(SKTexture(imageNamed: "notiGreenU"))
+        textures.append(SKTexture(imageNamed: "notiRedU"))
+        textures.append(SKTexture(imageNamed: "notiGrayU"))
+        
+        let rand = Int(arc4random_uniform(UInt32(textures.count)))
+        let texture = textures[rand] as SKTexture
+        
+        noti.texture = texture
+   // end of block that calls for random noti
+
+        noti.setScale(0.5)
         RoamingNoti = noti
         noti.name = "noti"
-        println("noti.name is \(noti.name)")
+        println("noti.name is \(noti.name)") // noti.name is optional("noti")
         //childNodeWithName("noti1")
 
         noti.anchorPoint = CGPointMake(0.5, 0.25)
         //noti.physicsBody = SKPhysicsBody(circleOfRadius:noti.size.width/4)
-        noti.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        //noti.position = CGPoint(x: size.width / 2, y: size.height / 2)
         noti.zPosition = 3
         addChild(noti)
         followRoamingPath()
@@ -171,7 +188,7 @@ class GameScene: SKScene {
     func followRoamingPath() {
         let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
         let pathDiameter = CGFloat(frame.height/2)
-        let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 0.8)), nil)
+        let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 1.2)), nil)
 
         let followPath = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         RoamingNoti.runAction(SKAction.repeatActionForever(followPath))

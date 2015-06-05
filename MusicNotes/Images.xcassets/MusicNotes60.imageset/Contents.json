@@ -7,11 +7,12 @@
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "notiRed@2x.png"
+      "filename" : "MusicNotes60@2x.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "MusicNotes60@3x.png"
     }
   ],
   "info" : {

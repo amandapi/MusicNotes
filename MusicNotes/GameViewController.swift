@@ -30,6 +30,7 @@ class GameViewController: UIViewController {
         }
     }
     
+
     override func shouldAutorotate() -> Bool {
         return true
     }
@@ -50,5 +51,6 @@ class GameViewController: UIViewController {
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+
 }
 
