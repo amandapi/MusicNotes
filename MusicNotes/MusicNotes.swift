@@ -16,8 +16,22 @@ class MusicNotes: SKSpriteNode {
     var velocity = CGPoint(x: 0, y: 0)
     
     init(imageNamed name: String) {
-        let texture = SKTexture(imageNamed: name)
+       // let texture = SKTexture(imageNamed: name)
+       // super.init(texture: texture, color: nil, size: texture.size())
+        
+        //from here - create random noti's
+
+        var textures = [SKTexture]()
+        textures.append(SKTexture(imageNamed: "notiPinkU"))
+        textures.append(SKTexture(imageNamed: "notiBlueU"))
+        textures.append(SKTexture(imageNamed: "notiRedU"))
+        textures.append(SKTexture(imageNamed: "notiGreenU"))
+        textures.append(SKTexture(imageNamed: "notiGrayU"))
+        let rand = Int(arc4random_uniform(UInt32(textures.count)))
+        let texture = textures[rand] as SKTexture
+        //noti.texture = texture
         super.init(texture: texture, color: nil, size: texture.size())
+        // to here
     }
     
     required init?(coder aDecoder: NSCoder) {

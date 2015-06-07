@@ -10,7 +10,12 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    var RoamingNoti = MusicNotes(imageNamed: "notiRedU")  //replace SKSpriteNode with subclass MusicNotes
+    //var roamingNoti = MusicNotes(imageNamed: String())  //replace SKSpriteNode with subclass MusicNotes
+    //var roamingNoti = MusicNotes(imageNamed: "notiPinkU")
+    //var noti = MusicNotes(imageNamed: "notiPinkU")
+    //var noti = MusicNotes(imageNamed: String())
+    
+    var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
     var lastUpdateTime: NSTimeInterval = 0.0
@@ -28,15 +33,21 @@ class GameScene: SKScene {
     let L5 = SKSpriteNode(imageNamed: "L5")
     let S5 = SKSpriteNode(imageNamed: "S5")
     
+    let clefTreble = SKSpriteNode(imageNamed: "clefTreble")
+    let clefBass = SKSpriteNode(imageNamed: "clefBass")
+    
     override init(size: CGSize) {
         super.init(size: size)
         
-      //  noti = MusicNotes(imageNamed: "notiRedU")
-        RoamingNoti.name = "noti"
+        //var noti = MusicNotes(imageNamed: String()) // this is line necessary?
+        //var noti = MusicNotes(imageNamed: "notiRedU")
+        roamingNoti?.name = "noti"
         addBackground()
         addStaffLines()
         addNoti()
         followRoamingPath()
+        addTrebleClef()
+        addBassClef()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -44,9 +55,11 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        RoamingNoti.removeAllActions()
+        roamingNoti!.removeAllActions()
         
-        if CGRectIntersectsRect(S3.frame, self.RoamingNoti.frame) {
+       // if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti.frame, UIEdgeInsetsMake(82, 0, 16.4, 0))) {
+        
+        if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
             draggingNoti = false
             return
         }
@@ -84,15 +97,21 @@ class GameScene: SKScene {
             draggingNoti = false
         }
         // check collision
-        if CGRectIntersectsRect(S3.frame, self.RoamingNoti.frame) {
+ 
+        if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
+        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti.frame, UIEdgeInsetsMake(75, 0, 15, 0))) {
             println("S3.frame is \(S3.frame)")
             println("S3.position.y is \(S3.position.y)")
-            //RoamingNoti.position.y = S3.position.y - (S3.frame.size.height/2)
-            RoamingNoti.position.y = S3.position.y
+            println("roamingNoti.frame is \(roamingNoti!.frame)")
+            //roamingNoti.position.y = S3.position.y - (S3.frame.size.height/2)
+            roamingNoti!.position.y = S3.position.y
+            // clef rotates
+            clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
+            clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
             addNoti()
         } else {
             //noti.removeFromParent()
-            RoamingNoti.setScale(0.20)
+            roamingNoti!.setScale(0.20)
             addNoti()
         }
     }
@@ -155,30 +174,33 @@ class GameScene: SKScene {
     
     func addNoti() {
         
-        var noti = MusicNotes(imageNamed: "notiRedU")  // replace SKSpriteNode with new subclass MusicNotes
+        var noti = MusicNotes(imageNamed: "notiPinkU")  // replace SKSpriteNode with new subclass MusicNotes
         
-    // the following block calls for random noti
+        //var noti = MusicNotes(imageNamed: String())
+        
+    // the following block moved to MusicNotes.swift
+        /*
         var textures = [SKTexture]()
         textures.append(SKTexture(imageNamed: "notiPinkU"))
         textures.append(SKTexture(imageNamed: "notiBlueU"))
-        textures.append(SKTexture(imageNamed: "notiGreenU"))
         textures.append(SKTexture(imageNamed: "notiRedU"))
+        textures.append(SKTexture(imageNamed: "notiGreenU"))
         textures.append(SKTexture(imageNamed: "notiGrayU"))
-        
         let rand = Int(arc4random_uniform(UInt32(textures.count)))
         let texture = textures[rand] as SKTexture
-        
         noti.texture = texture
    // end of block that calls for random noti
+*/
 
         noti.setScale(0.5)
-        RoamingNoti = noti
+        roamingNoti = noti
         noti.name = "noti"
         println("noti.name is \(noti.name)") // noti.name is optional("noti")
-        //childNodeWithName("noti1")
-
         noti.anchorPoint = CGPointMake(0.5, 0.25)
-        //noti.physicsBody = SKPhysicsBody(circleOfRadius:noti.size.width/4)
+
+        //noti.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: noti.frame.size.width, height: noti.frame.size.height/3))
+        //println("noti.frame.size is \(noti.frame.size)")
+        //noti.physicsBody?.dynamic = false
         //noti.position = CGPoint(x: size.width / 2, y: size.height / 2)
         noti.zPosition = 3
         addChild(noti)
@@ -189,9 +211,24 @@ class GameScene: SKScene {
         let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
         let pathDiameter = CGFloat(frame.height/2)
         let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 1.2)), nil)
-
         let followPath = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
-        RoamingNoti.runAction(SKAction.repeatActionForever(followPath))
+        roamingNoti!.runAction(SKAction.repeatActionForever(followPath))
+    }
+    
+    func addTrebleClef() {
+        clefTreble.anchorPoint = CGPointMake(0.5, 0.33)
+        //clefTreble.position = L2.position
+        clefTreble.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
+        println("L2.size.height is \(L2.size.height)" )
+        clefTreble.setScale(L2.size.height / 118)
+        self.addChild(clefTreble)
+    }
+    
+    func addBassClef() {
+        clefBass.anchorPoint = CGPointMake(0.5, 0.71)
+        clefBass.position = CGPoint(x: L4.position.x + frame.width/8, y: L4.position.y)
+        clefBass.setScale(L4.size.height / 56)
+        self.addChild(clefBass)
     }
     
     func drawLines() {

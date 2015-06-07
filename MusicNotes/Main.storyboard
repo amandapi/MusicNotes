@@ -19,41 +19,77 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyM-Ye-RDM">
-                                <rect key="frame" x="250" y="209" width="49" height="30"/>
-                                <state key="normal" title="Level 1">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyM-Ye-RDM">
+                                <rect key="frame" x="193" y="77" width="160" height="30"/>
+                                <state key="normal" title="Level 1 - treble, spaces">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <segue destination="BV1-FR-VrT" kind="show" id="adU-Vq-PHt"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4E-HF-XiK">
-                                <rect key="frame" x="250" y="247" width="49" height="30"/>
-                                <state key="normal" title="Level 2">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4E-HF-XiK">
+                                <rect key="frame" x="193" y="115" width="136" height="30"/>
+                                <state key="normal" title="Level 2 - bass, lines">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uH3-5J-dXh">
-                                <rect key="frame" x="250" y="285" width="49" height="30"/>
-                                <state key="normal" title="Level 3">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uH3-5J-dXh">
+                                <rect key="frame" x="193" y="153" width="143" height="30"/>
+                                <state key="normal" title="Level 3 - treble, lines">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ovr-XG-Zrf">
-                                <rect key="frame" x="250" y="323" width="49" height="30"/>
-                                <state key="normal" title="Level 4">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ovr-XG-Zrf">
+                                <rect key="frame" x="193" y="191" width="154" height="30"/>
+                                <state key="normal" title="Level 4 - bass, spaces">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1dO-Ka-STx">
-                                <rect key="frame" x="250" y="361" width="49" height="30"/>
-                                <state key="normal" title="Level 5">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1dO-Ka-STx">
+                                <rect key="frame" x="193" y="229" width="209" height="30"/>
+                                <state key="normal" title="Level 5 - treble, lines n spaces">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kgn-gf-Op6">
+                                <rect key="frame" x="193" y="267" width="203" height="30"/>
+                                <state key="normal" title="Level 6 - bass, lines n spaces">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JjA-5K-QUw">
+                                <rect key="frame" x="193" y="305" width="194" height="30"/>
+                                <state key="normal" title="Level 7 - treble, pentascales">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="arD-RV-lbU">
+                                <rect key="frame" x="193" y="343" width="187" height="30"/>
+                                <state key="normal" title="Level 8 - bass, pentascales">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="arD-RV-lbU" firstAttribute="leading" secondItem="JjA-5K-QUw" secondAttribute="leading" id="1IB-lP-C4I"/>
+                            <constraint firstItem="uH3-5J-dXh" firstAttribute="top" secondItem="b4E-HF-XiK" secondAttribute="bottom" constant="8" id="2hP-E0-CNl"/>
+                            <constraint firstItem="1dO-Ka-STx" firstAttribute="leading" secondItem="ovr-XG-Zrf" secondAttribute="leading" id="9Q6-aj-qDr"/>
+                            <constraint firstItem="1dO-Ka-STx" firstAttribute="leading" secondItem="Kgn-gf-Op6" secondAttribute="leading" id="9u3-5A-xji"/>
+                            <constraint firstItem="JjA-5K-QUw" firstAttribute="top" secondItem="Kgn-gf-Op6" secondAttribute="bottom" constant="8" id="FhU-I0-0aI"/>
+                            <constraint firstItem="Kgn-gf-Op6" firstAttribute="top" secondItem="1dO-Ka-STx" secondAttribute="bottom" constant="8" id="Jhy-Iz-iyl"/>
+                            <constraint firstItem="ovr-XG-Zrf" firstAttribute="leading" secondItem="uH3-5J-dXh" secondAttribute="leading" id="Lfg-lm-xUx"/>
+                            <constraint firstItem="ovr-XG-Zrf" firstAttribute="top" secondItem="uH3-5J-dXh" secondAttribute="bottom" constant="8" id="PmG-00-5G8"/>
+                            <constraint firstItem="b4E-HF-XiK" firstAttribute="leading" secondItem="uH3-5J-dXh" secondAttribute="leading" id="UIH-zX-bFS"/>
+                            <constraint firstItem="eyM-Ye-RDM" firstAttribute="leading" secondItem="E61-1F-scU" secondAttribute="leadingMargin" constant="88" id="bd1-7U-aAM"/>
+                            <constraint firstItem="eyM-Ye-RDM" firstAttribute="leading" secondItem="b4E-HF-XiK" secondAttribute="leading" id="dfw-5d-mh8"/>
+                            <constraint firstItem="JjA-5K-QUw" firstAttribute="leading" secondItem="Kgn-gf-Op6" secondAttribute="leading" id="ehK-nH-0d2"/>
+                            <constraint firstItem="eyM-Ye-RDM" firstAttribute="top" secondItem="UZf-kz-UFc" secondAttribute="bottom" constant="28" id="hGC-Tq-Le0"/>
+                            <constraint firstItem="b4E-HF-XiK" firstAttribute="top" secondItem="eyM-Ye-RDM" secondAttribute="bottom" constant="8" id="nhs-1T-baS"/>
+                            <constraint firstItem="arD-RV-lbU" firstAttribute="top" secondItem="JjA-5K-QUw" secondAttribute="bottom" constant="8" id="xot-ph-y0o"/>
+                            <constraint firstItem="1dO-Ka-STx" firstAttribute="top" secondItem="ovr-XG-Zrf" secondAttribute="bottom" constant="8" id="z3U-fP-ccW"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="HlN-yF-MTA"/>
                 </viewController>
@@ -73,8 +109,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" misplaced="YES" text="Score" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="Kgn-Vy-ZsT">
-                                <rect key="frame" x="191" y="94" width="85" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Score" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="Kgn-Vy-ZsT">
+                                <rect key="frame" x="211" y="103" width="85" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="QTv-op-hsR"/>
                                     <constraint firstAttribute="width" constant="85" id="Wh6-0V-qu7"/>
@@ -83,8 +119,8 @@
                                 <color key="textColor" red="0.56829886259999995" green="1" blue="0.079667775230000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="C in a Space" textAlignment="center" lineBreakMode="tailTruncation" minimumScaleFactor="1" translatesAutoresizingMaskIntoConstraints="NO" id="bZb-t0-OG1">
-                                <rect key="frame" x="16" y="135" width="568" height="46"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="C in a Space" textAlignment="center" lineBreakMode="tailTruncation" minimumScaleFactor="1" translatesAutoresizingMaskIntoConstraints="NO" id="bZb-t0-OG1">
+                                <rect key="frame" x="16" y="144" width="568" height="46"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="38"/>
                                 <color key="textColor" red="0.56829886259999995" green="1" blue="0.079667775230000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -98,8 +134,8 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Level" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="yta-Fb-YN7">
-                                <rect key="frame" x="100" y="84" width="83" height="42"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Level" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="yta-Fb-YN7">
+                                <rect key="frame" x="100" y="75" width="83" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="83" id="Ot4-J5-bET"/>
                                 </constraints>
@@ -108,32 +144,41 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7gs-rk-Cv2">
-                                <rect key="frame" x="511" y="90" width="68" height="30"/>
+                                <rect key="frame" x="499" y="90" width="85" height="30"/>
                                 <state key="normal" title="Facebook">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" misplaced="YES" text="Lives" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="5" translatesAutoresizingMaskIntoConstraints="NO" id="FcU-zu-E5j">
-                                <rect key="frame" x="11" y="87" width="81" height="35"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Lives" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="5" translatesAutoresizingMaskIntoConstraints="NO" id="FcU-zu-E5j">
+                                <rect key="frame" x="11" y="96" width="61" height="35"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                 <color key="textColor" red="0.56829886259999995" green="1" blue="0.079667775230000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qco-uh-bzn">
+                                <rect key="frame" x="366" y="92" width="30" height="30"/>
+                                <state key="normal" title="Hint">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="5c0-aU-asc" secondAttribute="trailing" constant="109" id="3y8-c9-Ep1"/>
                             <constraint firstItem="bZb-t0-OG1" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="7bO-2I-IyZ"/>
                             <constraint firstItem="FcU-zu-E5j" firstAttribute="firstBaseline" secondItem="Kgn-Vy-ZsT" secondAttribute="baseline" id="A8O-Tm-ga0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="7gs-rk-Cv2" secondAttribute="trailing" id="GRT-Pq-BTp"/>
+                            <constraint firstItem="Qco-uh-bzn" firstAttribute="baseline" secondItem="5c0-aU-asc" secondAttribute="baseline" constant="2" id="QWE-HA-s6c"/>
                             <constraint firstItem="FcU-zu-E5j" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" constant="-5" id="RhW-Cb-Rb5"/>
                             <constraint firstItem="Kgn-Vy-ZsT" firstAttribute="leading" secondItem="yta-Fb-YN7" secondAttribute="trailing" constant="28" id="acW-4g-fhu"/>
                             <constraint firstItem="5c0-aU-asc" firstAttribute="baseline" secondItem="7gs-rk-Cv2" secondAttribute="baseline" id="ag0-W1-zoq"/>
                             <constraint firstItem="bZb-t0-OG1" firstAttribute="top" secondItem="yta-Fb-YN7" secondAttribute="bottom" constant="9" id="ba5-Oo-j6X"/>
-                            <constraint firstItem="7gs-rk-Cv2" firstAttribute="leading" secondItem="5c0-aU-asc" secondAttribute="trailing" constant="20" id="ecd-XV-KP9"/>
+                            <constraint firstItem="7gs-rk-Cv2" firstAttribute="leading" secondItem="5c0-aU-asc" secondAttribute="trailing" constant="8" symbolic="YES" id="ecd-XV-KP9"/>
                             <constraint firstItem="FcU-zu-E5j" firstAttribute="baseline" secondItem="Kgn-Vy-ZsT" secondAttribute="firstBaseline" id="fjY-K8-SFp"/>
                             <constraint firstItem="bZb-t0-OG1" firstAttribute="top" secondItem="maK-i9-Uhn" secondAttribute="bottom" constant="80" id="iGJ-td-gnm"/>
                             <constraint firstItem="yta-Fb-YN7" firstAttribute="leading" secondItem="FcU-zu-E5j" secondAttribute="trailing" constant="28" id="iKz-xd-o7l"/>
                             <constraint firstItem="yta-Fb-YN7" firstAttribute="centerY" secondItem="5c0-aU-asc" secondAttribute="centerY" id="ldk-DU-8bI"/>
                             <constraint firstItem="5c0-aU-asc" firstAttribute="top" secondItem="maK-i9-Uhn" secondAttribute="bottom" constant="26" id="og0-fH-tdP"/>
+                            <constraint firstItem="5c0-aU-asc" firstAttribute="leading" secondItem="Qco-uh-bzn" secondAttribute="trailing" constant="8" symbolic="YES" id="sao-vQ-qP3"/>
                             <constraint firstItem="yta-Fb-YN7" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leading" constant="100" id="y9g-B2-5Hx"/>
                             <constraint firstItem="bZb-t0-OG1" firstAttribute="top" secondItem="FcU-zu-E5j" secondAttribute="bottom" constant="13" id="yQc-aC-k8V"/>
                             <constraint firstItem="bZb-t0-OG1" firstAttribute="trailing" secondItem="3se-qz-xqx" secondAttribute="trailingMargin" id="zO8-lg-lCq"/>
