@@ -10,7 +10,9 @@ import UIKit
 import SpriteKit
 
 class GameViewController: UIViewController {
-
+    
+//    var level: NSDictionary = NSDictionary()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,8 +30,18 @@ class GameViewController: UIViewController {
             
             skView.presentScene(scene)
         }
+
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+      //  GameScene.level = self.
+        let skView = self.view as! SKView
+        let scene = skView.scene as! GameScene
+ //       scene.level = self.level
+        
+    }
 
     override func shouldAutorotate() -> Bool {
         return true

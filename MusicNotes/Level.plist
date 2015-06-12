@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Level1</key>
+	<dict>
+		<key>clef</key>
+		<string>treble</string>
+		<key>step1</key>
+		<dict>
+			<key>position</key>
+			<string>S5</string>
+			<key>instruction</key>
+			<string>G in a Space</string>
+		</dict>
+		<key>step2</key>
+		<dict>
+			<key>position</key>
+			<string>S4</string>
+			<key>instruction</key>
+			<string>E in a Space</string>
+		</dict>
+		<key>step3</key>
+		<dict>
+			<key>position</key>
+			<string>S3</string>
+			<key>instruction</key>
+			<string>C in a Space</string>
+		</dict>
+		<key>step4</key>
+		<dict>
+			<key>position</key>
+			<string>S2</string>
+			<key>instruction</key>
+			<string>A in a Space</string>
+		</dict>
+		<key>step5</key>
+		<dict>
+			<key>position</key>
+			<string>S1</string>
+			<key>instruction</key>
+			<string>F in a Space</string>
+		</dict>
+		<key>step6</key>
+		<dict>
+			<key>position</key>
+			<string>S0</string>
+			<key>instruction</key>
+			<string>D in a Space</string>
+		</dict>
+	</dict>
+	<key>Level4</key>
+	<dict>
+		<key>clef</key>
+		<string>bass</string>
+		<key>step1</key>
+		<dict>
+			<key>position</key>
+			<string>S5</string>
+			<key>instruction</key>
+			<string>B in a Space</string>
+		</dict>
+		<key>step2</key>
+		<dict>
+			<key>position</key>
+			<string>S4</string>
+			<key>instruction</key>
+			<string>G in a Space</string>
+		</dict>
+		<key>step3</key>
+		<dict>
+			<key>position</key>
+			<string>S3</string>
+			<key>instruction</key>
+			<string>E in a Space</string>
+		</dict>
+		<key>step4</key>
+		<dict>
+			<key>position</key>
+			<string>S2</string>
+			<key>instruction</key>
+			<string>C in a Space</string>
+		</dict>
+		<key>step5</key>
+		<dict>
+			<key>position</key>
+			<string>S1</string>
+			<key>instruction</key>
+			<string>A in a Space</string>
+		</dict>
+		<key>step6</key>
+		<dict>
+			<key>position</key>
+			<string>S0</string>
+			<key>instruction</key>
+			<string>F in a Space</string>
+		</dict>
+	</dict>
+	<key>Level2</key>
+	<dict>
+		<key>clef</key>
+		<string>bass</string>
+		<key>step1</key>
+		<dict>
+			<key>position</key>
+			<string>L5</string>
+			<key>instruction</key>
+			<string>A on a Line</string>
+		</dict>
+		<key>step2</key>
+		<dict>
+			<key>position</key>
+			<string>L4</string>
+			<key>instruction</key>
+			<string>F on a Line</string>
+		</dict>
+		<key>step3</key>
+		<dict>
+			<key>position</key>
+			<string>L3</string>
+			<key>instruction</key>
+			<string>D on a Line</string>
+		</dict>
+		<key>step4</key>
+		<dict>
+			<key>position</key>
+			<string>L2</string>
+			<key>instruction</key>
+			<string>B on a Line</string>
+		</dict>
+		<key>step5</key>
+		<dict>
+			<key>position</key>
+			<string>L1</string>
+			<key>instruction</key>
+			<string>G on a Line</string>
+		</dict>
+	</dict>
+	<key>Level3</key>
+	<dict>
+		<key>clef</key>
+		<string>treble</string>
+		<key>step1</key>
+		<dict>
+			<key>position</key>
+			<string>L5</string>
+			<key>instruction</key>
+			<string>F on a Line</string>
+		</dict>
+		<key>step2</key>
+		<dict>
+			<key>position</key>
+			<string>L4</string>
+			<key>instruction</key>
+			<string>D on a Line</string>
+		</dict>
+		<key>step3</key>
+		<dict>
+			<key>position</key>
+			<string>L3</string>
+			<key>instruction</key>
+			<string>B on a Line</string>
+		</dict>
+		<key>step4</key>
+		<dict>
+			<key>position</key>
+			<string>L2</string>
+			<key>instruction</key>
+			<string>G on a Line</string>
+		</dict>
+		<key>step5</key>
+		<dict>
+			<key>position</key>
+			<string>L1</string>
+			<key>instruction</key>
+			<string>E on a Line</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

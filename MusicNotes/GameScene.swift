@@ -15,11 +15,18 @@ class GameScene: SKScene {
     //var noti = MusicNotes(imageNamed: "notiPinkU")
     //var noti = MusicNotes(imageNamed: String())
     
+    
     var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
+    
     var lastUpdateTime: NSTimeInterval = 0.0
     var dt: NSTimeInterval = 0.0
+    
+    var score : Int = 0
+    var dead : Int = 0
+    
+//    var level: NSDictionary = NSDictionary()
     
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
@@ -36,10 +43,13 @@ class GameScene: SKScene {
     let clefTreble = SKSpriteNode(imageNamed: "clefTreble")
     let clefBass = SKSpriteNode(imageNamed: "clefBass")
     
+    let trashcan = SKSpriteNode(imageNamed: "trashcan")
+    let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
+    
     override init(size: CGSize) {
         super.init(size: size)
         
-        //var noti = MusicNotes(imageNamed: String()) // this is line necessary?
+        //var noti = MusicNotes(imageNamed: String()) // necessary?
         //var noti = MusicNotes(imageNamed: "notiRedU")
         roamingNoti?.name = "noti"
         addBackground()
@@ -47,7 +57,8 @@ class GameScene: SKScene {
         addNoti()
         followRoamingPath()
         addTrebleClef()
-        addBassClef()
+        //addBassClef()
+        addTrashcanAndTrashcanLid()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -56,8 +67,6 @@ class GameScene: SKScene {
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         roamingNoti!.removeAllActions()
-        
-       // if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti.frame, UIEdgeInsetsMake(82, 0, 16.4, 0))) {
         
         if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
             draggingNoti = false
@@ -68,7 +77,6 @@ class GameScene: SKScene {
         let location = touch!.locationInNode(self)
         let node = nodeAtPoint(location)
         if node.name == "noti" {
-            
             draggingNoti = true
             let noti = node as! MusicNotes
             noti.addMovingPoint(location)
@@ -96,22 +104,41 @@ class GameScene: SKScene {
         } else {
             draggingNoti = false
         }
+        
         // check collision
  
         if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
-        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti.frame, UIEdgeInsetsMake(75, 0, 15, 0))) {
-            println("S3.frame is \(S3.frame)")
-            println("S3.position.y is \(S3.position.y)")
-            println("roamingNoti.frame is \(roamingNoti!.frame)")
+        
+        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(84, -10, 20, -10))) {
+        
+        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0))) {
+        
+            //println("S3.frame is \(S3.frame)")
+            //println("S3.position.y is \(S3.position.y)")
+            //println("roamingNoti.frame is \(roamingNoti!.frame)")
+            //println("tighter roamingNoti.frame is \(UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0)))")
+            //println("roamingNoti.position is \(roamingNoti!.position)")
+            
             //roamingNoti.position.y = S3.position.y - (S3.frame.size.height/2)
             roamingNoti!.position.y = S3.position.y
+            
             // clef rotates
             clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
-            clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
+            //clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
+            //let waitAction = SKAction.waitForDuration(3.0)
+            changeInstructionAndPositionAndClef()
+           
+            // count score
+            score++
+            println("score is \(score)")
+            
             addNoti()
+            
         } else {
-            //noti.removeFromParent()
-            roamingNoti!.setScale(0.20)
+            dies()
+            //let diesAction = SKAction(dies())
+            //let waitAction2 = SKAction.waitForDuration(6.0)
+            //let addNotiAction = SKAction(addNoti())
             addNoti()
         }
     }
@@ -126,6 +153,46 @@ class GameScene: SKScene {
         drawLines()
     }
     
+    func dies() {
+        let shrinkAction = SKAction.scaleBy(0.25, duration: 1.0)
+        let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 1.0)
+        let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*2) , duration: 1.0)
+        let fallAction = SKAction.moveToY(30.0, duration: 1.0)
+        let removeAction = SKAction.removeFromParent()
+        roamingNoti!.runAction(SKAction.sequence([shrinkAction, rotateAction, recycleAction, fallAction, removeAction]))
+        
+        let openAction = SKAction.rotateByAngle(CGFloat(-M_PI / 2), duration: 1.0)
+        let waitAction1 = SKAction.waitForDuration(3.0)
+        let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
+        trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
+        // count how many is dead
+        dead++
+        println("dead number is \(dead)")
+    }
+    
+    func changeInstructionAndPositionAndClef() {
+        if let path = NSBundle.mainBundle().pathForResource("Level", ofType: "plist") {
+        let data = NSArray(contentsOfFile: NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!)
+        println(data)
+        }
+
+/*
+        if let Level = NSDictionary(contentsOfFile: path) {
+        }
+       // var level: NSDictionary = NSDictionary()
+        var myDict: NSDictionary?
+        if let path = NSBundle.mainBundle().pathForResource("Config", ofType: "plist") {
+            myDict = NSDictionary(contentsOfFile: path)
+        }
+        if let level = myDict {
+            // Use your dict here
+        }
+*/
+
+        
+    }
+
+    
     func addBackground() {
         let bg = SKSpriteNode(imageNamed: "background1")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
@@ -133,6 +200,14 @@ class GameScene: SKScene {
         bg.zPosition = -1
         addChild(bg)
     }
+   
+    
+/*
+    func loadPlist() {
+        let filePath = NSBundle.mainBundle().pathForResource("level", ofType: "plist")!
+        let levels = NSDictionary(contentsOfFile: filePath)
+    }
+*/
     
     func addStaffLines() {
 
@@ -169,7 +244,7 @@ class GameScene: SKScene {
         S5.position = CGPoint(x: frame.width/2 , y: frame.height/2 + 3*68*frame.width/1680)
         S5.setScale(frame.width/1680)
         self.addChild(S5)
-        println("S5 y.Scale is \(S5.yScale)")
+        //println("S5 y.Scale is \(S5.yScale)")
     }
     
     func addNoti() {
@@ -177,30 +252,16 @@ class GameScene: SKScene {
         var noti = MusicNotes(imageNamed: "notiPinkU")  // replace SKSpriteNode with new subclass MusicNotes
         
         //var noti = MusicNotes(imageNamed: String())
-        
-    // the following block moved to MusicNotes.swift
-        /*
-        var textures = [SKTexture]()
-        textures.append(SKTexture(imageNamed: "notiPinkU"))
-        textures.append(SKTexture(imageNamed: "notiBlueU"))
-        textures.append(SKTexture(imageNamed: "notiRedU"))
-        textures.append(SKTexture(imageNamed: "notiGreenU"))
-        textures.append(SKTexture(imageNamed: "notiGrayU"))
-        let rand = Int(arc4random_uniform(UInt32(textures.count)))
-        let texture = textures[rand] as SKTexture
-        noti.texture = texture
-   // end of block that calls for random noti
-*/
 
         noti.setScale(0.5)
         roamingNoti = noti
         noti.name = "noti"
-        println("noti.name is \(noti.name)") // noti.name is optional("noti")
-        noti.anchorPoint = CGPointMake(0.5, 0.25)
+        println("noti is \(noti)")  // note this does give the color
+        noti.anchorPoint = CGPointMake(0.38, 0.25)
 
-        //noti.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: noti.frame.size.width, height: noti.frame.size.height/3))
+        noti.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: noti.frame.size.width, height: noti.frame.size.height/4))
         //println("noti.frame.size is \(noti.frame.size)")
-        //noti.physicsBody?.dynamic = false
+        noti.physicsBody?.dynamic = false
         //noti.position = CGPoint(x: size.width / 2, y: size.height / 2)
         noti.zPosition = 3
         addChild(noti)
@@ -219,7 +280,7 @@ class GameScene: SKScene {
         clefTreble.anchorPoint = CGPointMake(0.5, 0.33)
         //clefTreble.position = L2.position
         clefTreble.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
-        println("L2.size.height is \(L2.size.height)" )
+        //println("L2.size.height is \(L2.size.height)" )
         clefTreble.setScale(L2.size.height / 118)
         self.addChild(clefTreble)
     }
@@ -229,6 +290,16 @@ class GameScene: SKScene {
         clefBass.position = CGPoint(x: L4.position.x + frame.width/8, y: L4.position.y)
         clefBass.setScale(L4.size.height / 56)
         self.addChild(clefBass)
+    }
+    
+    func addTrashcanAndTrashcanLid() {
+        trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/1.68)
+        trashcan.setScale(frame.width/900)
+        self.addChild(trashcan)
+        trashcanLid.position = CGPoint(x: frame.width - frame.width*0.095 + trashcanLid.frame.width/8 , y: trashcan.frame.height - trashcan.frame.height/4)
+        trashcanLid.setScale(frame.width/900)
+        trashcanLid.anchorPoint = CGPointMake(1, 0)
+        addChild(trashcanLid)
     }
     
     func drawLines() {

@@ -19,8 +19,7 @@ class MusicNotes: SKSpriteNode {
        // let texture = SKTexture(imageNamed: name)
        // super.init(texture: texture, color: nil, size: texture.size())
         
-        //from here - create random noti's
-
+        //create random noti's
         var textures = [SKTexture]()
         textures.append(SKTexture(imageNamed: "notiPinkU"))
         textures.append(SKTexture(imageNamed: "notiBlueU"))
@@ -31,7 +30,6 @@ class MusicNotes: SKSpriteNode {
         let texture = textures[rand] as SKTexture
         //noti.texture = texture
         super.init(texture: texture, color: nil, size: texture.size())
-        // to here
     }
     
     required init?(coder aDecoder: NSCoder) {
