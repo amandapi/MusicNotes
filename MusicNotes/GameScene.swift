@@ -10,23 +10,26 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    //var roamingNoti = MusicNotes(imageNamed: String())  //replace SKSpriteNode with subclass MusicNotes
-    //var roamingNoti = MusicNotes(imageNamed: "notiPinkU")
-    //var noti = MusicNotes(imageNamed: "notiPinkU")
-    //var noti = MusicNotes(imageNamed: String())
-    
-    
-    var roamingNoti: MusicNotes?
+    var roamingNoti: MusicNotes?  // replace SKSpriteNode with new subclass MusicNotes
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
     
-    var lastUpdateTime: NSTimeInterval = 0.0
-    var dt: NSTimeInterval = 0.0
+    var lastUpdateTime: NSTimeInterval = 0.0  // for drawLines
+    var dt: NSTimeInterval = 0.0  // for drawLines
     
-    var score : Int = 0
-    var dead : Int = 0
+    var score : Int = 0 // to count score
+    var deadCount : Int = 0  // to count dead notes
     
-//    var level: NSDictionary = NSDictionary()
+    // load dictionary and afilliated items
+    //var instruction: String = "C in a Space"  // no hard coding please
+    //var destination: String = "S3"
+    //var clef: String = "treble"
+    var instruction = SKLabelNode()
+    var destination = SKSpriteNode()
+    var clef = SKSpriteNode()
+    //var stepInLevel: Int = 1  // for retrieving info in plist
+    
+//    let levels : NSDictionary? = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!)
     
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
@@ -49,8 +52,6 @@ class GameScene: SKScene {
     override init(size: CGSize) {
         super.init(size: size)
         
-        //var noti = MusicNotes(imageNamed: String()) // necessary?
-        //var noti = MusicNotes(imageNamed: "notiRedU")
         roamingNoti?.name = "noti"
         addBackground()
         addStaffLines()
@@ -109,17 +110,15 @@ class GameScene: SKScene {
  
         if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
         
-        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(84, -10, 20, -10))) {
-        
-        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0))) {
-        
+            //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(84, -10, 20, -10))) {
+            //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0))) {
             //println("S3.frame is \(S3.frame)")
             //println("S3.position.y is \(S3.position.y)")
             //println("roamingNoti.frame is \(roamingNoti!.frame)")
             //println("tighter roamingNoti.frame is \(UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0)))")
             //println("roamingNoti.position is \(roamingNoti!.position)")
-            
             //roamingNoti.position.y = S3.position.y - (S3.frame.size.height/2)
+            
             roamingNoti!.position.y = S3.position.y
             
             // clef rotates
@@ -130,12 +129,14 @@ class GameScene: SKScene {
            
             // count score
             score++
+            showScore()
             println("score is \(score)")
-            
             addNoti()
             
         } else {
             dies()
+            showDeadCount()
+            flashGameOver()
             //let diesAction = SKAction(dies())
             //let waitAction2 = SKAction.waitForDuration(6.0)
             //let addNotiAction = SKAction(addNoti())
@@ -166,30 +167,22 @@ class GameScene: SKScene {
         let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
         trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
         // count how many is dead
-        dead++
-        println("dead number is \(dead)")
+        deadCount++
+        println("deadCount is \(deadCount)")
     }
+
     
     func changeInstructionAndPositionAndClef() {
-        if let path = NSBundle.mainBundle().pathForResource("Level", ofType: "plist") {
-        let data = NSArray(contentsOfFile: NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!)
-        println(data)
-        }
-
-/*
-        if let Level = NSDictionary(contentsOfFile: path) {
-        }
-       // var level: NSDictionary = NSDictionary()
-        var myDict: NSDictionary?
-        if let path = NSBundle.mainBundle().pathForResource("Config", ofType: "plist") {
-            myDict = NSDictionary(contentsOfFile: path)
-        }
-        if let level = myDict {
-            // Use your dict here
-        }
-*/
-
-        
+       
+        let path = NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!
+        let myDictionary = NSDictionary(contentsOfFile: path)
+        //println("myDictionary: \(myDictionary)")  // this works
+        //println(myDictionary!["Level1"])          // this works
+        //println(myDictionary!["Level2"])          // this works
+        //println(myDictionary?.valueForKeyPath("Level2.step1"))  // this works
+        //println(myDictionary?.valueForKeyPath("Level2.step1.destination"))  // this returns "Optional(L5)
+        println(myDictionary?.valueForKeyPath("Level2.step1.instruction"))  // this returns "Optional(A on a Line)
+        //println(myDictionary?.valueForKeyPath("Level2.clef"))  // this returns "Optional(bass)"
     }
 
     
@@ -200,14 +193,6 @@ class GameScene: SKScene {
         bg.zPosition = -1
         addChild(bg)
     }
-   
-    
-/*
-    func loadPlist() {
-        let filePath = NSBundle.mainBundle().pathForResource("level", ofType: "plist")!
-        let levels = NSDictionary(contentsOfFile: filePath)
-    }
-*/
     
     func addStaffLines() {
 
@@ -248,7 +233,6 @@ class GameScene: SKScene {
     }
     
     func addNoti() {
-        
         var noti = MusicNotes(imageNamed: "notiPinkU")  // replace SKSpriteNode with new subclass MusicNotes
         
         //var noti = MusicNotes(imageNamed: String())
@@ -295,11 +279,61 @@ class GameScene: SKScene {
     func addTrashcanAndTrashcanLid() {
         trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/1.68)
         trashcan.setScale(frame.width/900)
+        //trashcan.zPosition = 2
         self.addChild(trashcan)
         trashcanLid.position = CGPoint(x: frame.width - frame.width*0.095 + trashcanLid.frame.width/8 , y: trashcan.frame.height - trashcan.frame.height/4)
         trashcanLid.setScale(frame.width/900)
         trashcanLid.anchorPoint = CGPointMake(1, 0)
         addChild(trashcanLid)
+    }
+    
+    func showScore() {
+        var scoreLabel = UILabel(frame: CGRectMake(frame.width/8 , frame.height/8, 300, 60))
+        scoreLabel.center = CGPoint(x: frame.width/8 , y: frame.height/8)
+        scoreLabel.textAlignment = NSTextAlignment.Center
+        scoreLabel.text = "Score: \(score)"
+        scoreLabel.font = UIFont(name: "Verdana-Bold", size: 58.0) // Courier-Bold
+        scoreLabel.textColor = UIColor.redColor()
+        scoreLabel.shadowColor = UIColor.blackColor()
+        scoreLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
+        //scoreLabel.clearsContextBeforeDrawing = true
+        //scoreLabel.setNeedsDisplay()
+        self.view?.addSubview(scoreLabel)
+    }
+    
+    func showDeadCount() {
+        var deadCountLabel = UILabel(frame: trashcan.frame)
+        deadCountLabel.center = CGPoint(x: frame.width - frame.width*0.12 , y: 725)
+        deadCountLabel.textAlignment = NSTextAlignment.Center
+        deadCountLabel.text = "\(deadCount)"
+        deadCountLabel.font = UIFont(name: "Verdana-Bold", size: 58.0) // Courier-Bold
+        deadCountLabel.textColor = UIColor.redColor()
+        deadCountLabel.shadowColor = UIColor.blackColor()
+        deadCountLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
+        //deadCountLabel.clearsContextBeforeDrawing = true
+        //deadCountLabel.setNeedsDisplay()
+        self.view?.addSubview(deadCountLabel)
+    }
+    
+    func flashGameOver() { // when deadCount = 3
+        let gameoverLabel = SKLabelNode(fontNamed: "MarkerFelt-Wide")
+        gameoverLabel.fontSize = 88
+        gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
+        gameoverLabel.fontColor = SKColor.redColor()
+        gameoverLabel.text = "Game Over"
+        gameoverLabel.zPosition = 4
+        gameoverLabel.alpha = 0
+
+        let fadeinAction = SKAction.fadeInWithDuration(0.5)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
+        let deleteAction = SKAction.removeFromParent()
+        gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
+        
+        if (deadCount == 3) {
+            addChild(gameoverLabel) // and also segue back to LevelViewController
+        } else {
+            return
+        }
     }
     
     func drawLines() {

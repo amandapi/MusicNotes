@@ -11,8 +11,6 @@ import SpriteKit
 
 class GameViewController: UIViewController {
     
-//    var level: NSDictionary = NSDictionary()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

@@ -11,23 +11,8 @@ import SpriteKit
 import Foundation
 
 class LevelViewController: UIViewController {
-
-    var instruction: String = "C in a Space"
-    var location: String = "S3"
-    var selectedLevel: Int = 1
-//    var levels: NSDictionary?
-    let level : NSDictionary? = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!)
     
-/*
-    if let path = NSBundle.mainBundle().pathForResource("level", ofType: plist) {
-        myDict = NSDictionary(contentsOfFile: path)
-    }
-    if let level = myDict {
-        // use dictionary
-    }
-*/
-
-
+    var selectedLevel: Int = 1 // for all 8 buttons    
 
     @IBAction func levelOne(sender: AnyObject) { // so all 8 buttons can segue to gameViewController
         self.performSegueWithIdentifier("levelToGame", sender: self)
@@ -36,12 +21,6 @@ class LevelViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
- /*
-        if let path = NSBundle.mainBundle().pathForResource("level", ofType: "plist") {
-            levels = NSDictionary(contentsOfFile: path)
-        }
-*/
 
     }
 
