@@ -8,29 +8,26 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    var roamingNoti: MusicNotes?  // replace SKSpriteNode with new subclass MusicNotes
+    var noti = MusicNotes(imageNamed: String())
+    var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
     
-    var lastUpdateTime: NSTimeInterval = 0.0  // for drawLines
-    var dt: NSTimeInterval = 0.0  // for drawLines
+    var lastUpdateTime: NSTimeInterval = 0.0
+    var dt: NSTimeInterval = 0.0 
     
-    var score : Int = 0 // to count score
-    var deadCount : Int = 0  // to count dead notes
+    var score : Int = 0
+    var deadCount : Int = 0
     
-    // load dictionary and afilliated items
-    //var instruction: String = "C in a Space"  // no hard coding please
-    //var destination: String = "S3"
-    //var clef: String = "treble"
-    var instruction = SKLabelNode()
-    var destination = SKSpriteNode()
-    var clef = SKSpriteNode()
-    //var stepInLevel: Int = 1  // for retrieving info in plist
+    var instruction = SKLabelNode()  // retrieve from plist
+    var destination = SKSpriteNode()  // retrieve from plist
+    var clef = SKSpriteNode()  // retrieve from plist
+    var background = SKSpriteNode()  // retrieve from plist
+    var gameLevel = Int()  // retrieve from plist
     
-//    let levels : NSDictionary? = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!)
-    
+    // these are the "destinations" defined by "staffLines"
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
     let S1 = SKSpriteNode(imageNamed: "S1")
@@ -43,31 +40,37 @@ class GameScene: SKScene {
     let L5 = SKSpriteNode(imageNamed: "L5")
     let S5 = SKSpriteNode(imageNamed: "S5")
     
+    // these are the "clefs"
     let clefTreble = SKSpriteNode(imageNamed: "clefTreble")
     let clefBass = SKSpriteNode(imageNamed: "clefBass")
     
     let trashcan = SKSpriteNode(imageNamed: "trashcan")
     let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
     
+    // here is the path to Level.plist
+    let path = NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("NSCoding not supported")
+    }
+    
     override init(size: CGSize) {
         super.init(size: size)
-        
-        roamingNoti?.name = "noti"
+    }
+    
+    override func didMoveToView(view: SKView) {
         addBackground()
         addStaffLines()
         addNoti()
-        followRoamingPath()
-        addTrebleClef()
-        //addBassClef()
+        addClef()
         addTrashcanAndTrashcanLid()
-    }
-    
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        addInstruction()
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
         roamingNoti!.removeAllActions()
+        roamingNoti?.name = "noti"
         
         if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
             draggingNoti = false
@@ -97,7 +100,7 @@ class GameScene: SKScene {
         noti.addMovingPoint(location)
         }
     }
-    
+
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
         if (draggingNoti == false ) {
@@ -111,21 +114,19 @@ class GameScene: SKScene {
         if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
         
             //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(84, -10, 20, -10))) {
-            //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0))) {
+        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0))) {
             //println("S3.frame is \(S3.frame)")
             //println("S3.position.y is \(S3.position.y)")
             //println("roamingNoti.frame is \(roamingNoti!.frame)")
             //println("tighter roamingNoti.frame is \(UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0)))")
             //println("roamingNoti.position is \(roamingNoti!.position)")
-            //roamingNoti.position.y = S3.position.y - (S3.frame.size.height/2)
+            //roamingNoti!.position.y = S3.position.y - (S3.frame.size.height/2)
             
-            roamingNoti!.position.y = S3.position.y
+            roamingNoti!.position.y = S3.position.y    // this does not work
             
             // clef rotates
             clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
-            //clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
-            //let waitAction = SKAction.waitForDuration(3.0)
-            changeInstructionAndPositionAndClef()
+            clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
            
             // count score
             score++
@@ -137,13 +138,10 @@ class GameScene: SKScene {
             dies()
             showDeadCount()
             flashGameOver()
-            //let diesAction = SKAction(dies())
-            //let waitAction2 = SKAction.waitForDuration(6.0)
-            //let addNotiAction = SKAction(addNoti())
             addNoti()
         }
     }
-    
+
     override func update(currentTime: CFTimeInterval) {
         dt = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
@@ -151,12 +149,11 @@ class GameScene: SKScene {
             let noti = node as! MusicNotes
             noti.move(self.dt)
         })
-        drawLines()
     }
     
     func dies() {
         let shrinkAction = SKAction.scaleBy(0.25, duration: 1.0)
-        let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 1.0)
+        let rotateAction = SKAction.rotateByAngle(CGFloat(3*M_PI), duration: 1.0)
         let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*2) , duration: 1.0)
         let fallAction = SKAction.moveToY(30.0, duration: 1.0)
         let removeAction = SKAction.removeFromParent()
@@ -170,21 +167,48 @@ class GameScene: SKScene {
         deadCount++
         println("deadCount is \(deadCount)")
     }
+    
+    func addInstruction() {
+        
+        // generate text for instruction        
+        var instruction = SKLabelNode(fontNamed: "Verdana-Bold")
+        instruction.text = "C in a Space" // how to feed value from plist?
+        instruction.fontSize = 58
+        instruction.fontColor = UIColor.redColor()
+        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 200)
+        self.addChild(instruction)
+    }
 
     
-    func changeInstructionAndPositionAndClef() {
+ /*   func retrieveValuesFromLevel.plist() {
        
         let path = NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!
         let myDictionary = NSDictionary(contentsOfFile: path)
-        //println("myDictionary: \(myDictionary)")  // this works
-        //println(myDictionary!["Level1"])          // this works
-        //println(myDictionary!["Level2"])          // this works
-        //println(myDictionary?.valueForKeyPath("Level2.step1"))  // this works
-        //println(myDictionary?.valueForKeyPath("Level2.step1.destination"))  // this returns "Optional(L5)
-        println(myDictionary?.valueForKeyPath("Level2.step1.instruction"))  // this returns "Optional(A on a Line)
-        //println(myDictionary?.valueForKeyPath("Level2.clef"))  // this returns "Optional(bass)"
-    }
+        println("myDictionary: \(myDictionary)")  // this prints "Optional({ levels = ({ background = bg1 ..." the whole dictionary
 
+        var arrayOfLevels = myDictionary!.allKeys as! [String]
+        println("arrayOfLevels: \(arrayOfLevels)") // this prints "[levels]"
+        println("arrayOfLevels.count: \(arrayOfLevels.count)") // this prints "1"
+        println("arrayOfLevels[0]: \(arrayOfLevels[0])") // this prints "levels"
+    
+        let levels = myDictionary!["levels"] as! [[String:AnyObject]]
+        println("levels: \(levels)")  // this prints "[[clef: clefTreble, challenges: { ..." the whole array of levels and then everything
+        println("levels[3] : \(levels[3])")  // this prints [clef: clefBass, challenges: { ...
+        println(levels[3]["background"])  // this prints "Optional(bg4)"
+        println(levels[3]["clef"])  // this prints "Optional(clefBass)"
+        println(levels[3]["challenges"])  // this prints "Optional({ challenge01 = ..." 
+        println(levels[3]["challenges"]!["challenge04"]!!)  // this prints "("E in a Space", S3)"
+        println(levels[3]["challenges"]!["challenge04"]!![0])  // this prints "E in a Space"
+        println(levels[3]["challenges"]!["challenge04"]!![1])  // this prints "S3"
+
+        // return random values from dictionary through a random int
+        let randomIndex: Int = Int(arc4random_uniform(UInt32(myDictionary!.count)))
+        let value = Array(myDictionary.values)[randomIndex]
+        let key = Array(myDictionary.keys)[randomIndex]
+        let value = myDictionary[key]
+        return (key, value!)
+    }
+*/
     
     func addBackground() {
         let bg = SKSpriteNode(imageNamed: "background1")
@@ -216,6 +240,7 @@ class GameScene: SKScene {
         self.addChild(L3)
         S3.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 68*frame.width/1680)
         S3.setScale(frame.width/1680)
+        S3.anchorPoint = CGPointMake(0.5, 0.5)
         self.addChild(S3)
         L4.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         L4.setScale(frame.width/1680)
@@ -233,20 +258,14 @@ class GameScene: SKScene {
     }
     
     func addNoti() {
-        var noti = MusicNotes(imageNamed: "notiPinkU")  // replace SKSpriteNode with new subclass MusicNotes
-        
-        //var noti = MusicNotes(imageNamed: String())
+        //var noti = MusicNotes(imageNamed: "notiPinkU")
+        var noti = MusicNotes(imageNamed: String())
 
         noti.setScale(0.5)
         roamingNoti = noti
         noti.name = "noti"
-        println("noti is \(noti)")  // note this does give the color
-        noti.anchorPoint = CGPointMake(0.38, 0.25)
-
-        noti.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: noti.frame.size.width, height: noti.frame.size.height/4))
-        //println("noti.frame.size is \(noti.frame.size)")
-        noti.physicsBody?.dynamic = false
-        //noti.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        println("noti is \(noti)")  // note this does specify exactly which noti
+//        noti.anchorPoint = CGPointMake(0.38, 0.25)  //moved to MusicNotes        
         noti.zPosition = 3
         addChild(noti)
         followRoamingPath()
@@ -260,18 +279,14 @@ class GameScene: SKScene {
         roamingNoti!.runAction(SKAction.repeatActionForever(followPath))
     }
     
-    func addTrebleClef() {
+    func addClef() {
         clefTreble.anchorPoint = CGPointMake(0.5, 0.33)
-        //clefTreble.position = L2.position
         clefTreble.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
-        //println("L2.size.height is \(L2.size.height)" )
         clefTreble.setScale(L2.size.height / 118)
         self.addChild(clefTreble)
-    }
-    
-    func addBassClef() {
+        
         clefBass.anchorPoint = CGPointMake(0.5, 0.71)
-        clefBass.position = CGPoint(x: L4.position.x + frame.width/8, y: L4.position.y)
+        clefBass.position = CGPoint(x: L4.position.x + frame.width/3.6, y: L4.position.y)
         clefBass.setScale(L4.size.height / 56)
         self.addChild(clefBass)
     }
@@ -279,7 +294,6 @@ class GameScene: SKScene {
     func addTrashcanAndTrashcanLid() {
         trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/1.68)
         trashcan.setScale(frame.width/900)
-        //trashcan.zPosition = 2
         self.addChild(trashcan)
         trashcanLid.position = CGPoint(x: frame.width - frame.width*0.095 + trashcanLid.frame.width/8 , y: trashcan.frame.height - trashcan.frame.height/4)
         trashcanLid.setScale(frame.width/900)
@@ -288,7 +302,9 @@ class GameScene: SKScene {
     }
     
     func showScore() {
+        
         var scoreLabel = UILabel(frame: CGRectMake(frame.width/8 , frame.height/8, 300, 60))
+
         scoreLabel.center = CGPoint(x: frame.width/8 , y: frame.height/8)
         scoreLabel.textAlignment = NSTextAlignment.Center
         scoreLabel.text = "Score: \(score)"
@@ -299,7 +315,7 @@ class GameScene: SKScene {
         //scoreLabel.clearsContextBeforeDrawing = true
         //scoreLabel.setNeedsDisplay()
         self.view?.addSubview(scoreLabel)
-    }
+        }
     
     func showDeadCount() {
         var deadCountLabel = UILabel(frame: trashcan.frame)
@@ -317,7 +333,7 @@ class GameScene: SKScene {
     
     func flashGameOver() { // when deadCount = 3
         let gameoverLabel = SKLabelNode(fontNamed: "MarkerFelt-Wide")
-        gameoverLabel.fontSize = 88
+        gameoverLabel.fontSize = 138
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"
@@ -330,32 +346,11 @@ class GameScene: SKScene {
         gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
         
         if (deadCount == 3) {
-            addChild(gameoverLabel) // and also segue back to LevelViewController
+            addChild(gameoverLabel)
+            // how to stop new note appearing and segue back to LevelViewController
         } else {
             return
         }
     }
-    
-    func drawLines() {
-        enumerateChildNodesWithName("line", usingBlock: {node, stop in
-            node.removeFromParent()  // redraw path every frame
-        })
-        enumerateChildNodesWithName("noti", usingBlock: {node, stop in
-            // for each noti, try to get a new path
-            let noti = node as! MusicNotes
-            if let path = noti.createPathToMove() {
-                let shapeNode = SKShapeNode()  // assign the path to its path property
-                shapeNode.path = path
-                shapeNode.name = "line"
-                shapeNode.strokeColor = UIColor.yellowColor()
-                shapeNode.lineWidth = 1
-                shapeNode.glowWidth = 18
-                shapeNode.lineCap = kCGLineCapRound
-                shapeNode.zPosition = 2
-                shapeNode.alpha = 0.3
-                self.addChild(shapeNode)
-            }
-        })
-    }
-}
 
+}

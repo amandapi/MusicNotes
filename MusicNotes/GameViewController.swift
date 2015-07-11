@@ -14,7 +14,8 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let scene = GameScene(size: view.frame.size) as GameScene? {
+        
+    if let scene = GameScene(size: view.frame.size) as GameScene? {
             // Configure the view.
             let skView = self.view as! SKView
             skView.showsFPS = true
@@ -28,7 +29,6 @@ class GameViewController: UIViewController {
             
             skView.presentScene(scene)
         }
-
     }
     
     override func viewWillAppear(animated: Bool) {

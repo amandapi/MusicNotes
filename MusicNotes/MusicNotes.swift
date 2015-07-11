@@ -16,8 +16,6 @@ class MusicNotes: SKSpriteNode {
     var velocity = CGPoint(x: 0, y: 0)
     
     init(imageNamed name: String) {
-       // let texture = SKTexture(imageNamed: name)
-       // super.init(texture: texture, color: nil, size: texture.size())
         
         //create random noti's
         var textures = [SKTexture]()
@@ -28,8 +26,9 @@ class MusicNotes: SKSpriteNode {
         textures.append(SKTexture(imageNamed: "notiGrayU"))
         let rand = Int(arc4random_uniform(UInt32(textures.count)))
         let texture = textures[rand] as SKTexture
-        //noti.texture = texture
         super.init(texture: texture, color: nil, size: texture.size())
+        
+        anchorPoint = CGPointMake(0.38, 0.25) // where should I put this line?
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -63,28 +62,7 @@ class MusicNotes: SKSpriteNode {
             }
         }
     }
-    
-    func createPathToMove() -> CGPathRef? {
-        
-        if wayPoints.count <= 1 {  // enough point for path?
-            return nil
-        }
-        
-        var ref = CGPathCreateMutable()  // create mutable CGPathRef so to add points to it
-        
-        for var i = 0; i < wayPoints.count; ++i { //iterate all waypoints to build the path
-            let p = wayPoints[i]
-            
-            if i == 0 { // path is just starting
-                CGPathMoveToPoint(ref, nil, p.x, p.y)
-            } else {  // add a line to the point
-                CGPathAddLineToPoint(ref, nil, p.x, p.y)
-            }
-        }
-        
-        return ref  // return the path
-    }
-    
+
 }
 
 

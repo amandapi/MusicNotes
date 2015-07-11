@@ -109,12 +109,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="C in a Space" textAlignment="center" lineBreakMode="tailTruncation" minimumScaleFactor="1" translatesAutoresizingMaskIntoConstraints="NO" id="bZb-t0-OG1">
-                                <rect key="frame" x="16" y="144" width="568" height="46"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="38"/>
-                                <color key="textColor" red="0.56829886259999995" green="1" blue="0.079667775230000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5c0-aU-asc">
                                 <rect key="frame" x="404" y="90" width="87" height="30"/>
                                 <constraints>
@@ -136,7 +130,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Level" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="yta-Fb-YN7">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Level" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="yta-Fb-YN7">
                                 <rect key="frame" x="255" y="85" width="90" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="Ot4-J5-bET"/>
@@ -147,25 +141,18 @@
                             </label>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="bZb-t0-OG1" firstAttribute="top" secondItem="yta-Fb-YN7" secondAttribute="bottom" constant="20" id="3xB-d0-i7t"/>
                             <constraint firstAttribute="trailing" secondItem="5c0-aU-asc" secondAttribute="trailing" constant="109" id="3y8-c9-Ep1"/>
-                            <constraint firstItem="bZb-t0-OG1" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="7bO-2I-IyZ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="7gs-rk-Cv2" secondAttribute="trailing" id="GRT-Pq-BTp"/>
                             <constraint firstItem="Qco-uh-bzn" firstAttribute="baseline" secondItem="5c0-aU-asc" secondAttribute="baseline" id="QWE-HA-s6c"/>
                             <constraint firstItem="5c0-aU-asc" firstAttribute="baseline" secondItem="7gs-rk-Cv2" secondAttribute="baseline" id="ag0-W1-zoq"/>
-                            <constraint firstItem="bZb-t0-OG1" firstAttribute="top" secondItem="yta-Fb-YN7" secondAttribute="bottom" constant="9" id="ba5-Oo-j6X"/>
                             <constraint firstItem="7gs-rk-Cv2" firstAttribute="leading" secondItem="5c0-aU-asc" secondAttribute="trailing" constant="8" symbolic="YES" id="ecd-XV-KP9"/>
-                            <constraint firstItem="yta-Fb-YN7" firstAttribute="centerX" secondItem="bZb-t0-OG1" secondAttribute="centerX" id="hXv-p8-JMz"/>
-                            <constraint firstItem="bZb-t0-OG1" firstAttribute="top" secondItem="maK-i9-Uhn" secondAttribute="bottom" constant="80" id="iGJ-td-gnm"/>
                             <constraint firstItem="yta-Fb-YN7" firstAttribute="centerY" secondItem="5c0-aU-asc" secondAttribute="centerY" id="ldk-DU-8bI"/>
                             <constraint firstItem="5c0-aU-asc" firstAttribute="top" secondItem="maK-i9-Uhn" secondAttribute="bottom" constant="26" id="og0-fH-tdP"/>
                             <constraint firstItem="5c0-aU-asc" firstAttribute="leading" secondItem="Qco-uh-bzn" secondAttribute="trailing" constant="8" symbolic="YES" id="sao-vQ-qP3"/>
                             <constraint firstItem="yta-Fb-YN7" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leading" constant="20" symbolic="YES" id="y9g-B2-5Hx"/>
-                            <constraint firstItem="bZb-t0-OG1" firstAttribute="trailing" secondItem="3se-qz-xqx" secondAttribute="trailingMargin" id="zO8-lg-lCq"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="ba5-Oo-j6X"/>
                                 <exclude reference="y9g-B2-5Hx"/>
                             </mask>
                         </variation>
@@ -198,6 +185,6 @@
         <image name="background1.png" width="2048" height="1536"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="z5n-3W-wDH"/>
+        <segue reference="OF9-3M-kcp"/>
     </inferredMetricsTieBreakers>
 </document>
