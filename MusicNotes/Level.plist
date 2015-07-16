@@ -335,7 +335,7 @@
 			<key>background</key>
 			<string>bg8</string>
 			<key>clef</key>
-			<string>clafBass</string>
+			<string>clefBass</string>
 			<key>challenges</key>
 			<dict>
 				<key>challenge01</key>

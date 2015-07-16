@@ -68,7 +68,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
+
         roamingNoti!.removeAllActions()
         roamingNoti?.name = "noti"
         
@@ -99,6 +99,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if let noti = movingNoti {
         noti.addMovingPoint(location)
         }
+        
+    }
+    
+    func destinationRect(destination: CGRect) -> CGRect {
+        
+        return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/3, destination.size.width, destination.size.height/3)
+        
     }
 
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -111,18 +118,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // check collision
  
-        if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
-        
-            //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(84, -10, 20, -10))) {
-        //if CGRectIntersectsRect(S3.frame, UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0))) {
-            //println("S3.frame is \(S3.frame)")
-            //println("S3.position.y is \(S3.position.y)")
-            //println("roamingNoti.frame is \(roamingNoti!.frame)")
-            //println("tighter roamingNoti.frame is \(UIEdgeInsetsInsetRect(self.roamingNoti!.frame, UIEdgeInsetsMake(self.roamingNoti!.frame.height*5/8, 0, self.roamingNoti!.frame.height/8, 0)))")
-            //println("roamingNoti.position is \(roamingNoti!.position)")
-            //roamingNoti!.position.y = S3.position.y - (S3.frame.size.height/2)
+        if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
             
-            roamingNoti!.position.y = S3.position.y    // this does not work
+            println("roamingNoti.frame is \(roamingNoti!.frame)")
+            println("scoringRect is \(roamingNoti!.scoringRect())")
+            println("S3.frame is \(S3.frame)")
+            println("destinationRect is \(destinationRect(S3.frame))")
+
+            roamingNoti!.position.y = S3.position.y    // this does not work if addNoti() is effective
             
             // clef rotates
             clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
@@ -175,7 +178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         instruction.text = "C in a Space" // how to feed value from plist?
         instruction.fontSize = 58
         instruction.fontColor = UIColor.redColor()
-        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 200)
+        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 230)
         self.addChild(instruction)
     }
 
@@ -212,6 +215,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addBackground() {
         let bg = SKSpriteNode(imageNamed: "background1")
+        // bg raw size is 2048x1536
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
@@ -238,9 +242,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         L3.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 2*68*frame.width/1680)
         L3.setScale(frame.width/1680)
         self.addChild(L3)
-        S3.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 68*frame.width/1680)
-        S3.setScale(frame.width/1680)
-        S3.anchorPoint = CGPointMake(0.5, 0.5)
+        S3.position = CGPoint(x: frame.size.width/2 , y: frame.size.height/2 - 68*frame.size.width/1680)
+        S3.setScale(frame.size.width/1680)
+        //S3.anchorPoint = CGPointMake(0.5, 0.5)
         self.addChild(S3)
         L4.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         L4.setScale(frame.width/1680)
@@ -256,7 +260,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(S5)
         //println("S5 y.Scale is \(S5.yScale)")
     }
-    
+
     func addNoti() {
         //var noti = MusicNotes(imageNamed: "notiPinkU")
         var noti = MusicNotes(imageNamed: String())
@@ -264,19 +268,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         noti.setScale(0.5)
         roamingNoti = noti
         noti.name = "noti"
-        println("noti is \(noti)")  // note this does specify exactly which noti
-//        noti.anchorPoint = CGPointMake(0.38, 0.25)  //moved to MusicNotes        
+        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
+        noti.anchorPoint = CGPointMake(0.38, 0.25)  // should this line be here or in MusicNotes?
         noti.zPosition = 3
+        noti.position = CGPoint(x: frame.width/2, y: frame.height*3/4)
         addChild(noti)
         followRoamingPath()
     }
     
     func followRoamingPath() {
+
+        var path = CGPathCreateMutable()
+        //CGPathMoveToPoint(path, nil, 0, 0)
+        CGPathAddArc(path!, nil, 560, 360, 280, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
+        roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
+
+/*
         let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
         let pathDiameter = CGFloat(frame.height/2)
         let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 1.2)), nil)
         let followPath = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followPath))
+*/
     }
     
     func addClef() {
