@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A03FA8F1B5AF6FF00DA5EED /* hint.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A03FA8E1B5AF6FF00DA5EED /* hint.png */; };
 		0A2B3C211B279DAD005269BE /* Level.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A2B3C201B279DAD005269BE /* Level.plist */; };
 		0A488C591B215658006CDA4B /* MainMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A488C581B215658006CDA4B /* MainMenu.png */; };
 		0A488C5B1B215683006CDA4B /* background1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A488C5A1B215683006CDA4B /* background1.png */; };
+		0A5F78821B5AD18800FF922B /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A5F78811B5AD18800FF922B /* facebook.png */; };
+		0A5F78841B5AD18D00FF922B /* gamecenter.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A5F78831B5AD18D00FF922B /* gamecenter.png */; };
 		0A74175E1B261CAF00D17C83 /* LevelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A74175D1B261CAF00D17C83 /* LevelViewController.swift */; };
 		0A8EBD201B1BD2FA0075B37D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EBD1F1B1BD2FA0075B37D /* AppDelegate.swift */; };
 		0A8EBD221B1BD2FA0075B37D /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EBD211B1BD2FA0075B37D /* GameScene.sks */; };
@@ -22,6 +25,7 @@
 		0A8EBD461B1BD3E30075B37D /* MusicNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8EBD451B1BD3E30075B37D /* MusicNotes.swift */; };
 		0A8EBD481B1BD4040075B37D /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EBD471B1BD4040075B37D /* sprites.atlas */; };
 		0A8EBD4A1B1BD7850075B37D /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EBD491B1BD7850075B37D /* GameKit.framework */; };
+		0AA5EF7C1B5B073E0099DE8A /* background1menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AA5EF7B1B5B073E0099DE8A /* background1menu.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,9 +39,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A03FA8E1B5AF6FF00DA5EED /* hint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hint.png; sourceTree = "<group>"; };
 		0A2B3C201B279DAD005269BE /* Level.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Level.plist; sourceTree = "<group>"; };
 		0A488C581B215658006CDA4B /* MainMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MainMenu.png; sourceTree = "<group>"; };
 		0A488C5A1B215683006CDA4B /* background1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background1.png; sourceTree = "<group>"; };
+		0A5F78811B5AD18800FF922B /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
+		0A5F78831B5AD18D00FF922B /* gamecenter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gamecenter.png; sourceTree = "<group>"; };
 		0A74175D1B261CAF00D17C83 /* LevelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelViewController.swift; sourceTree = "<group>"; };
 		0A8EBD1A1B1BD2FA0075B37D /* MusicNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A8EBD1E1B1BD2FA0075B37D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -54,6 +61,7 @@
 		0A8EBD451B1BD3E30075B37D /* MusicNotes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicNotes.swift; sourceTree = "<group>"; };
 		0A8EBD471B1BD4040075B37D /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
 		0A8EBD491B1BD7850075B37D /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		0AA5EF7B1B5B073E0099DE8A /* background1menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background1menu.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +87,10 @@
 			isa = PBXGroup;
 			children = (
 				0A488C581B215658006CDA4B /* MainMenu.png */,
+				0A03FA8E1B5AF6FF00DA5EED /* hint.png */,
+				0A5F78811B5AD18800FF922B /* facebook.png */,
+				0AA5EF7B1B5B073E0099DE8A /* background1menu.png */,
+				0A5F78831B5AD18D00FF922B /* gamecenter.png */,
 				0A488C5A1B215683006CDA4B /* background1.png */,
 			);
 			path = Images;
@@ -236,9 +248,13 @@
 			files = (
 				0A8EBD481B1BD4040075B37D /* sprites.atlas in Resources */,
 				0A488C591B215658006CDA4B /* MainMenu.png in Resources */,
+				0A03FA8F1B5AF6FF00DA5EED /* hint.png in Resources */,
 				0A8EBD2E1B1BD2FA0075B37D /* LaunchScreen.xib in Resources */,
+				0AA5EF7C1B5B073E0099DE8A /* background1menu.png in Resources */,
 				0A8EBD2B1B1BD2FA0075B37D /* Images.xcassets in Resources */,
+				0A5F78821B5AD18800FF922B /* facebook.png in Resources */,
 				0A8EBD221B1BD2FA0075B37D /* GameScene.sks in Resources */,
+				0A5F78841B5AD18D00FF922B /* gamecenter.png in Resources */,
 				0A2B3C211B279DAD005269BE /* Level.plist in Resources */,
 				0A488C5B1B215683006CDA4B /* background1.png in Resources */,
 				0A8EBD441B1BD3B40075B37D /* Main.storyboard in Resources */,

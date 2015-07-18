@@ -12,9 +12,9 @@ import Foundation
 
 class LevelViewController: UIViewController {
     
-    var selectedLevel: Int = 1 // for all 8 buttons    
+    var selectedLevel: Int = 1 // for all 9 buttons
 
-    @IBAction func levelOne(sender: AnyObject) { // so all 8 buttons can segue to gameViewController
+    @IBAction func levelOne(sender: AnyObject) { // so all 9 buttons can segue to gameViewController
         self.performSegueWithIdentifier("levelToGame", sender: self)
         self.selectedLevel = sender.tag
     }
