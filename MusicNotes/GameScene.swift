@@ -7,8 +7,10 @@
 //
 
 import SpriteKit
+import UIKit  // neccessary?
+import Foundation   // neccessary?
 
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene {
     
     var noti = MusicNotes(imageNamed: String())
     var roamingNoti: MusicNotes?
@@ -21,11 +23,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var score : Int = 0
     var deadCount : Int = 0
     
+    var startMsg = SKLabelNode()
     var instruction = SKLabelNode()  // retrieve from plist
     var destination = SKSpriteNode()  // retrieve from plist
     var clef = SKSpriteNode()  // retrieve from plist
     var background = SKSpriteNode()  // retrieve from plist
     var gameLevel = Int()  // retrieve from plist
+    var gameState = GameState.StartingLevel
     
     // these are the "destinations" defined by "staffLines"
     let S0 = SKSpriteNode(imageNamed: "S0")
@@ -64,30 +68,47 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addNoti()
         addClef()
         addTrashcanAndTrashcanLid()
-        addInstruction()
+        addStartMsg()
+        
+        if gameState == .StartingLevel {
+            paused = true
+        }
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-
-        roamingNoti!.removeAllActions()
-        roamingNoti?.name = "noti"
         
-        if CGRectIntersectsRect(S3.frame, self.roamingNoti!.frame) {
-            draggingNoti = false
-            return
-        }
+        switch gameState {
+            
+            case .StartingLevel:
+                childNodeWithName("msgLabel")!.hidden = true
+                followRoamingPath()
+                addInstruction()
+                paused = false
+                gameState = .Playing
         
-        let touch = touches.first as? UITouch
-        let location = touch!.locationInNode(self)
-        let node = nodeAtPoint(location)
-        if node.name == "noti" {
-            draggingNoti = true
-            let noti = node as! MusicNotes
-            noti.addMovingPoint(location)
-            movingNoti = noti
+            //fallthrough
+            
+            case .Playing:
+                roamingNoti!.removeAllActions()
+                roamingNoti?.name = "noti"
+                
+                if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
+                    draggingNoti = false
+                    return
+                }
+                
+                let touch = touches.first as? UITouch
+                let location = touch!.locationInNode(self)
+                let node = nodeAtPoint(location)
+                if node.name == "noti" {
+                    draggingNoti = true
+                    let noti = node as! MusicNotes
+                    noti.addMovingPoint(location)
+                    movingNoti = noti
+            }
         }
     }
-    
+
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         
         if (draggingNoti == false ) {
@@ -99,13 +120,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if let noti = movingNoti {
         noti.addMovingPoint(location)
         }
-        
     }
     
     func destinationRect(destination: CGRect) -> CGRect {
-        
         return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/3, destination.size.width, destination.size.height/3)
-        
     }
 
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -126,22 +144,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             println("destinationRect is \(destinationRect(S3.frame))")
 
             roamingNoti!.position.y = S3.position.y    // this does not work if addNoti() is effective
-            
-            // clef rotates
-            clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
-            clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
-           
-            // count score
+
+            celebrate()
             score++
             showScore()
             println("score is \(score)")
             addNoti()
+            followRoamingPath()
             
         } else {
-            dies()
+            die()
             showDeadCount()
             flashGameOver()
             addNoti()
+            followRoamingPath()
         }
     }
 
@@ -154,7 +170,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
     }
     
-    func dies() {
+    func celebrate() {
+        clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
+        clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
+        
+        let texture = SKTexture(imageNamed: "starOrange")
+        let firework = SKEmitterNode()
+        firework.particleTexture = texture
+        //firework.particleColor = SKColor.redColor()
+        //firework.position = CGPointMake(300, 300)
+        firework.position = roamingNoti!.position
+        firework.particlePositionRange = CGVectorMake(150, 150)
+        firework.particleBirthRate = 20
+        firework.numParticlesToEmit = 600
+        firework.particleLifetime = 0.1
+        firework.particleSpeed = 10.0
+        firework.xAcceleration = 0
+        firework.yAcceleration = 0
+        firework.particleScale = 0.8
+        firework.particleScaleRange = 0.5
+        firework.particleScaleSpeed = 0.5
+        self.addChild(firework)
+    }
+    
+    func die() {
         let shrinkAction = SKAction.scaleBy(0.25, duration: 1.0)
         let rotateAction = SKAction.rotateByAngle(CGFloat(3*M_PI), duration: 1.0)
         let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*2) , duration: 1.0)
@@ -171,15 +210,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         println("deadCount is \(deadCount)")
     }
     
+    func addStartMsg() {
+        let startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
+        startMsg.name = "msgLabel"
+        startMsg.text = "Start!"
+        startMsg.fontColor = SKColor.greenColor()
+        startMsg.fontSize = 88
+        startMsg.position = CGPoint(x: 0 , y: 20)
+        startMsg.position = CGPointMake(CGRectGetMidX(self.frame) - 100, CGRectGetMidY(self.frame) + 200)
+        //startMsg.zPosition = 100
+        addChild(startMsg)
+    }
+    
     func addInstruction() {
-        
-        // generate text for instruction        
         var instruction = SKLabelNode(fontNamed: "Verdana-Bold")
         instruction.text = "C in a Space" // how to feed value from plist?
-        instruction.fontSize = 58
-        instruction.fontColor = UIColor.redColor()
-        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 230)
+        instruction.fontSize = 63
+        instruction.fontColor = UIColor.blackColor()
+        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 180)
         self.addChild(instruction)
+        
+        let fadeinAction = SKAction.fadeInWithDuration(0.5)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
+        instruction.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))    
     }
 
     
@@ -214,7 +267,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 */
     
     func addBackground() {
-        let bg = SKSpriteNode(imageNamed: "background1")
+        let bg = SKSpriteNode(imageNamed: "background7")
         // bg raw size is 2048x1536
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
@@ -271,18 +324,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         println("noti is \(noti)")  // note this does specify exactly which noti is roaming
         noti.anchorPoint = CGPointMake(0.38, 0.25)  // should this line be here or in MusicNotes?
         noti.zPosition = 3
-        noti.position = CGPoint(x: frame.width/2, y: frame.height*3/4)
+        noti.position = CGPoint(x: frame.width*3/5, y: frame.height*4/5)
         addChild(noti)
-        followRoamingPath()
+        //followRoamingPath()
     }
     
     func followRoamingPath() {
 
         var path = CGPathCreateMutable()
-        //CGPathMoveToPoint(path, nil, 0, 0)
+        //CGPathMoveToPoint(path, nil, 560, 360)  // (path, nil, x, y)
         CGPathAddArc(path!, nil, 560, 360, 280, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        // (path, nil, x, y, r, start ø , end ø, clockwise?)
         var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
+        //noti.runAction(SKAction.repeatActionForever(followArc))
 
 /*
         let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
@@ -290,7 +345,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 1.2)), nil)
         let followPath = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followPath))
+        println("didCallFollowRoamingPath")
 */
+        
     }
     
     func addClef() {
@@ -318,14 +375,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func showScore() {
         
         var scoreLabel = UILabel(frame: CGRectMake(frame.width/8 , frame.height/8, 300, 60))
-
-        scoreLabel.center = CGPoint(x: frame.width/8 , y: frame.height/8)
+        scoreLabel.center = CGPoint(x: frame.width/6 , y: frame.height/9)
         scoreLabel.textAlignment = NSTextAlignment.Center
         scoreLabel.text = "Score: \(score)"
-        scoreLabel.font = UIFont(name: "Verdana-Bold", size: 58.0) // Courier-Bold
+        scoreLabel.font = UIFont(name: "Verdana-Bold", size: 36.0) // Courier-Bold
         scoreLabel.textColor = UIColor.redColor()
-        scoreLabel.shadowColor = UIColor.blackColor()
-        scoreLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
+        //scoreLabel.shadowColor = UIColor.blackColor()
+        //scoreLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
         //scoreLabel.clearsContextBeforeDrawing = true
         //scoreLabel.setNeedsDisplay()
         self.view?.addSubview(scoreLabel)
@@ -338,8 +394,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         deadCountLabel.text = "\(deadCount)"
         deadCountLabel.font = UIFont(name: "Verdana-Bold", size: 58.0) // Courier-Bold
         deadCountLabel.textColor = UIColor.redColor()
-        deadCountLabel.shadowColor = UIColor.blackColor()
-        deadCountLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
+        //deadCountLabel.shadowColor = UIColor.blackColor()
+        //deadCountLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
         //deadCountLabel.clearsContextBeforeDrawing = true
         //deadCountLabel.setNeedsDisplay()
         self.view?.addSubview(deadCountLabel)

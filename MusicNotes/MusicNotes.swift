@@ -11,7 +11,7 @@ import SpriteKit
 
 class MusicNotes: SKSpriteNode {
     
-    let POINTS_PER_SEC: CGFloat = 200.0
+    let pointsPerSec: CGFloat = 200.0
     var wayPoints: [CGPoint] = []
     var velocity = CGPoint(x: 0, y: 0)
     
@@ -52,7 +52,7 @@ class MusicNotes: SKSpriteNode {
             let offset = CGPoint(x: targetPoint.x - currentPosition.x, y: targetPoint.y - currentPosition.y)
             let length = Double(sqrtf(Float(offset.x * offset.x) + Float(offset.y * offset.y)))
             let direction = CGPoint(x:CGFloat(offset.x) / CGFloat(length), y: CGFloat(offset.y) / CGFloat(length))
-            velocity = CGPoint(x: direction.x * POINTS_PER_SEC, y: direction.y * POINTS_PER_SEC)
+            velocity = CGPoint(x: direction.x * pointsPerSec, y: direction.y * pointsPerSec)
             
             // calculate noti's's new position
             newPosition = CGPoint(x:currentPosition.x + velocity.x * CGFloat(dt), y:currentPosition.y + velocity.y * CGFloat(dt))
