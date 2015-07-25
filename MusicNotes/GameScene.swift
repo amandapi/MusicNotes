@@ -51,9 +51,6 @@ class GameScene: SKScene {
     let trashcan = SKSpriteNode(imageNamed: "trashcan")
     let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
     
-    // here is the path to Level.plist
-    let path = NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!
-    
     required init(coder aDecoder: NSCoder) {
         fatalError("NSCoding not supported")
     }
@@ -71,7 +68,7 @@ class GameScene: SKScene {
         addStartMsg()
         
         if gameState == .StartingLevel {
-            paused = true
+            paused = true  // would false serves a better purpose?
         }
     }
     
@@ -94,7 +91,7 @@ class GameScene: SKScene {
                 
                 if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
                     draggingNoti = false
-                    return
+                    return         // what does this block do?
                 }
                 
                 let touch = touches.first as? UITouch
@@ -138,10 +135,10 @@ class GameScene: SKScene {
  
         if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
             
-            println("roamingNoti.frame is \(roamingNoti!.frame)")
-            println("scoringRect is \(roamingNoti!.scoringRect())")
-            println("S3.frame is \(S3.frame)")
-            println("destinationRect is \(destinationRect(S3.frame))")
+            //println("roamingNoti.frame is \(roamingNoti!.frame)")
+            //println("scoringRect is \(roamingNoti!.scoringRect())")
+            //println("S3.frame is \(S3.frame)")
+            //println("destinationRect is \(destinationRect(S3.frame))")
 
             roamingNoti!.position.y = S3.position.y    // this does not work if addNoti() is effective
 
@@ -170,46 +167,6 @@ class GameScene: SKScene {
         })
     }
     
-    func celebrate() {
-        clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
-        clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.0))
-        
-        let texture = SKTexture(imageNamed: "starOrange")
-        let firework = SKEmitterNode()
-        firework.particleTexture = texture
-        //firework.particleColor = SKColor.redColor()
-        //firework.position = CGPointMake(300, 300)
-        firework.position = roamingNoti!.position
-        firework.particlePositionRange = CGVectorMake(150, 150)
-        firework.particleBirthRate = 20
-        firework.numParticlesToEmit = 600
-        firework.particleLifetime = 0.1
-        firework.particleSpeed = 10.0
-        firework.xAcceleration = 0
-        firework.yAcceleration = 0
-        firework.particleScale = 0.8
-        firework.particleScaleRange = 0.5
-        firework.particleScaleSpeed = 0.5
-        self.addChild(firework)
-    }
-    
-    func die() {
-        let shrinkAction = SKAction.scaleBy(0.25, duration: 1.0)
-        let rotateAction = SKAction.rotateByAngle(CGFloat(3*M_PI), duration: 1.0)
-        let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*2) , duration: 1.0)
-        let fallAction = SKAction.moveToY(30.0, duration: 1.0)
-        let removeAction = SKAction.removeFromParent()
-        roamingNoti!.runAction(SKAction.sequence([shrinkAction, rotateAction, recycleAction, fallAction, removeAction]))
-        
-        let openAction = SKAction.rotateByAngle(CGFloat(-M_PI / 2), duration: 1.0)
-        let waitAction1 = SKAction.waitForDuration(3.0)
-        let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
-        trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
-        // count how many is dead
-        deadCount++
-        println("deadCount is \(deadCount)")
-    }
-    
     func addStartMsg() {
         let startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
         startMsg.name = "msgLabel"
@@ -234,40 +191,9 @@ class GameScene: SKScene {
         let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
         instruction.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))    
     }
-
-    
- /*   func retrieveValuesFromLevel.plist() {
-       
-        let path = NSBundle.mainBundle().pathForResource("Level", ofType: "plist")!
-        let myDictionary = NSDictionary(contentsOfFile: path)
-        println("myDictionary: \(myDictionary)")  // this prints "Optional({ levels = ({ background = bg1 ..." the whole dictionary
-
-        var arrayOfLevels = myDictionary!.allKeys as! [String]
-        println("arrayOfLevels: \(arrayOfLevels)") // this prints "[levels]"
-        println("arrayOfLevels.count: \(arrayOfLevels.count)") // this prints "1"
-        println("arrayOfLevels[0]: \(arrayOfLevels[0])") // this prints "levels"
-    
-        let levels = myDictionary!["levels"] as! [[String:AnyObject]]
-        println("levels: \(levels)")  // this prints "[[clef: clefTreble, challenges: { ..." the whole array of levels and then everything
-        println("levels[3] : \(levels[3])")  // this prints [clef: clefBass, challenges: { ...
-        println(levels[3]["background"])  // this prints "Optional(bg4)"
-        println(levels[3]["clef"])  // this prints "Optional(clefBass)"
-        println(levels[3]["challenges"])  // this prints "Optional({ challenge01 = ..." 
-        println(levels[3]["challenges"]!["challenge04"]!!)  // this prints "("E in a Space", S3)"
-        println(levels[3]["challenges"]!["challenge04"]!![0])  // this prints "E in a Space"
-        println(levels[3]["challenges"]!["challenge04"]!![1])  // this prints "S3"
-
-        // return random values from dictionary through a random int
-        let randomIndex: Int = Int(arc4random_uniform(UInt32(myDictionary!.count)))
-        let value = Array(myDictionary.values)[randomIndex]
-        let key = Array(myDictionary.keys)[randomIndex]
-        let value = myDictionary[key]
-        return (key, value!)
-    }
-*/
     
     func addBackground() {
-        let bg = SKSpriteNode(imageNamed: "background7")
+        let bg = SKSpriteNode(imageNamed: "bg8")
         // bg raw size is 2048x1536
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
@@ -276,7 +202,6 @@ class GameScene: SKScene {
     }
     
     func addStaffLines() {
-
         S0.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 7*68*frame.width/1680)
         S0.setScale(frame.width/1680)
         self.addChild(S0)
@@ -317,7 +242,6 @@ class GameScene: SKScene {
     func addNoti() {
         //var noti = MusicNotes(imageNamed: "notiPinkU")
         var noti = MusicNotes(imageNamed: String())
-
         noti.setScale(0.5)
         roamingNoti = noti
         noti.name = "noti"
@@ -330,15 +254,13 @@ class GameScene: SKScene {
     }
     
     func followRoamingPath() {
-
         var path = CGPathCreateMutable()
         //CGPathMoveToPoint(path, nil, 560, 360)  // (path, nil, x, y)
         CGPathAddArc(path!, nil, 560, 360, 280, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
-        // (path, nil, x, y, r, start ø , end ø, clockwise?)
+        // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
         var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
         //noti.runAction(SKAction.repeatActionForever(followArc))
-
 /*
         let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
         let pathDiameter = CGFloat(frame.height/2)
@@ -347,10 +269,10 @@ class GameScene: SKScene {
         roamingNoti!.runAction(SKAction.repeatActionForever(followPath))
         println("didCallFollowRoamingPath")
 */
-        
     }
     
     func addClef() {
+        
         clefTreble.anchorPoint = CGPointMake(0.5, 0.33)
         clefTreble.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
         clefTreble.setScale(L2.size.height / 118)
@@ -373,19 +295,19 @@ class GameScene: SKScene {
     }
     
     func showScore() {
+        var scoreLabel = UILabel(frame: CGRectMake(frame.width/6 , frame.height/10, 300, 60))
         
-        var scoreLabel = UILabel(frame: CGRectMake(frame.width/8 , frame.height/8, 300, 60))
-        scoreLabel.center = CGPoint(x: frame.width/6 , y: frame.height/9)
+        scoreLabel.center = CGPoint(x: frame.width/6 , y: frame.height/10)
         scoreLabel.textAlignment = NSTextAlignment.Center
         scoreLabel.text = "Score: \(score)"
-        scoreLabel.font = UIFont(name: "Verdana-Bold", size: 36.0) // Courier-Bold
+        scoreLabel.font = UIFont(name: "Verdana-Bold", size: 24.0) // Courier-Bold
         scoreLabel.textColor = UIColor.redColor()
         //scoreLabel.shadowColor = UIColor.blackColor()
         //scoreLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
         //scoreLabel.clearsContextBeforeDrawing = true
         //scoreLabel.setNeedsDisplay()
         self.view?.addSubview(scoreLabel)
-        }
+    }
     
     func showDeadCount() {
         var deadCountLabel = UILabel(frame: trashcan.frame)
@@ -421,6 +343,78 @@ class GameScene: SKScene {
         } else {
             return
         }
+    }
+    
+    func celebrate() {
+        clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
+        clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
+        
+        var soundC5 = SKAction.playSoundFileNamed("soundC5.wav", waitForCompletion: false)
+        self.runAction(soundC5)
+        
+        let texture1 = SKTexture(imageNamed: "particleRedHeart")
+        let twinkle1 = SKEmitterNode()
+        twinkle1.particleTexture = texture1
+        twinkle1.position = roamingNoti!.position
+        twinkle1.particlePositionRange = CGVectorMake(180, 180)
+        twinkle1.particleBirthRate = 33
+        twinkle1.numParticlesToEmit = 68
+        twinkle1.particleLifetime = 0.1
+        twinkle1.particleSpeed = 10.0
+        twinkle1.particleRotation = 0.0
+        twinkle1.particleRotationRange = 3.0
+        twinkle1.particleScale = 0.5
+        twinkle1.particleScaleRange = 0.6
+        twinkle1.particleScaleSpeed = 0.5
+        self.addChild(twinkle1)
+        
+        let texture2 = SKTexture(imageNamed: "particleGoldStar")
+        let twinkle2 = SKEmitterNode()
+        twinkle2.particleTexture = texture2
+        twinkle2.position = roamingNoti!.position
+        twinkle2.particlePositionRange = CGVectorMake(180, 180)
+        twinkle2.particleBirthRate = 33
+        twinkle2.numParticlesToEmit = 68
+        twinkle2.particleLifetime = 0.1
+        twinkle2.particleSpeed = 10.0
+        twinkle2.particleRotation = 3.0
+        twinkle2.particleRotationRange = 3.0
+        twinkle2.particleScale = 0.6
+        twinkle2.particleScaleRange = 0.6
+        twinkle2.particleScaleSpeed = 0.5
+        self.addChild(twinkle2)
+        
+        let texture3 = SKTexture(imageNamed: "particlePurpleFlower")
+        let twinkle3 = SKEmitterNode()
+        twinkle3.particleTexture = texture3
+        twinkle3.position = roamingNoti!.position
+        twinkle3.particlePositionRange = CGVectorMake(180, 180)
+        twinkle3.particleBirthRate = 33
+        twinkle3.numParticlesToEmit = 68
+        twinkle3.particleLifetime = 0.1
+        twinkle3.particleSpeed = 10.0
+        twinkle3.particleRotation = 3.0
+        twinkle3.particleRotationRange = 3.0
+        twinkle3.particleScale = 0.4
+        twinkle3.particleScaleRange = 0.6
+        twinkle3.particleScaleSpeed = 0.5
+        self.addChild(twinkle3)
+    }
+    
+    func die() {
+        let shrinkAction = SKAction.scaleBy(0.25, duration: 1.0)
+        let rotateAction = SKAction.rotateByAngle(CGFloat(3*M_PI), duration: 1.0)
+        let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*2) , duration: 1.0)
+        let fallAction = SKAction.moveToY(30.0, duration: 1.0)
+        let removeAction = SKAction.removeFromParent()
+        roamingNoti!.runAction(SKAction.sequence([shrinkAction, rotateAction, recycleAction, fallAction, removeAction]))
+        
+        let openAction = SKAction.rotateByAngle(CGFloat(-M_PI / 2), duration: 1.0)
+        let waitAction1 = SKAction.waitForDuration(3.0)
+        let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
+        trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
+        deadCount++
+        println("deadCount is \(deadCount)")
     }
 
 }

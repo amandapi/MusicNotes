@@ -14,7 +14,6 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
     if let scene = GameScene(size: view.frame.size) as GameScene? {
             // Configure the view.
             let skView = self.view as! SKView
