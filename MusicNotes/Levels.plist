@@ -550,9 +550,9 @@
 		</dict>
 		<dict>
 			<key>background</key>
-			<string></string>
+			<string>bg9</string>
 			<key>clef</key>
-			<string></string>
+			<string>clefBass</string>
 			<key>timeLimit</key>
 			<string></string>
 			<key>challenges</key>

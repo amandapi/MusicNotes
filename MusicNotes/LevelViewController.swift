@@ -11,51 +11,14 @@ import SpriteKit
 import Foundation
 
 class LevelViewController: UIViewController {
-    
-    // create func to (1) load plist, (2) create level objects from plist (3) create button on screen for each level object from plist
 
-    var currentLevel: Int = 0 // this is level number 1...9
+    var currentLevel : Level?
+    var levels: NSMutableArray?
     
-    // could not put together a valid init method
+    // could not put together a valid init method - does a viewController needs an init?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//    (1) load plist
-        
-        let myPlist = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Levels", ofType: "plist")!)!
-        
-        let levels = myPlist["levels"] as![[String:AnyObject]] 
-/*
-        println("levels.count is \(levels.count)") //this prints "levels.count is 9"
-        println("levels[3]\(levels[3])") //this prints complete level 4
-        println((levels[3]["clef"]!)) //this prints "clefBass"
-        println((levels[3]["background"]!)) //this prints "bg4"
-        println(levels[3]["challenges"]!) //this prints all 6 challenges in level04
-        println(levels[3]["challenges"]!["challenge04"]!!) //this prints ""E in a Space", S3, soundE3"
-        println(levels[3]["challenges"]!["challenge04"]!![0]) //this prints "E in a Space"
-        println(levels[3]["challenges"]!["challenge04"]!![1]) //this prints "S3"
-        println(levels[3]["challenges"]!["challenge04"]!![2]) //this prints "soundE3"
-        println("levels \(levels)") //this prints complete plist
-*/
-//      (2) create levelObjects from plist
-        
-        for i in 1...levels.count {
-            currentLevel = i
-            //println("currentLevel is \(currentLevel)") //this prints 1 2 3 4 5 6 7 8 9
-            
-            var levelData = levels[currentLevel - 1] // this levelObject carries data in levels 1...9
-            
-            if (i == 2) {
-                //println("levelObject is \(levelObject)") //this prints complete level2 data
-                //println(levelData["clef"]!) //this prints "clefBass"
-                //println(levelData["challenges"]!) //this prints all challenges in level 2
-                //println(levelData["background"]!) //this prints "bg2"
-                //println("currentLevel is \(currentLevel)") //this prints "2"
-            }
-        }
-
-//       (3) create button on screen for each level object from plist
         
         var levelButton = UIButton.buttonWithType(.System) as! UIButton
         
@@ -66,21 +29,30 @@ class LevelViewController: UIViewController {
         var y5 = self.view.frame.height/2.0 - buttonHeight/2.0
         var dx: CGFloat = gap + buttonWidth
         var dy: CGFloat = gap + buttonHeight
-        var i: Int = currentLevel
+        //var i: Int = currentLevel
         
-        for i in 1...9 {
-            
+        let levels = getLevels()
+        
+        for i in 1...levels.count {
+  
             if i <= 3 {
             
             var levelButton = UIButton.buttonWithType(.System) as! UIButton
-            currentLevel = i
-            levelButton.frame = CGRectMake(x5 + CGFloat(currentLevel)*dx - dx - dx , y5-dy, buttonWidth, buttonHeight)
-            levelButton.setTitle("LEVEL \(currentLevel)", forState: UIControlState.Normal)
+            levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5-dy, buttonWidth, buttonHeight)
+            levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
+            levelButton.tag = i
             levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
             levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
-            levelButton.titleLabel!.textColor = UIColor.blackColor()
+            
+            //levelButton.titleLabel!.textColor = UIColor.blackColor()
+            levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            //levelButton.titleLabel!.shadowColor = UIColor.blackColor()
+            levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
+            levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
+            //find ot about shadowOpacity and shadowRadius on layer
+
             levelButton.titleLabel!.textAlignment = .Center
-            levelButton.setBackgroundImage(UIImage(named: "bg\(currentLevel).png"), forState: UIControlState.Normal)
+            levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
             levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) // from plist
 
             self.view.addSubview(levelButton)
@@ -88,14 +60,16 @@ class LevelViewController: UIViewController {
             } else if i < 7 {
                 
                 var levelButton = UIButton.buttonWithType(.System) as! UIButton
-                currentLevel = i
-                levelButton.frame = CGRectMake(x5 + CGFloat(currentLevel - 3)*dx - dx - dx , y5, buttonWidth, buttonHeight)
-                levelButton.setTitle("LEVEL \(currentLevel)", forState: UIControlState.Normal)
+                levelButton.frame = CGRectMake(x5 + CGFloat(i - 3)*dx - dx - dx , y5, buttonWidth, buttonHeight)
+                levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
+                levelButton.tag = i
                 levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
                 levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
-                levelButton.titleLabel!.textColor = UIColor.blackColor()
+                levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                levelButton.setTitleShadowColor(UIColor.grayColor(), forState: UIControlState.Normal)
+                levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
                 levelButton.titleLabel!.textAlignment = .Center
-                levelButton.setBackgroundImage(UIImage(named: "bg\(currentLevel).png"), forState: UIControlState.Normal)
+                levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
                 levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) // from plist
                 
                 self.view.addSubview(levelButton)
@@ -103,38 +77,81 @@ class LevelViewController: UIViewController {
             } else {
                 
                 var levelButton = UIButton.buttonWithType(.System) as! UIButton
-                currentLevel = i
-                levelButton.frame = CGRectMake(x5 + CGFloat(currentLevel - 6)*dx - dx - dx , y5 + dy, buttonWidth, buttonHeight)
-                levelButton.setTitle("LEVEL \(currentLevel)", forState: UIControlState.Normal)
+                levelButton.frame = CGRectMake(x5 + CGFloat(i - 6)*dx - dx - dx , y5 + dy, buttonWidth, buttonHeight)
+                levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
+                levelButton.tag = i
                 levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
                 levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
-                levelButton.titleLabel!.textColor = UIColor.blackColor()
+                levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+                levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
+                levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
                 levelButton.titleLabel!.textAlignment = .Center
-                levelButton.setBackgroundImage(UIImage(named: "bg\(currentLevel).png"), forState: UIControlState.Normal)
+                levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
                 levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) // from plist
                 
                 self.view.addSubview(levelButton)
             }
         }
     }
-
-    func buttonPressed(sender: AnyObject) {
-        self.performSegueWithIdentifier("levelViewToGameView", sender: self)
-        //selectedLevel = sender.tag
-        //load respective levelData from plist
+    
+    func getLevels() -> NSArray {
+        
+        if levels == nil {
+            let myPlist = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Levels", ofType: "plist")!)!
+            let plistLevels = myPlist["levels"] as! [[String:AnyObject]] // the array of levels
+            
+            levels = NSMutableArray()
+            
+            for i in 0...(plistLevels.count-1) {  //plistLevels.count=9
+                
+                var levelData = plistLevels[i] // this levelData carries data in levels 1...9
+                
+                let background = levelData["background"] as! String
+                let clef = levelData["clef"] as! String
+                let challenges = levelData["challenges"] as! NSDictionary
+                //println(levelData["background"]!) //prints bg for each i
+                //println(levelData["clef"]!) //prints clef for each i
+                //println(levelData["challenges"]!) //prints challenges for each i
+                
+                levels!.addObject(Level(background : background , clef : clef , challenges : challenges ))
+            }
+        }
+        return levels!
     }
     
-/*  // somehow these 2 inits are not useful after creating classes Level and Challenge
+    func buttonPressed(sender: AnyObject) {
+        var levelNumber = sender.tag
+        let levels = getLevels()
+        currentLevel = levels.objectAtIndex(levelNumber - 1) as? Level 
+        self.performSegueWithIdentifier("levelViewToGameView", sender: self)
+        println("sender.tag is \(sender.tag)") //5 (when pressed 5)
+        println("levelNumber is \(levelNumber)")  //5 (when pressed 5)
+        println("got bg as \(currentLevel!.background)")  //bg5 (when pressed 5)
+        println("got bg? as \(currentLevel!.background)?")  //bg5? (when pressed 5)
+    }
     
-    init(size: CGSize) {
-        super.init(size: size)
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        var vc = segue.destinationViewController as! GameViewController
+ //       vc.setLevel(currentLevel!)
+        
+        var destinationViewController: GameViewController = segue.destinationViewController as! GameViewController
+        destinationViewController.setLevel(currentLevel!) //Michael uses thisline
+        
+//        destinationViewController.level = currentLevel  // I added this line on Thursday
+        
+    }
+    
+    
+    /*    required init(currentLevel: Level()) {
+    //fatalError("NSCoding not supported")
+    self.currentLevel = currentLevel
+    super.init(size : NSSize)
     }
     
     required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    fatalError("init(coder:) has not been implemented")
     }
-
-*/
+    */
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

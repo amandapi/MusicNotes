@@ -11,10 +11,20 @@ import SpriteKit
 
 class GameViewController: UIViewController {
     
+    var scene: GameScene!
+    
+    var level: Level!
+    func setLevel(level: Level) {
+        self.level = level
+        println("check level is \(level)")
+        println("check level.background is \(level.background)")  // returns bg5 when button 5 is pressed
+    }
+      
     override func viewDidLoad() {
         super.viewDidLoad()
         
     if let scene = GameScene(size: view.frame.size) as GameScene? {
+        
             // Configure the view.
             let skView = self.view as! SKView
             skView.showsFPS = true
@@ -27,13 +37,13 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             
             skView.presentScene(scene)
+        
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-      //  GameScene.level = self.
         let skView = self.view as! SKView
         let scene = skView.scene as! GameScene
  //       scene.level = self.level

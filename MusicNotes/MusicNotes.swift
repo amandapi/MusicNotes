@@ -19,18 +19,16 @@ class MusicNotes: SKSpriteNode {
         
         //create random noti's
         var textures = [SKTexture]()
-        textures.append(SKTexture(imageNamed: "notiPinkU"))
-        textures.append(SKTexture(imageNamed: "notiBlueU"))
-        textures.append(SKTexture(imageNamed: "notiRedU"))
-        textures.append(SKTexture(imageNamed: "notiGreenU"))
-        textures.append(SKTexture(imageNamed: "notiGrayU"))
+        textures.append(SKTexture(imageNamed: "notiPinkU.png"))
+        textures.append(SKTexture(imageNamed: "notiBlueU.png"))
+        textures.append(SKTexture(imageNamed: "notiGreenU.png"))
+        textures.append(SKTexture(imageNamed: "notiGreyU.png"))
+        textures.append(SKTexture(imageNamed: "notiRedU.png"))
         let rand = Int(arc4random_uniform(UInt32(textures.count)))
         let texture = textures[rand] as SKTexture
         super.init(texture: texture, color: nil, size: texture.size())
         
         anchorPoint = CGPointMake(0.38, 0.25) // where should I put this line?
-        
-
     }
     
     required init?(coder aDecoder: NSCoder) {

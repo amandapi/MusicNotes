@@ -12,23 +12,29 @@ import Foundation   // neccessary?
 
 class GameScene: SKScene {
     
+    //weak var parentController: GameViewController? // trying to pass data from GemViewController to GameScene
+    //var viewController: GameViewController! // trying to pass data from GemViewController to GameScene
+    
     var noti = MusicNotes(imageNamed: String())
     var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
     
     var lastUpdateTime: NSTimeInterval = 0.0
-    var dt: NSTimeInterval = 0.0 
+    var dt: NSTimeInterval = 0.0
     
-    var score : Int = 0
-    var deadCount : Int = 0
+    var scoreLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+    var score: Int = 0
+    var deadCountLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+    var deadCount:Int = 0
+    var startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
     
-    var startMsg = SKLabelNode()
+//    var currentLevel = Level?()
     var instruction = SKLabelNode()  // retrieve from plist
     var destination = SKSpriteNode()  // retrieve from plist
+
     var clef = SKSpriteNode()  // retrieve from plist
     var background = SKSpriteNode()  // retrieve from plist
-    var gameLevel = Int()  // retrieve from plist
     var gameState = GameState.StartingLevel
     
     // these are the "destinations" defined by "staffLines"
@@ -66,9 +72,10 @@ class GameScene: SKScene {
         addClef()
         addTrashcanAndTrashcanLid()
         addStartMsg()
+        setupCountLabels()
         
         if gameState == .StartingLevel {
-            paused = true  // would false serves a better purpose?
+            paused = true  // would false serves a better purpose? and get rid of gameStates?
         }
     }
     
@@ -134,24 +141,19 @@ class GameScene: SKScene {
         // check collision
  
         if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
-            
-            //println("roamingNoti.frame is \(roamingNoti!.frame)")
-            //println("scoringRect is \(roamingNoti!.scoringRect())")
-            //println("S3.frame is \(S3.frame)")
-            //println("destinationRect is \(destinationRect(S3.frame))")
 
-            roamingNoti!.position.y = S3.position.y    // this does not work if addNoti() is effective
+            roamingNoti!.position.y = S3.position.y // this does not work if addNoti() is effective
 
             celebrate()
             score++
-            showScore()
-            println("score is \(score)")
+            scoreLabel.text = "Score: \(score)"
             addNoti()
             followRoamingPath()
             
         } else {
             die()
-            showDeadCount()
+            deadCount++
+            deadCountLabel.text = "\(deadCount)"
             flashGameOver()
             addNoti()
             followRoamingPath()
@@ -166,89 +168,144 @@ class GameScene: SKScene {
             noti.move(self.dt)
         })
     }
-    
+
     func addStartMsg() {
         let startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
         startMsg.name = "msgLabel"
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.greenColor()
-        startMsg.fontSize = 88
-        startMsg.position = CGPoint(x: 0 , y: 20)
-        startMsg.position = CGPointMake(CGRectGetMidX(self.frame) - 100, CGRectGetMidY(self.frame) + 200)
-        //startMsg.zPosition = 100
+        startMsg.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/8)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            startMsg.fontSize = 88
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            startMsg.fontSize = 44
+        }
         addChild(startMsg)
     }
     
     func addInstruction() {
         var instruction = SKLabelNode(fontNamed: "Verdana-Bold")
         instruction.text = "C in a Space" // how to feed value from plist?
-        instruction.fontSize = 63
         instruction.fontColor = UIColor.blackColor()
-        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 180)
+        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/5)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            instruction.fontSize = 66
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            instruction.fontSize = 33
+        }
         self.addChild(instruction)
-        
-        let fadeinAction = SKAction.fadeInWithDuration(0.5)
-        let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
-        instruction.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))    
+
+        let fadeinAction = SKAction.fadeInWithDuration(0.2)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
+        instruction.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
     }
-    
+
+/*
     func addBackground() {
-        let bg = SKSpriteNode(imageNamed: "bg8")
-        // bg raw size is 2048x1536
+        
+        let bg = SKSpriteNode(imageNamed: "bg9")
+        //bg raw size is 2048x1536
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
         addChild(bg)
     }
+*/
+
+
+    func addBackground() {
+        
+//        var level: Level!
+//        GameViewController().setLevel(level!)
+//            func setLevel(level: Level) {
+//                self.level = level
+//            }
+//        println("Level is \(Level.self)")  // MusicNotes.Level
+
+//        var bgName = level?.background!   // nil cuz currentLevel is nil
+//        var bg = SKSpriteNode(imageNamed: "\(bgName)")
+//        println("level is \(level!)") //level is nil
+//        println("bgName is \(bgName)")  //bgName is nil
+
+        var bg = SKSpriteNode(imageNamed: "bg9")
+//        bg raw size is 2048x1536
+        bg.anchorPoint = CGPoint(x: 0, y: 0)
+        bg.size = self.frame.size
+        bg.zPosition = -1
+            addChild(bg)
+        }
+
     
     func addStaffLines() {
-        S0.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 7*68*frame.width/1680)
-        S0.setScale(frame.width/1680)
+        
+        var w = frame.width/2
+        var h = frame.height/2
+        var d = 68*frame.width/2300
+        var yScale = frame.width/2300
+        var xScale = frame.width/1680
+        
+        S0.position = CGPoint(x:w , y:h-7*d)
+        S0.yScale = yScale
+        S0.xScale = xScale
         self.addChild(S0)
-        L1.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 6*68*frame.width/1680)
-        L1.setScale(frame.width/1680)
+        L1.position = CGPoint(x:w , y:h-6*d)
+        L1.yScale = yScale
+        L1.xScale = xScale
         self.addChild(L1)
-        S1.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 5*68*frame.width/1680)
-        S1.setScale(frame.width/1680)
+        S1.position = CGPoint(x:w , y:h-5*d)
+        S1.yScale = yScale
+        S1.xScale = xScale
         self.addChild(S1)
-        L2.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 4*68*frame.width/1680)
-        L2.setScale(frame.width/1680)
+        L2.position = CGPoint(x:w , y:h-4*d)
+        L2.yScale = yScale
+        L2.xScale = xScale
         self.addChild(L2)
-        S2.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 3*68*frame.width/1680)
-        S2.setScale(frame.width/1680)
+        S2.position = CGPoint(x:w , y:h-3*d)
+        S2.yScale = yScale
+        S2.xScale = xScale
         self.addChild(S2)
-        L3.position = CGPoint(x: frame.width/2 , y: frame.height/2 - 2*68*frame.width/1680)
-        L3.setScale(frame.width/1680)
+        L3.position = CGPoint(x:w , y:h-2*d)
+        L3.yScale = yScale
+        L3.xScale = xScale
         self.addChild(L3)
-        S3.position = CGPoint(x: frame.size.width/2 , y: frame.size.height/2 - 68*frame.size.width/1680)
-        S3.setScale(frame.size.width/1680)
-        //S3.anchorPoint = CGPointMake(0.5, 0.5)
+        S3.position = CGPoint(x:w , y:h-d)
+        S3.yScale = yScale
+        S3.xScale = xScale
         self.addChild(S3)
-        L4.position = CGPoint(x: frame.width/2 , y: frame.height/2)
-        L4.setScale(frame.width/1680)
+        L4.position = CGPoint(x:w , y:h)
+        L4.yScale = yScale
+        L4.xScale = xScale
         self.addChild(L4)
-        S4.position = CGPoint(x: frame.width/2 , y: frame.height/2 + 68*frame.width/1680)
-        S4.setScale(frame.width/1680)
+        S4.position = CGPoint(x:w , y:h+d)
+        S4.yScale = yScale
+        S4.xScale = xScale
         self.addChild(S4)
-        L5.position = CGPoint(x: frame.width/2, y: frame.height/2 + 2*68*frame.width/1680)
-        L5.setScale(frame.width/1680)
+        L5.position = CGPoint(x:w, y:h+2*d)
+        L5.yScale = yScale
+        L5.xScale = xScale
         self.addChild(L5)
-        S5.position = CGPoint(x: frame.width/2 , y: frame.height/2 + 3*68*frame.width/1680)
-        S5.setScale(frame.width/1680)
+        S5.position = CGPoint(x:w , y:h+3*d)
+        S5.yScale = yScale
+        S5.xScale = xScale
         self.addChild(S5)
-        //println("S5 y.Scale is \(S5.yScale)")
+        
+        println("framewidth is \(frame.width)")
+        println("frame height is \(frame.height)")
     }
 
     func addNoti() {
         //var noti = MusicNotes(imageNamed: "notiPinkU")
         var noti = MusicNotes(imageNamed: String())
-        noti.setScale(0.5)
+//        noti.setScale(0.5)
+//        noti.setScale(frame.height*0.00063)
+        noti.setScale(S5.yScale * 0.8)
         roamingNoti = noti
         noti.name = "noti"
         println("noti is \(noti)")  // note this does specify exactly which noti is roaming
         noti.anchorPoint = CGPointMake(0.38, 0.25)  // should this line be here or in MusicNotes?
         noti.zPosition = 3
-        noti.position = CGPoint(x: frame.width*3/5, y: frame.height*4/5)
+        //noti.position = CGPoint(x: frame.width*3/5, y: frame.height*4/5)
+        noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
         addChild(noti)
         //followRoamingPath()
     }
@@ -256,7 +313,8 @@ class GameScene: SKScene {
     func followRoamingPath() {
         var path = CGPathCreateMutable()
         //CGPathMoveToPoint(path, nil, 560, 360)  // (path, nil, x, y)
-        CGPathAddArc(path!, nil, 560, 360, 280, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        //CGPathAddArc(path!, nil, 560, 360, 280, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
         // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
         var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
@@ -285,42 +343,45 @@ class GameScene: SKScene {
     }
     
     func addTrashcanAndTrashcanLid() {
-        trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/1.68)
+        trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: 0)
+        trashcan.anchorPoint = CGPointMake(0.5, 0)
         trashcan.setScale(frame.width/900)
+        trashcan.zPosition = 200
         self.addChild(trashcan)
-        trashcanLid.position = CGPoint(x: frame.width - frame.width*0.095 + trashcanLid.frame.width/8 , y: trashcan.frame.height - trashcan.frame.height/4)
+        trashcanLid.position = CGPoint(x: frame.width - frame.width*0.095 + trashcanLid.frame.width/10 , y: trashcan.frame.height - trashcan.frame.height/4)
         trashcanLid.setScale(frame.width/900)
         trashcanLid.anchorPoint = CGPointMake(1, 0)
+        trashcanLid.zPosition = 200
         addChild(trashcanLid)
     }
     
-    func showScore() {
-        var scoreLabel = UILabel(frame: CGRectMake(frame.width/6 , frame.height/10, 300, 60))
+    func setupCountLabels() {
         
-        scoreLabel.center = CGPoint(x: frame.width/6 , y: frame.height/10)
-        scoreLabel.textAlignment = NSTextAlignment.Center
-        scoreLabel.text = "Score: \(score)"
-        scoreLabel.font = UIFont(name: "Verdana-Bold", size: 24.0) // Courier-Bold
-        scoreLabel.textColor = UIColor.redColor()
-        //scoreLabel.shadowColor = UIColor.blackColor()
-        //scoreLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
-        //scoreLabel.clearsContextBeforeDrawing = true
-        //scoreLabel.setNeedsDisplay()
-        self.view?.addSubview(scoreLabel)
-    }
-    
-    func showDeadCount() {
-        var deadCountLabel = UILabel(frame: trashcan.frame)
-        deadCountLabel.center = CGPoint(x: frame.width - frame.width*0.12 , y: 725)
-        deadCountLabel.textAlignment = NSTextAlignment.Center
-        deadCountLabel.text = "\(deadCount)"
-        deadCountLabel.font = UIFont(name: "Verdana-Bold", size: 58.0) // Courier-Bold
-        deadCountLabel.textColor = UIColor.redColor()
-        //deadCountLabel.shadowColor = UIColor.blackColor()
-        //deadCountLabel.shadowOffset = CGSize(width: -5.0, height: -5.0)
-        //deadCountLabel.clearsContextBeforeDrawing = true
-        //deadCountLabel.setNeedsDisplay()
-        self.view?.addSubview(deadCountLabel)
+        scoreLabel.fontColor = SKColor.redColor()
+        scoreLabel.text = "Score: 0"
+        scoreLabel.name = "scoreLabel"
+        scoreLabel.verticalAlignmentMode = .Center
+        scoreLabel.position = CGPoint(x: frame.width/8 , y: frame.height*9/10)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            scoreLabel.fontSize = 48
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            scoreLabel.fontSize = 23
+        }
+        addChild(scoreLabel)
+        
+        deadCountLabel.fontColor = SKColor.redColor()
+        deadCountLabel.text = "0"
+        deadCountLabel.name = "deadCountLabel"
+        deadCountLabel.verticalAlignmentMode = .Center
+        //deadCountLabel.position = trashcan.position
+        deadCountLabel.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/2.3)
+        deadCountLabel.zPosition = 250
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            deadCountLabel.fontSize = 48
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            deadCountLabel.fontSize = 23
+        }
+        addChild(deadCountLabel)
     }
     
     func flashGameOver() { // when deadCount = 3
@@ -339,7 +400,7 @@ class GameScene: SKScene {
         
         if (deadCount == 3) {
             addChild(gameoverLabel)
-            // how to stop new note appearing and segue back to LevelViewController
+            // reset level, score, deadcount, segue back to LevelViewController
         } else {
             return
         }
@@ -349,8 +410,7 @@ class GameScene: SKScene {
         clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
         clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
         
-        var soundC5 = SKAction.playSoundFileNamed("soundC5.wav", waitForCompletion: false)
-        self.runAction(soundC5)
+        playSound("soundC5.wav")
         
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
         let twinkle1 = SKEmitterNode()
@@ -401,8 +461,12 @@ class GameScene: SKScene {
         self.addChild(twinkle3)
     }
     
+    func playSound(sound:String) { // method for GameViewController to play any sound file on demand
+        runAction(SKAction.playSoundFileNamed(sound, waitForCompletion: false))
+    }
+    
     func die() {
-        let shrinkAction = SKAction.scaleBy(0.25, duration: 1.0)
+        let shrinkAction = SKAction.scaleBy(0.38, duration: 1.0)
         let rotateAction = SKAction.rotateByAngle(CGFloat(3*M_PI), duration: 1.0)
         let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*2) , duration: 1.0)
         let fallAction = SKAction.moveToY(30.0, duration: 1.0)
@@ -413,8 +477,6 @@ class GameScene: SKScene {
         let waitAction1 = SKAction.waitForDuration(3.0)
         let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
         trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
-        deadCount++
-        println("deadCount is \(deadCount)")
     }
 
 }
