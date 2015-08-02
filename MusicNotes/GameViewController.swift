@@ -16,8 +16,8 @@ class GameViewController: UIViewController {
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
-        println("check level is \(level)")
-        println("check level.background is \(level.background)")  // returns bg5 when button 5 is pressed
+        //println("check level is \(level)")
+        //println("check level.background is \(level.background)")  // returns bg5 when button 5 is pressed
     }
       
     override func viewDidLoad() {
@@ -35,9 +35,11 @@ class GameViewController: UIViewController {
             
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
+        
+            // here is to pass information about the level to the GameScene Object
+            scene.setLevel(level)
             
             skView.presentScene(scene)
-        
         }
     }
     

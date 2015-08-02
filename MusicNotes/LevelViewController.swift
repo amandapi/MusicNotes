@@ -66,7 +66,7 @@ class LevelViewController: UIViewController {
                 levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
                 levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
                 levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-                levelButton.setTitleShadowColor(UIColor.grayColor(), forState: UIControlState.Normal)
+                levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
                 levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
                 levelButton.titleLabel!.textAlignment = .Center
                 levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
@@ -124,23 +124,16 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         currentLevel = levels.objectAtIndex(levelNumber - 1) as? Level 
         self.performSegueWithIdentifier("levelViewToGameView", sender: self)
-        println("sender.tag is \(sender.tag)") //5 (when pressed 5)
-        println("levelNumber is \(levelNumber)")  //5 (when pressed 5)
-        println("got bg as \(currentLevel!.background)")  //bg5 (when pressed 5)
-        println("got bg? as \(currentLevel!.background)?")  //bg5? (when pressed 5)
+        //println("sender.tag is \(sender.tag)") //5 (when pressed 5)
+        //println("levelNumber is \(levelNumber)")  //5 (when pressed 5)
+        //println("got bg as \(currentLevel!.background)")  //bg5 (when pressed 5)
+        //println("got bg? as \(currentLevel!.background)?")  //bg5? (when pressed 5)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        var vc = segue.destinationViewController as! GameViewController
- //       vc.setLevel(currentLevel!)
-        
         var destinationViewController: GameViewController = segue.destinationViewController as! GameViewController
-        destinationViewController.setLevel(currentLevel!) //Michael uses thisline
-        
-//        destinationViewController.level = currentLevel  // I added this line on Thursday
-        
+        destinationViewController.setLevel(currentLevel!)
     }
-    
     
     /*    required init(currentLevel: Level()) {
     //fatalError("NSCoding not supported")

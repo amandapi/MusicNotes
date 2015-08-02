@@ -12,9 +12,6 @@ import Foundation   // neccessary?
 
 class GameScene: SKScene {
     
-    //weak var parentController: GameViewController? // trying to pass data from GemViewController to GameScene
-    //var viewController: GameViewController! // trying to pass data from GemViewController to GameScene
-    
     var noti = MusicNotes(imageNamed: String())
     var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
@@ -24,20 +21,25 @@ class GameScene: SKScene {
     var dt: NSTimeInterval = 0.0
     
     var scoreLabel = SKLabelNode(fontNamed: "Verdana-Bold")
-    var score: Int = 0
+    var score = 0
     var deadCountLabel = SKLabelNode(fontNamed: "Verdana-Bold")
-    var deadCount:Int = 0
-    var startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
+    var deadCount = 0
+    //var startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
+    var startMsg = SKLabelNode()
     
-//    var currentLevel = Level?()
     var instruction = SKLabelNode()  // retrieve from plist
     var destination = SKSpriteNode()  // retrieve from plist
-
-    var clef = SKSpriteNode()  // retrieve from plist
-    var background = SKSpriteNode()  // retrieve from plist
+    var background = SKSpriteNode()
+    
+    // these are the "clefs"
+    var clefTreble = SKSpriteNode()
+    var clefBass = SKSpriteNode()
+    var clef = SKSpriteNode()
+    var clefRotating = SKSpriteNode()
+    
     var gameState = GameState.StartingLevel
     
-    // these are the "destinations" defined by "staffLines"
+    // these are the "destinations" defined by sizes of "staffLines"
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
     let S1 = SKSpriteNode(imageNamed: "S1")
@@ -50,10 +52,6 @@ class GameScene: SKScene {
     let L5 = SKSpriteNode(imageNamed: "L5")
     let S5 = SKSpriteNode(imageNamed: "S5")
     
-    // these are the "clefs"
-    let clefTreble = SKSpriteNode(imageNamed: "clefTreble")
-    let clefBass = SKSpriteNode(imageNamed: "clefBass")
-    
     let trashcan = SKSpriteNode(imageNamed: "trashcan")
     let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
     
@@ -63,6 +61,15 @@ class GameScene: SKScene {
     
     override init(size: CGSize) {
         super.init(size: size)
+    }
+    
+// This block will be called by GameViewController's scene.setLevel(level) before skView.presentScene
+    var level: Level!
+    func setLevel(level: Level) {
+        self.level = level
+        //println("check2 is \(level)") // returns MusicNotes.Level
+        //println("check3 is \(level.background)") // correct
+        //println("check4 is \(level.clef)")  // correct
     }
     
     override func didMoveToView(view: SKView) {
@@ -95,11 +102,12 @@ class GameScene: SKScene {
             case .Playing:
                 roamingNoti!.removeAllActions()
                 roamingNoti?.name = "noti"
-                
+/*
                 if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
                     draggingNoti = false
                     return         // what does this block do?
                 }
+*/
                 
                 let touch = touches.first as? UITouch
                 let location = touch!.locationInNode(self)
@@ -200,44 +208,18 @@ class GameScene: SKScene {
         instruction.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
     }
 
-/*
     func addBackground() {
-        
-        let bg = SKSpriteNode(imageNamed: "bg9")
-        //bg raw size is 2048x1536
+
+//        var bg = SKSpriteNode(imageNamed: "bg9") // bg raw size is 2048x1536
+        var bgName = level?.background!
+        var bg = SKSpriteNode(imageNamed: "\(bgName!)")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
         addChild(bg)
-    }
-*/
-
-
-    func addBackground() {
-        
-//        var level: Level!
-//        GameViewController().setLevel(level!)
-//            func setLevel(level: Level) {
-//                self.level = level
-//            }
-//        println("Level is \(Level.self)")  // MusicNotes.Level
-
-//        var bgName = level?.background!   // nil cuz currentLevel is nil
-//        var bg = SKSpriteNode(imageNamed: "\(bgName)")
-//        println("level is \(level!)") //level is nil
-//        println("bgName is \(bgName)")  //bgName is nil
-
-        var bg = SKSpriteNode(imageNamed: "bg9")
-//        bg raw size is 2048x1536
-        bg.anchorPoint = CGPoint(x: 0, y: 0)
-        bg.size = self.frame.size
-        bg.zPosition = -1
-            addChild(bg)
         }
-
     
     func addStaffLines() {
-        
         var w = frame.width/2
         var h = frame.height/2
         var d = 68*frame.width/2300
@@ -288,23 +270,17 @@ class GameScene: SKScene {
         S5.yScale = yScale
         S5.xScale = xScale
         self.addChild(S5)
-        
-        println("framewidth is \(frame.width)")
-        println("frame height is \(frame.height)")
     }
 
     func addNoti() {
         //var noti = MusicNotes(imageNamed: "notiPinkU")
         var noti = MusicNotes(imageNamed: String())
-//        noti.setScale(0.5)
-//        noti.setScale(frame.height*0.00063)
         noti.setScale(S5.yScale * 0.8)
         roamingNoti = noti
         noti.name = "noti"
         println("noti is \(noti)")  // note this does specify exactly which noti is roaming
         noti.anchorPoint = CGPointMake(0.38, 0.25)  // should this line be here or in MusicNotes?
         noti.zPosition = 3
-        //noti.position = CGPoint(x: frame.width*3/5, y: frame.height*4/5)
         noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
         addChild(noti)
         //followRoamingPath()
@@ -328,30 +304,39 @@ class GameScene: SKScene {
         println("didCallFollowRoamingPath")
 */
     }
-    
+
     func addClef() {
-        
-        clefTreble.anchorPoint = CGPointMake(0.5, 0.33)
-        clefTreble.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
-        clefTreble.setScale(L2.size.height / 118)
-        self.addChild(clefTreble)
-        
-        clefBass.anchorPoint = CGPointMake(0.5, 0.71)
-        clefBass.position = CGPoint(x: L4.position.x + frame.width/3.6, y: L4.position.y)
-        clefBass.setScale(L4.size.height / 56)
-        self.addChild(clefBass)
+        //let clefTreble = SKSpriteNode()
+        //let clefBass = SKSpriteNode()
+        var clef = SKSpriteNode(imageNamed: "\(level.clef!).png")
+        //println("level.clef! is \(level.clef!)") //correct: clefBass or clefTreble
+        if level.clef! == "clefTreble" {
+            clef.anchorPoint = CGPointMake(0.5, 0.33)
+            clef.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
+            clef.setScale(L2.size.height / 118)
+            clef.name = "clefTreble"
+            self.addChild(clef)
+            clefRotating = clef
+        } else if level.clef! == "clefBass" {
+            clef.anchorPoint = CGPointMake(0.5, 0.71)
+            clef.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L4.position.y)
+            clef.setScale(L4.size.height / 56)
+            clef.name = "clefBass"
+            self.addChild(clef)
+            clefRotating = clef
+        }
     }
     
     func addTrashcanAndTrashcanLid() {
         trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: 0)
         trashcan.anchorPoint = CGPointMake(0.5, 0)
         trashcan.setScale(frame.width/900)
-        trashcan.zPosition = 200
+        trashcan.zPosition = 10
         self.addChild(trashcan)
         trashcanLid.position = CGPoint(x: frame.width - frame.width*0.095 + trashcanLid.frame.width/10 , y: trashcan.frame.height - trashcan.frame.height/4)
         trashcanLid.setScale(frame.width/900)
         trashcanLid.anchorPoint = CGPointMake(1, 0)
-        trashcanLid.zPosition = 200
+        trashcanLid.zPosition = 10
         addChild(trashcanLid)
     }
     
@@ -375,7 +360,7 @@ class GameScene: SKScene {
         deadCountLabel.verticalAlignmentMode = .Center
         //deadCountLabel.position = trashcan.position
         deadCountLabel.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/2.3)
-        deadCountLabel.zPosition = 250
+        deadCountLabel.zPosition = 20
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             deadCountLabel.fontSize = 48
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -385,13 +370,18 @@ class GameScene: SKScene {
     }
     
     func flashGameOver() { // when deadCount = 3
-        let gameoverLabel = SKLabelNode(fontNamed: "MarkerFelt-Wide")
-        gameoverLabel.fontSize = 138
+        let gameoverLabel = SKLabelNode(fontNamed: "Verdana-Bold")
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"
         gameoverLabel.zPosition = 4
         gameoverLabel.alpha = 0
+        //gameoverLabel.fontSize = 138
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            deadCountLabel.fontSize = 138
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            deadCountLabel.fontSize = 68
+        }
 
         let fadeinAction = SKAction.fadeInWithDuration(0.5)
         let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
@@ -407,9 +397,7 @@ class GameScene: SKScene {
     }
     
     func celebrate() {
-        clefTreble.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
-        clefBass.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
-        
+        rotateClef()
         playSound("soundC5.wav")
         
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
@@ -459,6 +447,11 @@ class GameScene: SKScene {
         twinkle3.particleScaleRange = 0.6
         twinkle3.particleScaleSpeed = 0.5
         self.addChild(twinkle3)
+    }
+    
+    func rotateClef() {
+        //let clef = clefRotating
+        clefRotating.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
     }
     
     func playSound(sound:String) { // method for GameViewController to play any sound file on demand
