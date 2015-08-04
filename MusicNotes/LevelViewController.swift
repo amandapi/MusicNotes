@@ -53,7 +53,7 @@ class LevelViewController: UIViewController {
 
             levelButton.titleLabel!.textAlignment = .Center
             levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-            levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) // from plist
+            levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) 
 
             self.view.addSubview(levelButton)
                 
@@ -70,7 +70,7 @@ class LevelViewController: UIViewController {
                 levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
                 levelButton.titleLabel!.textAlignment = .Center
                 levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-                levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) // from plist
+                levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
                 
                 self.view.addSubview(levelButton)
                 
@@ -87,7 +87,7 @@ class LevelViewController: UIViewController {
                 levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
                 levelButton.titleLabel!.textAlignment = .Center
                 levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-                levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) // from plist
+                levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
                 
                 self.view.addSubview(levelButton)
             }

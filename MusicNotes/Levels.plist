@@ -11,37 +11,37 @@
 			<string>clefTreble</string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge06</key>
+				<key>6</key>
 				<array>
 					<string>D in a Space</string>
 					<string>S0</string>
 					<string>soundD4</string>
 				</array>
-				<key>challenge05</key>
+				<key>5</key>
 				<array>
 					<string>F in a Space</string>
 					<string>S1</string>
 					<string>soundF4</string>
 				</array>
-				<key>challenge04</key>
+				<key>4</key>
 				<array>
 					<string>A in a Space</string>
 					<string>S2</string>
 					<string>soundA4</string>
 				</array>
-				<key>challenge03</key>
+				<key>3</key>
 				<array>
 					<string>C in a Space</string>
 					<string>S3</string>
 					<string>soundC5</string>
 				</array>
-				<key>challenge02</key>
+				<key>2</key>
 				<array>
 					<string>E in a Space</string>
 					<string>S4</string>
 					<string>soundE5</string>
 				</array>
-				<key>challenge01</key>
+				<key>1</key>
 				<array>
 					<string>G in a Space</string>
 					<string>S5</string>
@@ -56,31 +56,31 @@
 			<string>clefBass</string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge05</key>
+				<key>5</key>
 				<array>
 					<string>G on a Line</string>
 					<string>L1</string>
 					<string>soundG2</string>
 				</array>
-				<key>challenge04</key>
+				<key>4</key>
 				<array>
 					<string>B on a Line</string>
 					<string>L2</string>
 					<string>soundB2</string>
 				</array>
-				<key>challenge03</key>
+				<key>3</key>
 				<array>
 					<string>D on a Line</string>
 					<string>L3</string>
 					<string>soundD3</string>
 				</array>
-				<key>challenge02</key>
+				<key>2</key>
 				<array>
 					<string>F on a Line</string>
 					<string>L4</string>
 					<string>soundF3</string>
 				</array>
-				<key>challenge01</key>
+				<key>1</key>
 				<array>
 					<string>A on a Line</string>
 					<string>L5</string>
@@ -95,31 +95,31 @@
 			<string>clefTreble</string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge05</key>
+				<key>5</key>
 				<array>
 					<string>F on a Line</string>
 					<string>L5</string>
 					<string>soundF5</string>
 				</array>
-				<key>challenge04</key>
+				<key>4</key>
 				<array>
 					<string>D on a Line</string>
 					<string>L4</string>
 					<string>soundD5</string>
 				</array>
-				<key>challenge03</key>
+				<key>3</key>
 				<array>
 					<string>B on a Line</string>
 					<string>L3</string>
 					<string>soundB4</string>
 				</array>
-				<key>challenge02</key>
+				<key>2</key>
 				<array>
 					<string>G on a Line</string>
 					<string>L2</string>
 					<string>soundG4</string>
 				</array>
-				<key>challenge01</key>
+				<key>1</key>
 				<array>
 					<string>E on a Line</string>
 					<string>L1</string>
@@ -134,37 +134,37 @@
 			<string>clefBass</string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge06</key>
+				<key>6</key>
 				<array>
 					<string>B in a Space</string>
 					<string>S5</string>
 					<string>soundB3</string>
 				</array>
-				<key>challenge05</key>
+				<key>5</key>
 				<array>
 					<string>G in a Space </string>
 					<string>S4</string>
 					<string>soundG3</string>
 				</array>
-				<key>challenge04</key>
+				<key>4</key>
 				<array>
 					<string>E in a Space</string>
 					<string>S3</string>
 					<string>soundE3</string>
 				</array>
-				<key>challenge03</key>
+				<key>3</key>
 				<array>
 					<string>C in a Space</string>
 					<string>S2</string>
 					<string>soundC3</string>
 				</array>
-				<key>challenge02</key>
+				<key>2</key>
 				<array>
 					<string>A in a Space</string>
 					<string>S1</string>
 					<string>soundA2</string>
 				</array>
-				<key>challenge01</key>
+				<key>1</key>
 				<array>
 					<string>F in a Space</string>
 					<string>S0</string>
@@ -179,67 +179,67 @@
 			<string>clefBass</string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge11</key>
+				<key>11</key>
 				<array>
 					<string>A on a Line</string>
 					<string>L5</string>
 					<string>soundA3</string>
 				</array>
-				<key>challenge10</key>
+				<key>10</key>
 				<array>
 					<string>F on a Line</string>
 					<string>L4</string>
 					<string>soundF3</string>
 				</array>
-				<key>challenge09</key>
+				<key>9</key>
 				<array>
 					<string>D on a Line</string>
 					<string>L3</string>
 					<string>soundD2</string>
 				</array>
-				<key>challenge08</key>
+				<key>8</key>
 				<array>
 					<string>B on a Line</string>
 					<string>L2</string>
 					<string>soundB2</string>
 				</array>
-				<key>challenge07</key>
+				<key>7</key>
 				<array>
 					<string>G on a Line</string>
 					<string>L1</string>
 					<string>soundG2</string>
 				</array>
-				<key>challenge06</key>
+				<key>6</key>
 				<array>
 					<string>B in a Space</string>
 					<string>S5</string>
 					<string>soundB3</string>
 				</array>
-				<key>challenge05</key>
+				<key>5</key>
 				<array>
 					<string>G in a Space</string>
 					<string>S4</string>
 					<string>soundG3</string>
 				</array>
-				<key>challenge04</key>
+				<key>4</key>
 				<array>
 					<string>E in a Space</string>
 					<string>S3</string>
 					<string>soundE3</string>
 				</array>
-				<key>challenge03</key>
+				<key>3</key>
 				<array>
 					<string>C in a Space</string>
 					<string>S2</string>
 					<string>soundC3</string>
 				</array>
-				<key>challenge02</key>
+				<key>2</key>
 				<array>
 					<string>A in a Space</string>
 					<string>S1</string>
 					<string>soundA2</string>
 				</array>
-				<key>challenge01</key>
+				<key>1</key>
 				<array>
 					<string>F in a Space</string>
 					<string>S0</string>
@@ -254,67 +254,67 @@
 			<string>clefTreble</string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge11</key>
+				<key>11</key>
 				<array>
 					<string>F on a Line</string>
 					<string>L5</string>
 					<string>soundF5</string>
 				</array>
-				<key>challenge10</key>
+				<key>10</key>
 				<array>
 					<string>D on a Line</string>
 					<string>L4</string>
 					<string>soundD5</string>
 				</array>
-				<key>challenge09</key>
+				<key>9</key>
 				<array>
 					<string>B on a Line</string>
 					<string>L3</string>
 					<string>soundB4</string>
 				</array>
-				<key>challenge08</key>
+				<key>8</key>
 				<array>
 					<string>G on a Line </string>
 					<string>L2</string>
 					<string>soundG4</string>
 				</array>
-				<key>challenge07</key>
+				<key>7</key>
 				<array>
 					<string>E on a Line</string>
 					<string>L1</string>
 					<string>soundE4</string>
 				</array>
-				<key>challenge06</key>
+				<key>6</key>
 				<array>
 					<string>G in a Space</string>
 					<string>S5</string>
 					<string>soundG5</string>
 				</array>
-				<key>challenge05</key>
+				<key>5</key>
 				<array>
 					<string>E in a Space</string>
 					<string>S4</string>
 					<string>soundE5</string>
 				</array>
-				<key>challenge04</key>
+				<key>4</key>
 				<array>
 					<string>C in a Space</string>
 					<string>S3</string>
 					<string>soundC5</string>
 				</array>
-				<key>challenge03</key>
+				<key>3</key>
 				<array>
 					<string>A in a Space</string>
 					<string>S2</string>
 					<string>soundA4</string>
 				</array>
-				<key>challenge02</key>
+				<key>2</key>
 				<array>
 					<string>F in a Space</string>
 					<string>S1</string>
 					<string>soundF4</string>
 				</array>
-				<key>challenge01</key>
+				<key>1</key>
 				<array>
 					<string>D in a Space</string>
 					<string>S0</string>
@@ -326,112 +326,76 @@
 			<key>background</key>
 			<string>bg7</string>
 			<key>clef</key>
-			<string>clefTreble</string>
+			<string>clefBass</string>
+			<key>timeLimit</key>
+			<string></string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge04</key>
+				<key>11</key>
 				<array>
-					<string>D minor Pentascale</string>
-					<array>
-						<array>
-							<string>S0</string>
-							<string>soundD4</string>
-						</array>
-						<array>
-							<string>L1</string>
-							<string>soundE4</string>
-						</array>
-						<array>
-							<string>S1</string>
-							<string>soundF4</string>
-						</array>
-						<array>
-							<string>L2</string>
-							<string>soundG4</string>
-						</array>
-						<array>
-							<string>S2</string>
-							<string>soundA4</string>
-						</array>
-					</array>
+					<string>A on a Line</string>
+					<string>L5</string>
+					<string>soundA3</string>
 				</array>
-				<key>challenge03</key>
+				<key>10</key>
 				<array>
-					<string>A minor Pentascale</string>
-					<array>
-						<array>
-							<string>S2</string>
-							<string>soundA4</string>
-						</array>
-						<array>
-							<string>L3</string>
-							<string>soundB4</string>
-						</array>
-						<array>
-							<string>S3</string>
-							<string>soundC5</string>
-						</array>
-						<array>
-							<string>L4</string>
-							<string>soundD5</string>
-						</array>
-						<array>
-							<string>S4</string>
-							<string>soundE5</string>
-						</array>
-					</array>
+					<string>F on a Line</string>
+					<string>L4</string>
+					<string>soundF3</string>
 				</array>
-				<key>challenge02</key>
+				<key>9</key>
 				<array>
-					<string>G major Pentascale</string>
-					<array>
-						<array>
-							<string>L2</string>
-							<string>soundG4</string>
-						</array>
-						<array>
-							<string>S2</string>
-							<string>soundA4</string>
-						</array>
-						<array>
-							<string>L3</string>
-							<string>soundB4</string>
-						</array>
-						<array>
-							<string>S3</string>
-							<string>soundC5</string>
-						</array>
-						<array>
-							<string>L4</string>
-							<string>soundD5</string>
-						</array>
-					</array>
+					<string>D on a Line</string>
+					<string>L3</string>
+					<string>soundD2</string>
 				</array>
-				<key>challenge01</key>
+				<key>8</key>
 				<array>
-					<string>C major Pentascale</string>
-					<array>
-						<array>
-							<string>S3</string>
-							<string>soundC5</string>
-						</array>
-						<array>
-							<string>L4</string>
-							<string>soundD5</string>
-						</array>
-						<array>
-							<string>S4</string>
-							<string>soundE5</string>
-						</array>
-						<array>
-							<string>L5</string>
-							<string>soundF5</string>
-						</array>
-						<array>
-							<string>S5</string>
-							<string>soundG5</string>
-						</array>
-					</array>
+					<string>B on a Line</string>
+					<string>L2</string>
+					<string>soundB2</string>
+				</array>
+				<key>7</key>
+				<array>
+					<string>G on a Line</string>
+					<string>L1</string>
+					<string>soundG2</string>
+				</array>
+				<key>6</key>
+				<array>
+					<string>B in a Space</string>
+					<string>S5</string>
+					<string>soundB3</string>
+				</array>
+				<key>5</key>
+				<array>
+					<string>G in a Space</string>
+					<string>S4</string>
+					<string>soundG3</string>
+				</array>
+				<key>4</key>
+				<array>
+					<string>E in a Space</string>
+					<string>S3</string>
+					<string>soundE3</string>
+				</array>
+				<key>3</key>
+				<array>
+					<string>C in a Space</string>
+					<string>S2</string>
+					<string>soundC3</string>
+				</array>
+				<key>2</key>
+				<array>
+					<string>A in a Space</string>
+					<string>S1</string>
+					<string>soundA2</string>
+				</array>
+				<key>1</key>
+				<array>
+					<string>F in a Space</string>
+					<string>S0</string>
+					<string>soundF2</string>
 				</array>
 			</dict>
 		</dict>
@@ -439,112 +403,76 @@
 			<key>background</key>
 			<string>bg8</string>
 			<key>clef</key>
-			<string>clefBass</string>
+			<string>clefTreble</string>
+			<key>timeLimit</key>
+			<string></string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge01</key>
+				<key>11</key>
 				<array>
-					<string>D minor Pentascale</string>
-					<array>
-						<array>
-							<string>L3</string>
-							<string>soundD3</string>
-						</array>
-						<array>
-							<string>S3</string>
-							<string>soundE3</string>
-						</array>
-						<array>
-							<string>L4</string>
-							<string>soundF3</string>
-						</array>
-						<array>
-							<string>S4</string>
-							<string>soundG3</string>
-						</array>
-						<array>
-							<string>L5</string>
-							<string>A3</string>
-						</array>
-					</array>
+					<string>F on a Line</string>
+					<string>L5</string>
+					<string>soundF5</string>
 				</array>
-				<key>challenge02</key>
+				<key>10</key>
 				<array>
-					<string>G major Pentascale</string>
-					<array>
-						<array>
-							<string>L1</string>
-							<string>soundG2</string>
-						</array>
-						<array>
-							<string>S1</string>
-							<string>soundA2</string>
-						</array>
-						<array>
-							<string>L2</string>
-							<string>soundB2</string>
-						</array>
-						<array>
-							<string>S2</string>
-							<string>soundC3</string>
-						</array>
-						<array>
-							<string>L3</string>
-							<string>soundD3</string>
-						</array>
-					</array>
+					<string>D on a Line</string>
+					<string>L4</string>
+					<string>soundD5</string>
 				</array>
-				<key>challenge03</key>
+				<key>9</key>
 				<array>
-					<string>A minor Pentascale</string>
-					<array>
-						<array>
-							<string>S1</string>
-							<string>soundA2</string>
-						</array>
-						<array>
-							<string>L2</string>
-							<string>soundB2</string>
-						</array>
-						<array>
-							<string>S2</string>
-							<string>soundC3</string>
-						</array>
-						<array>
-							<string>L3</string>
-							<string>soundD3</string>
-						</array>
-						<array>
-							<string>S3</string>
-							<string>soundE3</string>
-						</array>
-					</array>
+					<string>B on a Line</string>
+					<string>L3</string>
+					<string>soundB4</string>
 				</array>
-				<key>challenge04</key>
+				<key>8</key>
 				<array>
-					<string>C major Pentascale</string>
-					<array>
-						<array>
-							<string>S2</string>
-							<string>soundC3</string>
-						</array>
-						<array>
-							<string>L3</string>
-							<string>soundD3</string>
-						</array>
-						<array>
-							<string>S3</string>
-							<string>soundE3</string>
-						</array>
-						<array>
-							<string>L4</string>
-							<string>soundF3</string>
-						</array>
-						<array>
-							<string>S4</string>
-							<string>G3</string>
-						</array>
-					</array>
+					<string>G on a Line </string>
+					<string>L2</string>
+					<string>soundG4</string>
+				</array>
+				<key>7</key>
+				<array>
+					<string>E on a Line</string>
+					<string>L1</string>
+					<string>soundE4</string>
+				</array>
+				<key>6</key>
+				<array>
+					<string>G in a Space</string>
+					<string>S5</string>
+					<string>soundG5</string>
+				</array>
+				<key>5</key>
+				<array>
+					<string>E in a Space</string>
+					<string>S4</string>
+					<string>soundE5</string>
+				</array>
+				<key>4</key>
+				<array>
+					<string>C in a Space</string>
+					<string>S3</string>
+					<string>soundC5</string>
+				</array>
+				<key>3</key>
+				<array>
+					<string>A in a Space</string>
+					<string>S2</string>
+					<string>soundA4</string>
+				</array>
+				<key>2</key>
+				<array>
+					<string>F in a Space</string>
+					<string>S1</string>
+					<string>soundF4</string>
+				</array>
+				<key>1</key>
+				<array>
+					<string>D in a Space</string>
+					<string>S0</string>
+					<string>soundD4</string>
 				</array>
 			</dict>
 		</dict>
@@ -556,7 +484,24 @@
 			<key>timeLimit</key>
 			<string></string>
 			<key>challenges</key>
-			<dict/>
+			<dict>
+				<key>challenge08</key>
+				<string></string>
+				<key>challenge07</key>
+				<string></string>
+				<key>challenge06</key>
+				<string></string>
+				<key>challenge05</key>
+				<string></string>
+				<key>challenge04</key>
+				<string></string>
+				<key>challenge03</key>
+				<string></string>
+				<key>challenge02</key>
+				<string></string>
+				<key>challenge01</key>
+				<string></string>
+			</dict>
 		</dict>
 	</array>
 </dict>

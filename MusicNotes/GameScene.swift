@@ -27,8 +27,11 @@ class GameScene: SKScene {
     //var startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
     var startMsg = SKLabelNode()
     
-    var instruction = SKLabelNode()  // retrieve from plist
-    var destination = SKSpriteNode()  // retrieve from plist
+    var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+    var instruction = String()
+    var destination = String()  // to retrieve from plist
+    var sound = String() // to retrieve from plist
+    
     var background = SKSpriteNode()
     
     // these are the "clefs"
@@ -67,16 +70,25 @@ class GameScene: SKScene {
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
-        //println("check2 is \(level)") // returns MusicNotes.Level
-        //println("check3 is \(level.background)") // correct
-        //println("check4 is \(level.clef)")  // correct
+        
+/*      println("check2 is \(level)") // returns MusicNotes.Level
+        println("check3 is \(level.background)") // correct
+        println("check4 is \(level.clef)")  // correct
+        println("check5 is \(level.challenges)") // correct
+        for challenge in level.challenges {
+            println("challenge is \(challenge)") //correct
+        }
+        for (key, value) in level.challenges {
+            println("key \(key) has value \(value)") //correct
+        }
+*/
     }
     
     override func didMoveToView(view: SKView) {
-        addBackground()
+        updateBackground()
         addStaffLines()
         addNoti()
-        addClef()
+        updateClef()
         addTrashcanAndTrashcanLid()
         addStartMsg()
         setupCountLabels()
@@ -93,11 +105,13 @@ class GameScene: SKScene {
             case .StartingLevel:
                 childNodeWithName("msgLabel")!.hidden = true
                 followRoamingPath()
-                addInstruction()
+                setupInstructionLabel()
+                updateChallenge()
+                //instructionLabel.text = "\(instruction)"
                 paused = false
                 gameState = .Playing
         
-            //fallthrough
+            //fallthrough  //suppressed for now
             
             case .Playing:
                 roamingNoti!.removeAllActions()
@@ -105,10 +119,9 @@ class GameScene: SKScene {
 /*
                 if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
                     draggingNoti = false
-                    return         // what does this block do?
+                    return         // this block doesnt seem to be useful
                 }
 */
-                
                 let touch = touches.first as? UITouch
                 let location = touch!.locationInNode(self)
                 let node = nodeAtPoint(location)
@@ -147,16 +160,27 @@ class GameScene: SKScene {
         }
         
         // check collision
+        
  
         if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
+            
+            movingNoti?.position.y = S3.position.y
+            
+        // how to disable movingNoti from moving in y directions?
+            var movingNotiView = UIView(frame: movingNoti!.frame)
+            //self.view!.addSubview(movingNotiView)
+            //println("movingNotiView is \(movingNotiView)")
+            movingNotiView.userInteractionEnabled = false
 
-            roamingNoti!.position.y = S3.position.y // this does not work if addNoti() is effective
+        // how to feed values of S3 from plist
 
             celebrate()
             score++
             scoreLabel.text = "Score: \(score)"
             addNoti()
             followRoamingPath()
+            updateChallenge()
+            //instructionLabel.text = "\(instruction)"
             
         } else {
             die()
@@ -165,7 +189,55 @@ class GameScene: SKScene {
             flashGameOver()
             addNoti()
             followRoamingPath()
+            updateChallenge()
+            //instructionLabel.text = "\(instruction)"
         }
+    }
+    
+    func updateChallenge() { // the dictionary that contains the challenges is level.challenges
+        
+        /*
+        for challenge in level.challenges {
+        println("challenge is \(challenge)") // 3, [F in a Space, S0, soundF2] <- listing each of challenge in level 3
+        println(level.challenges.count) // 5 for level 3
+        println(level.challenges["4"]!) // "D on a Line", L4, soundD5 for level 3
+        println(level.challenges["3"]![0]) // B on a Line forlevel 3
+        println(level.challenges["3"]![1]) // for destination
+        println(level.challenges["3"]![2]) // for sound
+        }
+        */
+        
+        let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
+        
+        //println("randomIndex is \(randomIndex)")  // correct
+        //println(level.challenges["\(randomIndex)"]!)  // correct
+        //println(level.challenges["\(randomIndex)"]![0])  //correct
+        
+        var instruction = level.challenges["\(randomIndex)"]![0] as! String
+        instructionLabel.text = "\(instruction)"
+        
+        var destination = level.challenges["\(randomIndex)"]![1] as! String
+        destination = "\(destination)"
+    }
+    
+    func setupInstructionLabel() {
+        //var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+        //instructionLabel.text = "C in a Space"
+
+        instructionLabel.fontColor = SKColor.blackColor()
+        instructionLabel.text = "Instruction"
+        instructionLabel.name = "instructionLabel"
+        instructionLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/5)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            instructionLabel.fontSize = 66
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            instructionLabel.fontSize = 33
+        }
+        addChild(instructionLabel)
+        
+//        let fadeinAction = SKAction.fadeInWithDuration(0.2)
+//        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
+//        instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
     }
 
     override func update(currentTime: CFTimeInterval) {
@@ -190,25 +262,8 @@ class GameScene: SKScene {
         }
         addChild(startMsg)
     }
-    
-    func addInstruction() {
-        var instruction = SKLabelNode(fontNamed: "Verdana-Bold")
-        instruction.text = "C in a Space" // how to feed value from plist?
-        instruction.fontColor = UIColor.blackColor()
-        instruction.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/5)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            instruction.fontSize = 66
-        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            instruction.fontSize = 33
-        }
-        self.addChild(instruction)
 
-        let fadeinAction = SKAction.fadeInWithDuration(0.2)
-        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
-        instruction.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
-    }
-
-    func addBackground() {
+    func updateBackground() {
 
 //        var bg = SKSpriteNode(imageNamed: "bg9") // bg raw size is 2048x1536
         var bgName = level?.background!
@@ -305,7 +360,7 @@ class GameScene: SKScene {
 */
     }
 
-    func addClef() {
+    func updateClef() {
         //let clefTreble = SKSpriteNode()
         //let clefBass = SKSpriteNode()
         var clef = SKSpriteNode(imageNamed: "\(level.clef!).png")
@@ -314,14 +369,14 @@ class GameScene: SKScene {
             clef.anchorPoint = CGPointMake(0.5, 0.33)
             clef.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
             clef.setScale(L2.size.height / 118)
-            clef.name = "clefTreble"
+            //clef.name = "clefTreble"  // why do we not need this line?
             self.addChild(clef)
             clefRotating = clef
         } else if level.clef! == "clefBass" {
             clef.anchorPoint = CGPointMake(0.5, 0.71)
             clef.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L4.position.y)
             clef.setScale(L4.size.height / 56)
-            clef.name = "clefBass"
+            //clef.name = "clefBass"   // why do we not need this line?
             self.addChild(clef)
             clefRotating = clef
         }
@@ -378,9 +433,9 @@ class GameScene: SKScene {
         gameoverLabel.alpha = 0
         //gameoverLabel.fontSize = 138
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            deadCountLabel.fontSize = 138
+            gameoverLabel.fontSize = 138
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            deadCountLabel.fontSize = 68
+            gameoverLabel.fontSize = 68
         }
 
         let fadeinAction = SKAction.fadeInWithDuration(0.5)
