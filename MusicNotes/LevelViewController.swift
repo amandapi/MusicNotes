@@ -22,7 +22,7 @@ class LevelViewController: UIViewController {
         
         var levelButton = UIButton.buttonWithType(.System) as! UIButton
         
-        var buttonWidth = self.view.frame.width / 5.0
+        var buttonWidth = self.view.frame.width / 5.8
         var buttonHeight = buttonWidth * 0.75
         var gap = buttonWidth / 10.0
         var x5 = self.view.frame.width/2.0 - buttonWidth/2.0
@@ -34,63 +34,32 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 1...levels.count {
-  
-            if i <= 3 {
             
             var levelButton = UIButton.buttonWithType(.System) as! UIButton
-            levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5-dy, buttonWidth, buttonHeight)
+  
+            if i <= 3 {
+                levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
+            } else if i < 7 {
+                levelButton.frame = CGRectMake(x5 + CGFloat(i - 3)*dx - dx - dx , y5 + gap*3, buttonWidth, buttonHeight)
+            } else {
+                levelButton.frame = CGRectMake(x5 + CGFloat(i - 6)*dx - dx - dx , y5 + dy + gap*3, buttonWidth, buttonHeight)
+            }
+            
             levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
             levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
             levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
-            
             //levelButton.titleLabel!.textColor = UIColor.blackColor()
             levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             //levelButton.titleLabel!.shadowColor = UIColor.blackColor()
             levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
             levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
-            //find ot about shadowOpacity and shadowRadius on layer
-
+            //find out about shadowOpacity and shadowRadius on layer
             levelButton.titleLabel!.textAlignment = .Center
             levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-            levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside) 
-
+            levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+            
             self.view.addSubview(levelButton)
-                
-            } else if i < 7 {
-                
-                var levelButton = UIButton.buttonWithType(.System) as! UIButton
-                levelButton.frame = CGRectMake(x5 + CGFloat(i - 3)*dx - dx - dx , y5, buttonWidth, buttonHeight)
-                levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
-                levelButton.tag = i
-                levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
-                levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
-                levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-                levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
-                levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
-                levelButton.titleLabel!.textAlignment = .Center
-                levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-                levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
-                
-                self.view.addSubview(levelButton)
-                
-            } else {
-                
-                var levelButton = UIButton.buttonWithType(.System) as! UIButton
-                levelButton.frame = CGRectMake(x5 + CGFloat(i - 6)*dx - dx - dx , y5 + dy, buttonWidth, buttonHeight)
-                levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
-                levelButton.tag = i
-                levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
-                levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
-                levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-                levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
-                levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
-                levelButton.titleLabel!.textAlignment = .Center
-                levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-                levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
-                
-                self.view.addSubview(levelButton)
-            }
         }
     }
     
@@ -109,9 +78,6 @@ class LevelViewController: UIViewController {
                 let background = levelData["background"] as! String
                 let clef = levelData["clef"] as! String
                 let challenges = levelData["challenges"] as! NSDictionary
-                //println(levelData["background"]!) //prints bg for each i
-                //println(levelData["clef"]!) //prints clef for each i
-                //println(levelData["challenges"]!) //prints challenges for each i
                 
                 levels!.addObject(Level(background : background , clef : clef , challenges : challenges ))
             }
@@ -124,10 +90,6 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         currentLevel = levels.objectAtIndex(levelNumber - 1) as? Level 
         self.performSegueWithIdentifier("levelViewToGameView", sender: self)
-        //println("sender.tag is \(sender.tag)") //5 (when pressed 5)
-        //println("levelNumber is \(levelNumber)")  //5 (when pressed 5)
-        //println("got bg as \(currentLevel!.background)")  //bg5 (when pressed 5)
-        //println("got bg? as \(currentLevel!.background)?")  //bg5? (when pressed 5)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

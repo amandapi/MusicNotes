@@ -38,6 +38,8 @@ class GameViewController: UIViewController {
         
             // here is to pass information about the level to the GameScene Object
             scene.setLevel(level)
+            scene.updateBackground(level.background)
+            scene.updateClef(level.clef)
             
             skView.presentScene(scene)
         }

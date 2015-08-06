@@ -30,6 +30,7 @@ class GameScene: SKScene {
     var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
     var instruction = String()
     var destination = String()  // to retrieve from plist
+    var destinationNode = SKSpriteNode()
     var sound = String() // to retrieve from plist
     
     var background = SKSpriteNode()
@@ -85,13 +86,14 @@ class GameScene: SKScene {
     }
     
     override func didMoveToView(view: SKView) {
-        updateBackground()
+        //updateBackground()
         addStaffLines()
         addNoti()
-        updateClef()
+        //updateClef()
         addTrashcanAndTrashcanLid()
         addStartMsg()
         setupCountLabels()
+        println("notiGhost1 is \(noti)")
         
         if gameState == .StartingLevel {
             paused = true  // would false serves a better purpose? and get rid of gameStates?
@@ -111,13 +113,13 @@ class GameScene: SKScene {
                 paused = false
                 gameState = .Playing
         
-            //fallthrough  //suppressed for now
+            //fallthrough  //suppressing this time doesnt seem to make a change
             
             case .Playing:
                 roamingNoti!.removeAllActions()
                 roamingNoti?.name = "noti"
-/*
-                if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
+
+/*                if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
                     draggingNoti = false
                     return         // this block doesnt seem to be useful
                 }
@@ -133,6 +135,8 @@ class GameScene: SKScene {
             }
         }
     }
+    
+ // create an array of scoringNoti, then at touchesBegan, ignore scoring notis
 
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         
@@ -160,40 +164,31 @@ class GameScene: SKScene {
         }
         
         // check collision
-        
  
-        if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
-            
-            movingNoti?.position.y = S3.position.y
-            
-        // how to disable movingNoti from moving in y directions?
-            var movingNotiView = UIView(frame: movingNoti!.frame)
-            //self.view!.addSubview(movingNotiView)
-            //println("movingNotiView is \(movingNotiView)")
-            movingNotiView.userInteractionEnabled = false
+        //if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
+        //    movingNoti?.position.y = S3.position.y
 
-        // how to feed values of S3 from plist
+        println("destinationNode2 is \(destinationNode)") // why is this nil?
+        
+        if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
+            movingNoti?.position.y = destinationNode.position.y
+            
+        //    theArray.append[movingNoti]
 
             celebrate()
             score++
             scoreLabel.text = "Score: \(score)"
-            addNoti()
-            followRoamingPath()
-            updateChallenge()
-            //instructionLabel.text = "\(instruction)"
-            
         } else {
             die()
             deadCount++
             deadCountLabel.text = "\(deadCount)"
             flashGameOver()
-            addNoti()
-            followRoamingPath()
-            updateChallenge()
-            //instructionLabel.text = "\(instruction)"
         }
+        addNoti()
+        followRoamingPath()
+//        updateChallenge()
     }
-    
+
     func updateChallenge() { // the dictionary that contains the challenges is level.challenges
         
         /*
@@ -209,21 +204,40 @@ class GameScene: SKScene {
         
         let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
         
-        //println("randomIndex is \(randomIndex)")  // correct
-        //println(level.challenges["\(randomIndex)"]!)  // correct
-        //println(level.challenges["\(randomIndex)"]![0])  //correct
-        
         var instruction = level.challenges["\(randomIndex)"]![0] as! String
         instructionLabel.text = "\(instruction)"
-        
+        let fadeinAction = SKAction.fadeInWithDuration(0.2)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
+        instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
+        println("instruction is \(instruction)")
+
         var destination = level.challenges["\(randomIndex)"]![1] as! String
-        destination = "\(destination)"
+        var destinationNode = getSpriteNodeForString(destination)
+        destinationNode.name = "\(destination)"
+        println("destination1 is \(destination)") // correct
+        println("destinationNode is \(destinationNode)")  // correct
+    }
+    
+    func getSpriteNodeForString(name : String) -> SKSpriteNode {
+        switch name {
+                case "L1": return L1
+                case "L2": return L2
+                case "L3": return L3
+                case "L4": return L4
+                case "L5": return L5
+                case "S0": return S0
+                case "S1": return S1
+                case "S2": return S2
+                case "S3": return S3
+                case "S4": return S4
+                case "S5": fallthrough
+                default: return S5
+            }
     }
     
     func setupInstructionLabel() {
         //var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
         //instructionLabel.text = "C in a Space"
-
         instructionLabel.fontColor = SKColor.blackColor()
         instructionLabel.text = "Instruction"
         instructionLabel.name = "instructionLabel"
@@ -234,13 +248,9 @@ class GameScene: SKScene {
             instructionLabel.fontSize = 33
         }
         addChild(instructionLabel)
-        
-//        let fadeinAction = SKAction.fadeInWithDuration(0.2)
-//        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
-//        instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
     }
 
-    override func update(currentTime: CFTimeInterval) {
+     override func update(currentTime: CFTimeInterval) {
         dt = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
         enumerateChildNodesWithName("noti", usingBlock: {node, stop in
@@ -263,15 +273,15 @@ class GameScene: SKScene {
         addChild(startMsg)
     }
 
-    func updateBackground() {
-
+    func updateBackground(background: String) { //func updateBackground() {
 //        var bg = SKSpriteNode(imageNamed: "bg9") // bg raw size is 2048x1536
-        var bgName = level?.background!
-        var bg = SKSpriteNode(imageNamed: "\(bgName!)")
+//        var bg = SKSpriteNode(imageNamed: "\(level?.background!)")
+        var bg = SKSpriteNode(imageNamed: "\(background)")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
-        addChild(bg)
+        //addChild(bg)  // this works too
+        insertChild(bg, atIndex: 0)   //self.insertChild(bg, atIndex: 0) work too
         }
     
     func addStaffLines() {
@@ -330,14 +340,14 @@ class GameScene: SKScene {
     func addNoti() {
         //var noti = MusicNotes(imageNamed: "notiPinkU")
         var noti = MusicNotes(imageNamed: String())
-        noti.setScale(S5.yScale * 0.8)
+        noti.setScale(S5.yScale * 0.83)
         roamingNoti = noti
         noti.name = "noti"
-        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
-        noti.anchorPoint = CGPointMake(0.38, 0.25)  // should this line be here or in MusicNotes?
+        noti.anchorPoint = CGPointMake(0.38, 0.28)  // should this line be here or in MusicNotes?
         noti.zPosition = 3
         noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
         addChild(noti)
+        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
         //followRoamingPath()
     }
     
@@ -360,26 +370,21 @@ class GameScene: SKScene {
 */
     }
 
-    func updateClef() {
-        //let clefTreble = SKSpriteNode()
-        //let clefBass = SKSpriteNode()
-        var clef = SKSpriteNode(imageNamed: "\(level.clef!).png")
-        //println("level.clef! is \(level.clef!)") //correct: clefBass or clefTreble
-        if level.clef! == "clefTreble" {
-            clef.anchorPoint = CGPointMake(0.5, 0.33)
-            clef.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L2.position.y)
-            clef.setScale(L2.size.height / 118)
-            //clef.name = "clefTreble"  // why do we not need this line?
-            self.addChild(clef)
-            clefRotating = clef
-        } else if level.clef! == "clefBass" {
-            clef.anchorPoint = CGPointMake(0.5, 0.71)
-            clef.position = CGPoint(x: L2.position.x - frame.width/3.5, y: L4.position.y)
-            clef.setScale(L4.size.height / 56)
-            //clef.name = "clefBass"   // why do we not need this line?
-            self.addChild(clef)
-            clefRotating = clef
+    func updateClef(clef: String) {
+        var cf = SKSpriteNode(imageNamed: "\(clef).png")
+        cf.name  = "\(clef)"
+        if (clef == "clefTreble") {
+            cf.anchorPoint = CGPointMake(0.5, 0.33)
+            cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
+            cf.setScale(frame.width/3880)
+        } else  {
+            cf.anchorPoint = CGPointMake(0.5, 0.71)
+            cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
+            cf.setScale(frame.width/1880)
         }
+        self.addChild(cf) // this works too
+        //self.insertChild(cf, atIndex: 0)
+        clefRotating = cf
     }
     
     func addTrashcanAndTrashcanLid() {
