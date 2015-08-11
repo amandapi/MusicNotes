@@ -29,9 +29,9 @@ class GameScene: SKScene {
     
     var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
     var instruction = String()
-    var destination = String()  // to retrieve from plist
+    var destination = String()
     var destinationNode = SKSpriteNode()
-    var sound = String() // to retrieve from plist
+    var sound = String()
     
     var background = SKSpriteNode()
     
@@ -44,6 +44,7 @@ class GameScene: SKScene {
     var gameState = GameState.StartingLevel
     
     // these are the "destinations" defined by sizes of "staffLines"
+    let L0 = SKSpriteNode(imageNamed: "L0")
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
     let S1 = SKSpriteNode(imageNamed: "S1")
@@ -55,6 +56,7 @@ class GameScene: SKScene {
     let S4 = SKSpriteNode(imageNamed: "S4")
     let L5 = SKSpriteNode(imageNamed: "L5")
     let S5 = SKSpriteNode(imageNamed: "S5")
+    let L6 = SKSpriteNode(imageNamed: "L6")
     
     let trashcan = SKSpriteNode(imageNamed: "trashcan")
     let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
@@ -72,11 +74,7 @@ class GameScene: SKScene {
     func setLevel(level: Level) {
         self.level = level
         
-/*      println("check2 is \(level)") // returns MusicNotes.Level
-        println("check3 is \(level.background)") // correct
-        println("check4 is \(level.clef)")  // correct
-        println("check5 is \(level.challenges)") // correct
-        for challenge in level.challenges {
+/*      for challenge in level.challenges {
             println("challenge is \(challenge)") //correct
         }
         for (key, value) in level.challenges {
@@ -93,7 +91,6 @@ class GameScene: SKScene {
         addTrashcanAndTrashcanLid()
         addStartMsg()
         setupCountLabels()
-        println("notiGhost1 is \(noti)")
         
         if gameState == .StartingLevel {
             paused = true  // would false serves a better purpose? and get rid of gameStates?
@@ -113,7 +110,7 @@ class GameScene: SKScene {
                 paused = false
                 gameState = .Playing
         
-            //fallthrough  //suppressing this time doesnt seem to make a change
+            //fallthrough  //suppressing this time prevents phantom notes to appear
             
             case .Playing:
                 roamingNoti!.removeAllActions()
@@ -152,7 +149,8 @@ class GameScene: SKScene {
     }
     
     func destinationRect(destination: CGRect) -> CGRect {
-        return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/3, destination.size.width, destination.size.height/3)
+        //return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/3, destination.size.width, destination.size.height/3)
+        return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/4, destination.size.width, destination.size.height/2)
     }
 
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -165,10 +163,8 @@ class GameScene: SKScene {
         
         // check collision
  
-        //if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
-        //    movingNoti?.position.y = S3.position.y
-
-        println("destinationNode2 is \(destinationNode)") // why is this nil?
+//        if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
+//            movingNoti?.position.y = S3.position.y
         
         if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
             movingNoti?.position.y = destinationNode.position.y
@@ -186,40 +182,58 @@ class GameScene: SKScene {
         }
         addNoti()
         followRoamingPath()
-//        updateChallenge()
+        updateChallenge()
     }
 
-    func updateChallenge() { // the dictionary that contains the challenges is level.challenges
+/*    func updateChallenge(challenges: NSDictionary) {
+        let randomIndex = Int(arc4random_uniform(UInt32(challenges.count))) + 1
+        println("challenges.count is \(challenges.count)")
         
-        /*
-        for challenge in level.challenges {
-        println("challenge is \(challenge)") // 3, [F in a Space, S0, soundF2] <- listing each of challenge in level 3
-        println(level.challenges.count) // 5 for level 3
-        println(level.challenges["4"]!) // "D on a Line", L4, soundD5 for level 3
-        println(level.challenges["3"]![0]) // B on a Line forlevel 3
-        println(level.challenges["3"]![1]) // for destination
-        println(level.challenges["3"]![2]) // for sound
-        }
-        */
-        
-        let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
-        
-        var instruction = level.challenges["\(randomIndex)"]![0] as! String
+        var instruction = challenges["\(randomIndex)"]![0] as! String
         instructionLabel.text = "\(instruction)"
-        let fadeinAction = SKAction.fadeInWithDuration(0.2)
-        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
-        instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
         println("instruction is \(instruction)")
-
-        var destination = level.challenges["\(randomIndex)"]![1] as! String
-        var destinationNode = getSpriteNodeForString(destination)
+        println("instructionLabel.text is \(instructionLabel.text)")
+ //       let fadeinAction = SKAction.fadeInWithDuration(0.2)
+ //       let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
+ //       instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
+        
+        var destination = challenges["\(randomIndex)"]![1] as! String
+        //var destinationNode = getSpriteNodeForString(destination)
+        self.destinationNode = getSpriteNodeForString(destination)
         destinationNode.name = "\(destination)"
         println("destination1 is \(destination)") // correct
         println("destinationNode is \(destinationNode)")  // correct
-    }
     
+        self.sound = level.challenges["\(randomIndex)"]![2] as! String
+        println("sound1 is \(sound)")
+    }
+*/
+    
+    func updateChallenge() { // the dictionary that contains the challenges is level.challenges
+
+        let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
+        //println("randomIndex is \(randomIndex)")
+        
+        var instruction = level.challenges["\(randomIndex)"]![0] as! String
+        instructionLabel.text = "\(instruction)"
+        //println("instruction is \(instruction)")
+        let fadeinAction = SKAction.fadeInWithDuration(0.2)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
+        instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
+
+        var destination = level.challenges["\(randomIndex)"]![1] as! String
+        //var destinationNode = getSpriteNodeForString(destination) // this line doesn't work
+        self.destinationNode = getSpriteNodeForString(destination)
+        destinationNode.name = "\(destination)"
+        //println("destinationNode is \(destinationNode)")  // correct
+        
+        self.sound = level.challenges["\(randomIndex)"]![2] as! String
+        println("sound1 is \(sound)")
+    }
+
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
         switch name {
+                case "L0": return L0
                 case "L1": return L1
                 case "L2": return L2
                 case "L3": return L3
@@ -230,8 +244,9 @@ class GameScene: SKScene {
                 case "S2": return S2
                 case "S3": return S3
                 case "S4": return S4
-                case "S5": fallthrough
-                default: return S5
+                case "S5": return S5
+                case "L6": fallthrough
+                default: return L6
             }
     }
     
@@ -276,7 +291,7 @@ class GameScene: SKScene {
     func updateBackground(background: String) { //func updateBackground() {
 //        var bg = SKSpriteNode(imageNamed: "bg9") // bg raw size is 2048x1536
 //        var bg = SKSpriteNode(imageNamed: "\(level?.background!)")
-        var bg = SKSpriteNode(imageNamed: "\(background)")
+        var bg = SKSpriteNode(imageNamed: "\(background).png")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
@@ -291,6 +306,11 @@ class GameScene: SKScene {
         var yScale = frame.width/2300
         var xScale = frame.width/1680
         
+        L0.position = CGPoint(x:w , y:h-8*d)
+        L0.yScale = yScale
+        L0.xScale = xScale
+        self.addChild(L0)
+        L0.hidden = true  // ledger line for middle C for clefTreble
         S0.position = CGPoint(x:w , y:h-7*d)
         S0.yScale = yScale
         S0.xScale = xScale
@@ -335,6 +355,11 @@ class GameScene: SKScene {
         S5.yScale = yScale
         S5.xScale = xScale
         self.addChild(S5)
+        L6.position = CGPoint(x:w , y:h+4*d)
+        L6.yScale = yScale
+        L6.xScale = xScale
+        self.addChild(L6)
+        L6.hidden = true  // ledger line for middle C for clefBass
     }
 
     func addNoti() {
@@ -382,8 +407,8 @@ class GameScene: SKScene {
             cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
             cf.setScale(frame.width/1880)
         }
-        self.addChild(cf) // this works too
-        //self.insertChild(cf, atIndex: 0)
+        //self.addChild(cf) // this works too
+        self.insertChild(cf, atIndex: 0)
         clefRotating = cf
     }
     
@@ -458,7 +483,8 @@ class GameScene: SKScene {
     
     func celebrate() {
         rotateClef()
-        playSound("soundC5.wav")
+        playSound("\(sound).wav")
+        println("sound2 is \(sound)")
         
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
         let twinkle1 = SKEmitterNode()

@@ -20,6 +20,4 @@ class Level {
         self.clef = clef
         self.challenges = challenges
     }
-    
-
 }

@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>9676AC59-4245-4DCE-99E5-EF0B38FC9B3E</string>
 	<key>IDESourceControlProjectName</key>
-	<string>MusicNotes</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>5591B960AD8F98687188EDC6996C670C5AE401EA</key>
 		<string>https://github.com/amandapi/MusicNotes.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>MusicNotes.xcodeproj</string>
+	<string>MusicNotes.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>5591B960AD8F98687188EDC6996C670C5AE401EA</key>

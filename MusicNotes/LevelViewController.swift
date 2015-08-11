@@ -14,11 +14,14 @@ class LevelViewController: UIViewController {
 
     var currentLevel : Level?
     var levels: NSMutableArray?
+    var chooseLevelLabel: UILabel?
     
     // could not put together a valid init method - does a viewController needs an init?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addChooseLevelLabel()
         
         var levelButton = UIButton.buttonWithType(.System) as! UIButton
         
@@ -96,6 +99,20 @@ class LevelViewController: UIViewController {
         var destinationViewController: GameViewController = segue.destinationViewController as! GameViewController
         destinationViewController.setLevel(currentLevel!)
     }
+    
+    func addChooseLevelLabel() {
+        
+        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3 , self.view.frame.size.height/6 , self.view.frame.size.width/3, self.view.frame.size.width/10))
+        //chooseLevelLabel.center = CGPointMake(self.view.frame.width/2 , self.view.frame.height)
+        chooseLevelLabel.textAlignment = NSTextAlignment.Center
+        chooseLevelLabel.text = "Choose Your Level"
+        chooseLevelLabel.textColor = UIColor.blackColor()
+        //chooseLevelLabel.font = UIFont(name: "Verdana-Bold", size: chooseLevelLabel.font.pointSize)
+        chooseLevelLabel.font = UIFont(name: "Verdana-Bold", size: 33)
+        chooseLevelLabel.sizeToFit()
+        self.view.addSubview(chooseLevelLabel)
+    }
+
     
     /*    required init(currentLevel: Level()) {
     //fatalError("NSCoding not supported")

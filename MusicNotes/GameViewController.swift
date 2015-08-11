@@ -12,6 +12,7 @@ import SpriteKit
 class GameViewController: UIViewController {
     
     var scene: GameScene!
+    var destinationNode = SKSpriteNode()
     
     var level: Level!
     func setLevel(level: Level) {
@@ -38,8 +39,11 @@ class GameViewController: UIViewController {
         
             // here is to pass information about the level to the GameScene Object
             scene.setLevel(level)
+        
+            // here is to ask GameScene to update variables according to level
             scene.updateBackground(level.background)
             scene.updateClef(level.clef)
+            //scene.updateChallenge(level.challenges)
             
             skView.presentScene(scene)
         }

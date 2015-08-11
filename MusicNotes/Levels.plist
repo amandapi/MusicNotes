@@ -195,7 +195,7 @@
 				<array>
 					<string>D on a Line</string>
 					<string>L3</string>
-					<string>soundD2</string>
+					<string>soundD3</string>
 				</array>
 				<key>8</key>
 				<array>
@@ -347,7 +347,7 @@
 				<array>
 					<string>D on a Line</string>
 					<string>L3</string>
-					<string>soundD2</string>
+					<string>soundD3</string>
 				</array>
 				<key>8</key>
 				<array>
@@ -485,22 +485,72 @@
 			<string></string>
 			<key>challenges</key>
 			<dict>
-				<key>challenge08</key>
-				<string></string>
-				<key>challenge07</key>
-				<string></string>
-				<key>challenge06</key>
-				<string></string>
-				<key>challenge05</key>
-				<string></string>
-				<key>challenge04</key>
-				<string></string>
-				<key>challenge03</key>
-				<string></string>
-				<key>challenge02</key>
-				<string></string>
-				<key>challenge01</key>
-				<string></string>
+				<key>11</key>
+				<array>
+					<string>F on a Line</string>
+					<string>L5</string>
+					<string>soundF5</string>
+				</array>
+				<key>10</key>
+				<array>
+					<string>D on a Line</string>
+					<string>L4</string>
+					<string>soundD5</string>
+				</array>
+				<key>9</key>
+				<array>
+					<string>B on a Line</string>
+					<string>L3</string>
+					<string>soundB4</string>
+				</array>
+				<key>8</key>
+				<array>
+					<string>G on a Line </string>
+					<string>L2</string>
+					<string>soundG4</string>
+				</array>
+				<key>7</key>
+				<array>
+					<string>E on a Line</string>
+					<string>L1</string>
+					<string>soundE4</string>
+				</array>
+				<key>5</key>
+				<array>
+					<string>E in a Space</string>
+					<string>S4</string>
+					<string>soundE5</string>
+				</array>
+				<key>4</key>
+				<array>
+					<string>C in a Space</string>
+					<string>S3</string>
+					<string>soundC5</string>
+				</array>
+				<key>3</key>
+				<array>
+					<string>A in a Space</string>
+					<string>S2</string>
+					<string>soundA4</string>
+				</array>
+				<key>2</key>
+				<array>
+					<string>F in a Space</string>
+					<string>S1</string>
+					<string>soundF4</string>
+				</array>
+				<key>1</key>
+				<array>
+					<string>D in a Space</string>
+					<string>S0</string>
+					<string>soundD4</string>
+				</array>
+				<key>6</key>
+				<array>
+					<string>G in a Space</string>
+					<string>S5</string>
+					<string>soundG5</string>
+				</array>
 			</dict>
 		</dict>
 	</array>
