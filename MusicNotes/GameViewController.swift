@@ -13,6 +13,11 @@ class GameViewController: UIViewController {
     
     var scene: GameScene!
     var destinationNode = SKSpriteNode()
+    var challengesArray: [NSArray] = []
+    var currentChallengeIndex: Int = 0
+    var instruction: String!
+    var destination: String!
+    var sound: String!
     
     var level: Level!
     func setLevel(level: Level) {
@@ -25,6 +30,8 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
     if let scene = GameScene(size: view.frame.size) as GameScene? {
+        
+            //scene.chellengeDelegate = self
         
             // Configure the view.
             let skView = self.view as! SKView
@@ -44,7 +51,55 @@ class GameViewController: UIViewController {
             scene.updateBackground(level.background)
             scene.updateClef(level.clef)
             //scene.updateChallenge(level.challenges)
+        
+      
+        
+        //Homework: level.randomizeChallenges() for every level, then use challengesArray, keep track of challengeIndex
+        
+        
+        var challengesArray = NSMutableArray()
+        for challenge in level.challenges {
+        challengesArray.insertObject(Challenge.self, atIndex: 0)
+        println(challengesArray)
+        }
+        
+        
+        
+        // randomize the challenges once at the beginning of the level
+        level.randomizeChallenges()
+        println(level)
+        println(challengesArray)
+        
+        // track the challenge of the current index
+        //currentChallengeIndex = 0 // this should be a property of GameViewController
+       // for key in challengesArray.keys {
+        //    currentChallengeIndex = challengesArray.index()
+
+        // pass the first challenge to GameScene
+      //  scene.updateChallenge(level.challengesArray[currentChallengeIndex] as! Challenge)
+        
+        
+
+        
+/*        var challengesArray = NSMutableArray()
+        for challenge in level.challenges {
+            println("challengeP is \(challenge)")
             
+            challengesArray.insertObject(Challenge.self, atIndex: 0)
+            level.randomizeChallenges()
+            scene.updateChallenge(Challenge(instruction: String(), destination: String(), sound: String()))
+            //challengesArray.addObject(Challenge)
+
+            level.randomizeChallenges()
+            //println(level) // gives MusicNotes.Level
+
+            println("challengeQ is \(challenge)") // gives one challenge
+            
+        }
+*/
+        
+        
+        
             skView.presentScene(scene)
         }
     }

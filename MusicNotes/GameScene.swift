@@ -16,6 +16,9 @@ class GameScene: SKScene {
     var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
+    var scoringNoti: MusicNotes?
+    //var scoringNotiArray: NSArray?
+    var scoringNotiArray = [SKSpriteNode]()
     
     var lastUpdateTime: NSTimeInterval = 0.0
     var dt: NSTimeInterval = 0.0
@@ -27,6 +30,7 @@ class GameScene: SKScene {
     //var startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
     var startMsg = SKLabelNode()
     
+    var challenge = NSArray()
     var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
     var instruction = String()
     var destination = String()
@@ -73,14 +77,15 @@ class GameScene: SKScene {
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
-        
-/*      for challenge in level.challenges {
+/*
+      for challenge in level.challenges {
             println("challenge is \(challenge)") //correct
         }
         for (key, value) in level.challenges {
             println("key \(key) has value \(value)") //correct
         }
 */
+
     }
     
     override func didMoveToView(view: SKView) {
@@ -105,7 +110,7 @@ class GameScene: SKScene {
                 childNodeWithName("msgLabel")!.hidden = true
                 followRoamingPath()
                 setupInstructionLabel()
-                updateChallenge()
+                updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
                 //instructionLabel.text = "\(instruction)"
                 paused = false
                 gameState = .Playing
@@ -133,7 +138,7 @@ class GameScene: SKScene {
         }
     }
     
- // create an array of scoringNoti, then at touchesBegan, ignore scoring notis
+ // create an array of scoringNoti, then at touchesBegan, ignore scoring noti
 
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         
@@ -167,10 +172,23 @@ class GameScene: SKScene {
 //            movingNoti?.position.y = S3.position.y
         
         if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
-            movingNoti?.position.y = destinationNode.position.y
+            //movingNoti?.position.y = destinationNode.position.y
+           
             
-        //    theArray.append[movingNoti]
+            
+            
+            
+           //  trying to change noti id to scoringNoti - this is useless
+            //scoringNoti = movingNoti
+            movingNoti?.position.y = destinationNode.position.y
+           
+            // make an array of the scoringNoti
+            scoringNotiArray.append(movingNoti!)
+            //println("scoringNotiArray is \(scoringNotiArray)")  // good
 
+            
+            
+            
             celebrate()
             score++
             scoreLabel.text = "Score: \(score)"
@@ -182,54 +200,68 @@ class GameScene: SKScene {
         }
         addNoti()
         followRoamingPath()
-        updateChallenge()
+        updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
     }
-
-/*    func updateChallenge(challenges: NSDictionary) {
-        let randomIndex = Int(arc4random_uniform(UInt32(challenges.count))) + 1
-        println("challenges.count is \(challenges.count)")
-        
-        var instruction = challenges["\(randomIndex)"]![0] as! String
-        instructionLabel.text = "\(instruction)"
-        println("instruction is \(instruction)")
-        println("instructionLabel.text is \(instructionLabel.text)")
- //       let fadeinAction = SKAction.fadeInWithDuration(0.2)
- //       let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
- //       instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
-        
-        var destination = challenges["\(randomIndex)"]![1] as! String
-        //var destinationNode = getSpriteNodeForString(destination)
-        self.destinationNode = getSpriteNodeForString(destination)
-        destinationNode.name = "\(destination)"
-        println("destination1 is \(destination)") // correct
-        println("destinationNode is \(destinationNode)")  // correct
     
-        self.sound = level.challenges["\(randomIndex)"]![2] as! String
-        println("sound1 is \(sound)")
+   
+    func updateChallenge(challenge: Challenge) {
+        println(Challenge)
+        self.instructionLabel.text = challenge.instruction
+        self.destinationNode = getSpriteNodeForString(challenge.destination)
+        self.sound = challenge.sound
+    }
+    
+    
+ 
+/*
+    func updateChallenge(Challenge: NSArray) {
+    
+        var instruction: AnyObject = Challenge[0]
+        instructionLabel.text = instruction as! String
+    
+        var destination = Challenge[1] as! String
+        self.destinationNode = getSpriteNodeForString(destination)
+    
+        self.sound = Challenge[2] as! String
     }
 */
     
+    
+/*
     func updateChallenge() { // the dictionary that contains the challenges is level.challenges
 
         let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
-        //println("randomIndex is \(randomIndex)")
+        println("randomIndex is \(randomIndex)")
+        //println(level.challenges)
         
+        // get instruction at this randomIndex
         var instruction = level.challenges["\(randomIndex)"]![0] as! String
         instructionLabel.text = "\(instruction)"
         //println("instruction is \(instruction)")
         let fadeinAction = SKAction.fadeInWithDuration(0.2)
         let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
         instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
-
+        
+        // get destination at this randomIndex
         var destination = level.challenges["\(randomIndex)"]![1] as! String
         //var destinationNode = getSpriteNodeForString(destination) // this line doesn't work
         self.destinationNode = getSpriteNodeForString(destination)
         destinationNode.name = "\(destination)"
         //println("destinationNode is \(destinationNode)")  // correct
         
+        // get sound at this randomIndex
         self.sound = level.challenges["\(randomIndex)"]![2] as! String
-        println("sound1 is \(sound)")
+        //println("sound is \(sound)")    
+
+
+
+        //remove this challenge for key randomIndex
+        
+        
     }
+*/
+
+
 
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
         switch name {
@@ -272,6 +304,7 @@ class GameScene: SKScene {
             let noti = node as! MusicNotes
             noti.move(self.dt)
         })
+        
     }
 
     func addStartMsg() {
@@ -484,7 +517,6 @@ class GameScene: SKScene {
     func celebrate() {
         rotateClef()
         playSound("\(sound).wav")
-        println("sound2 is \(sound)")
         
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
         let twinkle1 = SKEmitterNode()
