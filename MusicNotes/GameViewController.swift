@@ -92,7 +92,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         return true
     }
     
-    func NotiDidScore(didScore: Bool) {
+    func notiDidScore(didScore: Bool) {
         currentChallengeIndex++
         if (currentChallengeIndex < level.challengesArray.count){
             var challenge = level.challengesArray[currentChallengeIndex] as! Challenge
