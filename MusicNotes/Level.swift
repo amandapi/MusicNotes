@@ -25,31 +25,27 @@ class Level {
         
         challengesArray = NSMutableArray()
         for key in challenges.allKeys{
+            
             let value = challenges.objectForKey(key) as! NSArray
             let instruction = value[0] as! String
             let destination = value[1] as! String
             let sound = value[2] as! String
         challengesArray.addObject(Challenge(instruction: instruction, destination: destination, sound: sound))
-            //randomizeChallenges()
         }
-
-/*
-        var challengesArray : Array<NSArray> = []
-        for (key, value) in challenges {
-            challengesArray.append(value as! NSArray)
-            //println("challengesArray has key \(key) and value \(challengesArray)")
-            }
-*/
+        
+        // take a look inside Challenge
+        for challenge in challengesArray {
+            var c = challenge as! Challenge
+        println(c.instruction)
+        }
     }
-    
-    
 
-        func randomizeChallenges() {
-            //var randomChallenges = NSMutableArray(capacity: challengesArray.count)
-            for i in 0..<challengesArray.count {
-                let randomNumber = Int(arc4random_uniform(UInt32(challengesArray.count)))
-                let object: AnyObject = challengesArray[randomNumber]
-                challengesArray.removeObjectAtIndex(randomNumber)
+    func randomizeChallenges() {
+        for i in 0..<challengesArray.count {
+            let randomNumber = Int(arc4random_uniform(UInt32(challengesArray.count)))
+            let object: AnyObject = challengesArray[randomNumber]
+            challengesArray.removeObjectAtIndex(randomNumber)
+            challengesArray.insertObject(object, atIndex: 0)
             }
         }
     

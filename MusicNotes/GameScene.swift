@@ -10,7 +10,13 @@ import SpriteKit
 import UIKit  // neccessary?
 import Foundation   // neccessary?
 
+protocol GameSceneDelegate {
+    func NotiDidScore(didScore: Bool)
+}
+
 class GameScene: SKScene {
+    
+    var gameSceneDelegate = GameSceneDelegate?  // was without ()
     
     var noti = MusicNotes(imageNamed: String())
     var roamingNoti: MusicNotes?
@@ -73,19 +79,15 @@ class GameScene: SKScene {
         super.init(size: size)
     }
     
+    func setGameSceneDelegate(delegate: GameSceneDelegate) {
+        GameSceneDelegate = delegate
+    }
+    
+    
 // This block will be called by GameViewController's scene.setLevel(level) before skView.presentScene
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
-/*
-      for challenge in level.challenges {
-            println("challenge is \(challenge)") //correct
-        }
-        for (key, value) in level.challenges {
-            println("key \(key) has value \(value)") //correct
-        }
-*/
-
     }
     
     override func didMoveToView(view: SKView) {
@@ -110,7 +112,7 @@ class GameScene: SKScene {
                 childNodeWithName("msgLabel")!.hidden = true
                 followRoamingPath()
                 setupInstructionLabel()
-                updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
+                //updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
                 //instructionLabel.text = "\(instruction)"
                 paused = false
                 gameState = .Playing
@@ -171,35 +173,38 @@ class GameScene: SKScene {
 //        if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
 //            movingNoti?.position.y = S3.position.y
         
+        var didScore = false
+        
         if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
             //movingNoti?.position.y = destinationNode.position.y
-           
-            
-            
             
             
            //  trying to change noti id to scoringNoti - this is useless
             //scoringNoti = movingNoti
             movingNoti?.position.y = destinationNode.position.y
            
-            // make an array of the scoringNoti
+            // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and (b) make scoring Noti unmovable
             scoringNotiArray.append(movingNoti!)
             //println("scoringNotiArray is \(scoringNotiArray)")  // good
-
-            
-            
-            
+ 
             celebrate()
             score++
             scoreLabel.text = "Score: \(score)"
+            didScore = true
         } else {
             die()
             deadCount++
             deadCountLabel.text = "\(deadCount)"
-            flashGameOver()
+            flashGameOver() //if deadcount >= 3 {flashGameOver()}
         }
+        
         addNoti()
         followRoamingPath()
+        
+        if gameSceneDelegate != nil {
+            gameSceneDelegate!.notiDidScore(didScore)
+        }
+        
         updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
     }
     
@@ -286,7 +291,7 @@ class GameScene: SKScene {
         //var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
         //instructionLabel.text = "C in a Space"
         instructionLabel.fontColor = SKColor.blackColor()
-        instructionLabel.text = "Instruction"
+        //instructionLabel.text = "Instruction"
         instructionLabel.name = "instructionLabel"
         instructionLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/5)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {

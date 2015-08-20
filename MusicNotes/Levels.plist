@@ -9,6 +9,8 @@
 			<string>bg1</string>
 			<key>clef</key>
 			<string>clefTreble</string>
+			<key>timeLimit</key>
+			<string>-1</string>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -54,6 +56,8 @@
 			<string>bg2</string>
 			<key>clef</key>
 			<string>clefBass</string>
+			<key>timeLimit</key>
+			<string>-1</string>
 			<key>challenges</key>
 			<dict>
 				<key>5</key>
@@ -93,6 +97,8 @@
 			<string>bg3</string>
 			<key>clef</key>
 			<string>clefTreble</string>
+			<key>timeLimit</key>
+			<string>-1</string>
 			<key>challenges</key>
 			<dict>
 				<key>5</key>
@@ -132,6 +138,8 @@
 			<string>bg4</string>
 			<key>clef</key>
 			<string>clefBass</string>
+			<key>timeLimit</key>
+			<string>-1</string>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -177,6 +185,8 @@
 			<string>bg5</string>
 			<key>clef</key>
 			<string>clefBass</string>
+			<key>timeLimit</key>
+			<string>-1</string>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -252,6 +262,8 @@
 			<string>bg6</string>
 			<key>clef</key>
 			<string>clefTreble</string>
+			<key>timeLimit</key>
+			<string>-1</string>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -328,7 +340,7 @@
 			<key>clef</key>
 			<string>clefBass</string>
 			<key>timeLimit</key>
-			<string></string>
+			<string>1</string>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -405,7 +417,7 @@
 			<key>clef</key>
 			<string>clefTreble</string>
 			<key>timeLimit</key>
-			<string></string>
+			<string>1</string>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -480,9 +492,9 @@
 			<key>background</key>
 			<string>bg9</string>
 			<key>clef</key>
-			<string>clefBass</string>
+			<string>clefEither</string>
 			<key>timeLimit</key>
-			<string></string>
+			<string>1</string>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
