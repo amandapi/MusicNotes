@@ -11,12 +11,12 @@ import UIKit  // neccessary?
 import Foundation   // neccessary?
 
 protocol GameSceneDelegate {
-    func NotiDidScore(didScore: Bool)
+    func notiDidScore(didScore: Bool)
 }
 
 class GameScene: SKScene {
     
-    var gameSceneDelegate = GameSceneDelegate?  // was without ()
+    var gameSceneDelegate: GameSceneDelegate?
     
     var noti = MusicNotes(imageNamed: String())
     var roamingNoti: MusicNotes?
@@ -80,7 +80,7 @@ class GameScene: SKScene {
     }
     
     func setGameSceneDelegate(delegate: GameSceneDelegate) {
-        GameSceneDelegate = delegate
+        gameSceneDelegate = delegate
     }
     
     
@@ -204,8 +204,6 @@ class GameScene: SKScene {
         if gameSceneDelegate != nil {
             gameSceneDelegate!.notiDidScore(didScore)
         }
-        
-        updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
     }
     
    
