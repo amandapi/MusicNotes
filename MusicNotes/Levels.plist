@@ -497,71 +497,164 @@
 			<string>1</string>
 			<key>challenges</key>
 			<dict>
+				<key>22</key>
+				<array>
+					<string>A on a Line</string>
+					<string>L5</string>
+					<string>soundA3</string>
+					<string>clefBass</string>
+				</array>
+				<key>21</key>
+				<array>
+					<string>F on a Line
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;string&gt;F on a Line&lt;/string&gt;
+&lt;/plist&gt;
+</string>
+					<string>L4</string>
+					<string>soundF3</string>
+					<string>clefBass</string>
+				</array>
+				<key>20</key>
+				<array>
+					<string>D on a Line</string>
+					<string>L3</string>
+					<string>soundD3</string>
+					<string>clefBass</string>
+				</array>
+				<key>19</key>
+				<array>
+					<string>B on a Line</string>
+					<string>L2</string>
+					<string>soundB2</string>
+					<string>clefBass</string>
+				</array>
+				<key>18</key>
+				<array>
+					<string>G on a Line</string>
+					<string>L1</string>
+					<string>soundG2</string>
+					<string>clefBass</string>
+				</array>
+				<key>17</key>
+				<array>
+					<string>B in a Space</string>
+					<string>S5</string>
+					<string>soundB3</string>
+					<string>clefBass</string>
+				</array>
+				<key>16</key>
+				<array>
+					<string>G in a Space</string>
+					<string>S4</string>
+					<string>soundG3</string>
+					<string>clefBass</string>
+				</array>
+				<key>15</key>
+				<array>
+					<string>E in a Space</string>
+					<string>S3</string>
+					<string>soundE3</string>
+					<string>clefBass</string>
+				</array>
+				<key>14</key>
+				<array>
+					<string>C in a Space</string>
+					<string>S2</string>
+					<string>soundC3</string>
+					<string>clefBass</string>
+				</array>
+				<key>13</key>
+				<array>
+					<string>A in a Space</string>
+					<string>S1</string>
+					<string>soundA2</string>
+					<string>clefBass</string>
+				</array>
+				<key>12</key>
+				<array>
+					<string>F in a Space</string>
+					<string>S0</string>
+					<string>soundF2</string>
+					<string>clefBass</string>
+				</array>
 				<key>11</key>
 				<array>
 					<string>F on a Line</string>
 					<string>L5</string>
 					<string>soundF5</string>
+					<string>clefTreble</string>
 				</array>
 				<key>10</key>
 				<array>
 					<string>D on a Line</string>
 					<string>L4</string>
 					<string>soundD5</string>
+					<string>clefTreble</string>
 				</array>
 				<key>9</key>
 				<array>
 					<string>B on a Line</string>
 					<string>L3</string>
 					<string>soundB4</string>
+					<string>clefTreble</string>
 				</array>
 				<key>8</key>
 				<array>
 					<string>G on a Line </string>
 					<string>L2</string>
 					<string>soundG4</string>
+					<string>clefTreble</string>
 				</array>
 				<key>7</key>
 				<array>
 					<string>E on a Line</string>
 					<string>L1</string>
 					<string>soundE4</string>
-				</array>
-				<key>5</key>
-				<array>
-					<string>E in a Space</string>
-					<string>S4</string>
-					<string>soundE5</string>
-				</array>
-				<key>4</key>
-				<array>
-					<string>C in a Space</string>
-					<string>S3</string>
-					<string>soundC5</string>
-				</array>
-				<key>3</key>
-				<array>
-					<string>A in a Space</string>
-					<string>S2</string>
-					<string>soundA4</string>
-				</array>
-				<key>2</key>
-				<array>
-					<string>F in a Space</string>
-					<string>S1</string>
-					<string>soundF4</string>
-				</array>
-				<key>1</key>
-				<array>
-					<string>D in a Space</string>
-					<string>S0</string>
-					<string>soundD4</string>
+					<string>clefTreble</string>
 				</array>
 				<key>6</key>
 				<array>
 					<string>G in a Space</string>
 					<string>S5</string>
 					<string>soundG5</string>
+					<string>clefTreble</string>
+				</array>
+				<key>5</key>
+				<array>
+					<string>E in a Space</string>
+					<string>S4</string>
+					<string>soundE5</string>
+					<string>clefTreble</string>
+				</array>
+				<key>4</key>
+				<array>
+					<string>C in a Space</string>
+					<string>S3</string>
+					<string>soundC5</string>
+					<string>clefTreble</string>
+				</array>
+				<key>3</key>
+				<array>
+					<string>A in a Space</string>
+					<string>S2</string>
+					<string>soundA4</string>
+					<string>clefTreble</string>
+				</array>
+				<key>2</key>
+				<array>
+					<string>F in a Space</string>
+					<string>S1</string>
+					<string>soundF4</string>
+					<string>clefTreble</string>
+				</array>
+				<key>1</key>
+				<array>
+					<string>D in a Space</string>
+					<string>S0</string>
+					<string>soundD4</string>
+					<string>clefTreble</string>
 				</array>
 			</dict>
 		</dict>

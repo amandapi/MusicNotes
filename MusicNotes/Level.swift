@@ -36,7 +36,7 @@ class Level {
         // take a look inside Challenge
         for challenge in challengesArray {
             var c = challenge as! Challenge
-        println(c.instruction)
+        println("take a look \(c.instruction)")
         }
     }
 

@@ -31,33 +31,32 @@ class GameViewController: UIViewController, GameSceneDelegate {
         
         scene = GameScene(size: view.frame.size)
         
-            // Configure the view
-            let skView = self.view as! SKView
-            skView.showsFPS = true
-            skView.showsNodeCount = true
-            skView.showsPhysics = true
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
-            skView.ignoresSiblingOrder = false
+        // Configure the view
+        let skView = self.view as! SKView
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        skView.showsPhysics = true
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = false
             
-            /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .AspectFill
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .AspectFill
         
-            // here is to pass information about the level to the GameScene Object
-            scene.setLevel(level)
+        // here is to pass information about the level to the GameScene Object
+        scene.setLevel(level)
         
-            // here is to ask GameScene to update variables according to level
-            scene.updateBackground(level.background)
-            scene.updateClef(level.clef)
-            //scene.updateChallenge(level.Challenge)
+        // here is to ask GameScene to update variables according to level
+        scene.updateBackground(level.background)
+        scene.updateClef(level.clef)
         
-            level.randomizeChallenges()
+        //scene.updateChallenge(level.Challenge)
+        level.randomizeChallenges()
+        var currentChallenge = level.challengesArray[currentChallengeIndex] as! Challenge
+        scene.updateChallenge(currentChallenge)
         
-            var currentChallenge = level.challengesArray[currentChallengeIndex] as! Challenge
-            scene.updateChallenge(currentChallenge)
+        scene.gameSceneDelegate = self
         
-            scene.gameSceneDelegate = self
-        
-            skView.presentScene(scene)
+        skView.presentScene(scene)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -92,13 +91,13 @@ class GameViewController: UIViewController, GameSceneDelegate {
         return true
     }
     
-    func NotiDidScore(didScore: Bool) {
+    func notiDidScore(didScore: Bool) {
         currentChallengeIndex++
         if (currentChallengeIndex < level.challengesArray.count){
             var challenge = level.challengesArray[currentChallengeIndex] as! Challenge
             scene.updateChallenge(challenge)
         } else {
-            // end the level here
+            // congratulations you scored scoringNotiArray.count out of level.challengesArray.count! And segue to next level
         }
     }
 

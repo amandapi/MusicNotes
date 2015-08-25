@@ -15,6 +15,10 @@ class LevelViewController: UIViewController {
     var currentLevel : Level?
     var levels: NSMutableArray?
     var chooseLevelLabel: UILabel?
+
+    //var introductionBannerView = UIView()
+    var introductionBannerView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    //let status = UIImageView(image: UIImage(named: "introductionBanner"))
     
     // could not put together a valid init method - does a viewController needs an init?
 
@@ -64,7 +68,55 @@ class LevelViewController: UIViewController {
             
             self.view.addSubview(levelButton)
         }
+        
+       // add introductionBanner
+        introductionBannerView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/2.8)
+        introductionBannerView.center = self.view.center
+        introductionBannerView.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
+        //introductionBannerView.autoresizingMask = UIViewAutoresizing.FlexibleBottomMargin | UIViewAutoresizing.FlexibleHeight | UIViewAutoresizing.FlexibleRightMargin | UIViewAutoresizing.FlexibleLeftMargin | UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleWidth
+        introductionBannerView.contentMode = UIViewContentMode.ScaleAspectFit
+        introductionBannerView.layer.borderWidth = 2
+        introductionBannerView.layer.cornerRadius = 25
+        self.view.addSubview(introductionBannerView)
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+ 
+        // move banner off the screen to start
+        introductionBannerView.center.y -= view.bounds.width
+        
+        // animate banner back to the screen
+        UIView.animateWithDuration(1.2, delay: 0.0,
+            options: .CurveEaseIn, animations: {
+                self.introductionBannerView.center.y += self.view.bounds.width
+            }, completion: nil)
+
+        // animate banner away
+        UIView.animateWithDuration(2.8, delay: 3.8,
+            options: .CurveEaseIn | .CurveEaseOut, animations: {
+                self.introductionBannerView.center.y += self.view.bounds.width
+            }, completion: nil)
+
+    }
+
+
+
+    
+        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
+        
+        
+        
+/*        var myButton = UIButton.buttonWithType(.System) as! UIButton
+        //let myImage = UIImage(named: "introductionBanner.png") as UIImage?
+        //let myButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        myButton.frame = CGRectMake(200, 300, 800, 300)
+        myButton.setBackgroundImage(UIImage(named: "introductionBanner.png"), forState: UIControlState.Normal)
+        myButton.addTarget(self, action: "myButtonTouched:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(myButton)
+        println(myButton)
+*/
+    
     
     func getLevels() -> NSArray {
         
@@ -112,9 +164,6 @@ class LevelViewController: UIViewController {
         chooseLevelLabel.sizeToFit()
         self.view.addSubview(chooseLevelLabel)
     }
-    
-
-
     
     /*    required init(currentLevel: Level()) {
     //fatalError("NSCoding not supported")
