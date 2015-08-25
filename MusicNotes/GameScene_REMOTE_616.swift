@@ -176,10 +176,14 @@ class GameScene: SKScene {
         var didScore = false
         
         if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
-
+            //movingNoti?.position.y = destinationNode.position.y
+            
+            
+           //  trying to change noti id to scoringNoti - this is useless
+            //scoringNoti = movingNoti
             movingNoti?.position.y = destinationNode.position.y
            
-            // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and (b) make scoring Noti unmovable by using if contains(){}
+            // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and (b) make scoring Noti unmovable
             scoringNotiArray.append(movingNoti!)
             //println("scoringNotiArray is \(scoringNotiArray)")  // good
  
@@ -194,14 +198,12 @@ class GameScene: SKScene {
             flashGameOver() //if deadcount >= 3 {flashGameOver()}
         }
         
-        //NSThread.sleepForTimeInterval(1)  //how to use sleepForTimeInterval?
         addNoti()
         followRoamingPath()
         
         if gameSceneDelegate != nil {
             gameSceneDelegate!.notiDidScore(didScore)
         }
-
     }
     
    
@@ -226,6 +228,43 @@ class GameScene: SKScene {
         self.sound = Challenge[2] as! String
     }
 */
+    
+    
+/*
+    func updateChallenge() { // the dictionary that contains the challenges is level.challenges
+
+        let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
+        println("randomIndex is \(randomIndex)")
+        //println(level.challenges)
+        
+        // get instruction at this randomIndex
+        var instruction = level.challenges["\(randomIndex)"]![0] as! String
+        instructionLabel.text = "\(instruction)"
+        //println("instruction is \(instruction)")
+        let fadeinAction = SKAction.fadeInWithDuration(0.2)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
+        instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
+        
+        // get destination at this randomIndex
+        var destination = level.challenges["\(randomIndex)"]![1] as! String
+        //var destinationNode = getSpriteNodeForString(destination) // this line doesn't work
+        self.destinationNode = getSpriteNodeForString(destination)
+        destinationNode.name = "\(destination)"
+        //println("destinationNode is \(destinationNode)")  // correct
+        
+        // get sound at this randomIndex
+        self.sound = level.challenges["\(randomIndex)"]![2] as! String
+        //println("sound is \(sound)")    
+
+
+
+        //remove this challenge for key randomIndex
+        
+        
+    }
+*/
+
+
 
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
         switch name {
@@ -285,8 +324,9 @@ class GameScene: SKScene {
         addChild(startMsg)
     }
 
-    func updateBackground(background: String) {
+    func updateBackground(background: String) { //func updateBackground() {
 //        var bg = SKSpriteNode(imageNamed: "bg9") // bg raw size is 2048x1536
+//        var bg = SKSpriteNode(imageNamed: "\(level?.background!)")
         var bg = SKSpriteNode(imageNamed: "\(background).png")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
@@ -398,7 +438,7 @@ class GameScene: SKScene {
             cf.anchorPoint = CGPointMake(0.5, 0.33)
             cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
             cf.setScale(frame.width/3880)
-        } else  { // clef == "clefBass"
+        } else  {
             cf.anchorPoint = CGPointMake(0.5, 0.71)
             cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
             cf.setScale(frame.width/1880)

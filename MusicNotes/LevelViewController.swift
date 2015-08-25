@@ -100,24 +100,6 @@ class LevelViewController: UIViewController {
 
     }
 
-
-
-    
-        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
-        
-        
-        
-/*        var myButton = UIButton.buttonWithType(.System) as! UIButton
-        //let myImage = UIImage(named: "introductionBanner.png") as UIImage?
-        //let myButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        myButton.frame = CGRectMake(200, 300, 800, 300)
-        myButton.setBackgroundImage(UIImage(named: "introductionBanner.png"), forState: UIControlState.Normal)
-        myButton.addTarget(self, action: "myButtonTouched:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(myButton)
-        println(myButton)
-*/
-    
-    
     func getLevels() -> NSArray {
         
         if levels == nil {

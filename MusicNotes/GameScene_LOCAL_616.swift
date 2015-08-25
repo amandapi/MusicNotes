@@ -201,7 +201,8 @@ class GameScene: SKScene {
         if gameSceneDelegate != nil {
             gameSceneDelegate!.notiDidScore(didScore)
         }
-
+        
+        //updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
     }
     
    
