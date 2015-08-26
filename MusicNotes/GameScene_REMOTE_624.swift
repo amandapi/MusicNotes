@@ -179,7 +179,7 @@ class GameScene: SKScene {
             //movingNoti?.position.y = destinationNode.position.y
             
             
-            //  trying to change noti id to scoringNoti - this is useless
+           //  trying to change noti id to scoringNoti - this is useless
             //scoringNoti = movingNoti
             movingNoti?.position.y = destinationNode.position.y
            
@@ -228,43 +228,43 @@ class GameScene: SKScene {
         self.sound = Challenge[2] as! String
     }
 */
-
+    
     
 /*
     func updateChallenge() { // the dictionary that contains the challenges is level.challenges
-    
+
         let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
         println("randomIndex is \(randomIndex)")
         //println(level.challenges)
-    
+        
         // get instruction at this randomIndex
         var instruction = level.challenges["\(randomIndex)"]![0] as! String
         instructionLabel.text = "\(instruction)"
         //println("instruction is \(instruction)")
         let fadeinAction = SKAction.fadeInWithDuration(0.2)
         let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
-    instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
-    
+        instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
+        
         // get destination at this randomIndex
         var destination = level.challenges["\(randomIndex)"]![1] as! String
         //var destinationNode = getSpriteNodeForString(destination) // this line doesn't work
         self.destinationNode = getSpriteNodeForString(destination)
         destinationNode.name = "\(destination)"
         //println("destinationNode is \(destinationNode)")  // correct
-    
+        
         // get sound at this randomIndex
         self.sound = level.challenges["\(randomIndex)"]![2] as! String
-        //println("sound is \(sound)")
-    
-    
-    
+        //println("sound is \(sound)")    
+
+
+
         //remove this challenge for key randomIndex
-    
-    
+        
+        
     }
 */
-    
-    
+
+
 
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
         switch name {
