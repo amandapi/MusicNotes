@@ -87,7 +87,7 @@ class LevelViewController: UIViewController {
         introductionBannerView.center.y -= view.bounds.width
         
         // animate banner back to the screen
-        UIView.animateWithDuration(1.2, delay: 0.0,
+        UIView.animateWithDuration(1.2, delay: 0.5,
             options: .CurveEaseIn, animations: {
                 self.introductionBannerView.center.y += self.view.bounds.width
             }, completion: nil)
