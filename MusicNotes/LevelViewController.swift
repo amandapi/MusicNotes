@@ -73,7 +73,6 @@ class LevelViewController: UIViewController {
         introductionBannerView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/2.8)
         introductionBannerView.center = self.view.center
         introductionBannerView.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
-        //introductionBannerView.autoresizingMask = UIViewAutoresizing.FlexibleBottomMargin | UIViewAutoresizing.FlexibleHeight | UIViewAutoresizing.FlexibleRightMargin | UIViewAutoresizing.FlexibleLeftMargin | UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleWidth
         introductionBannerView.contentMode = UIViewContentMode.ScaleAspectFit
         introductionBannerView.layer.borderWidth = 2
         introductionBannerView.layer.cornerRadius = 25
@@ -85,15 +84,13 @@ class LevelViewController: UIViewController {
  
         // move banner off the screen to start
         introductionBannerView.center.y -= view.bounds.width
-        
         // animate banner back to the screen
-        UIView.animateWithDuration(1.2, delay: 0.5,
+        UIView.animateWithDuration(1.0, delay: 0.1,
             options: .CurveEaseIn, animations: {
                 self.introductionBannerView.center.y += self.view.bounds.width
             }, completion: nil)
-
         // animate banner away
-        UIView.animateWithDuration(2.8, delay: 3.8,
+        UIView.animateWithDuration(3.8, delay: 4.8,
             options: .CurveEaseIn | .CurveEaseOut, animations: {
                 self.introductionBannerView.center.y += self.view.bounds.width
             }, completion: nil)

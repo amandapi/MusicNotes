@@ -195,9 +195,12 @@ class GameScene: SKScene {
             die()
             deadCount++
             deadCountLabel.text = "\(deadCount)"
-            flashGameOver() //if deadcount >= 3 {flashGameOver()}
+            if deadCount >= 3 {
+                flashGameOver() // and reset level, score, deadcount, segue back to LevelViewController
+            }
         }
         
+        //NSThread.sleepForTimeInterval(1) // how to make new Noti comes up after 1s?
         addNoti()
         followRoamingPath()
         
@@ -205,7 +208,6 @@ class GameScene: SKScene {
             gameSceneDelegate!.notiDidScore(didScore)
         }
     }
-    
    
     func updateChallenge(challenge: Challenge) {
         println(Challenge)
@@ -214,58 +216,6 @@ class GameScene: SKScene {
         self.sound = challenge.sound
     }
     
-    
- 
-/*
-    func updateChallenge(Challenge: NSArray) {
-    
-        var instruction: AnyObject = Challenge[0]
-        instructionLabel.text = instruction as! String
-    
-        var destination = Challenge[1] as! String
-        self.destinationNode = getSpriteNodeForString(destination)
-    
-        self.sound = Challenge[2] as! String
-    }
-*/
-
-    
-/*
-    func updateChallenge() { // the dictionary that contains the challenges is level.challenges
-    
-        let randomIndex = Int(arc4random_uniform(UInt32(level.challenges.count))) + 1
-        println("randomIndex is \(randomIndex)")
-        //println(level.challenges)
-    
-        // get instruction at this randomIndex
-        var instruction = level.challenges["\(randomIndex)"]![0] as! String
-        instructionLabel.text = "\(instruction)"
-        //println("instruction is \(instruction)")
-        let fadeinAction = SKAction.fadeInWithDuration(0.2)
-        let fadeoutAction = SKAction.fadeOutWithDuration(0.2)
-    instructionLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
-    
-        // get destination at this randomIndex
-        var destination = level.challenges["\(randomIndex)"]![1] as! String
-        //var destinationNode = getSpriteNodeForString(destination) // this line doesn't work
-        self.destinationNode = getSpriteNodeForString(destination)
-        destinationNode.name = "\(destination)"
-        //println("destinationNode is \(destinationNode)")  // correct
-    
-        // get sound at this randomIndex
-        self.sound = level.challenges["\(randomIndex)"]![2] as! String
-        //println("sound is \(sound)")
-    
-    
-    
-        //remove this challenge for key randomIndex
-    
-    
-    }
-*/
-    
-    
-
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
         switch name {
                 case "L0": return L0
@@ -490,7 +440,7 @@ class GameScene: SKScene {
         addChild(deadCountLabel)
     }
     
-    func flashGameOver() { // when deadCount = 3
+    func flashGameOver() { // when deadCount >= 3
         let gameoverLabel = SKLabelNode(fontNamed: "Verdana-Bold")
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         gameoverLabel.fontColor = SKColor.redColor()
@@ -509,12 +459,15 @@ class GameScene: SKScene {
         let deleteAction = SKAction.removeFromParent()
         gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
         
-        if (deadCount == 3) {
+        addChild(gameoverLabel)
+        
+/*        if (deadCount == 3) {
             addChild(gameoverLabel)
             // reset level, score, deadcount, segue back to LevelViewController
         } else {
             return
         }
+*/
     }
     
     func celebrate() {
