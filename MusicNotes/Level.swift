@@ -11,14 +11,12 @@ import Foundation
 class Level {
     
     let background: String!
-    let clef: String!
     let challenges: NSDictionary!
     var challengesArray: NSMutableArray!
     
-    required init(background: String, clef: String, challenges: NSDictionary) {
+    required init(background: String, challenges: NSDictionary) {
         //fatalError("NSCoding not supported")
         self.background = background
-        self.clef = clef
         self.challenges = challenges
        
         // create an array out of the challenges in a given level
@@ -30,13 +28,17 @@ class Level {
             let instruction = value[0] as! String
             let destination = value[1] as! String
             let sound = value[2] as! String
-        challengesArray.addObject(Challenge(instruction: instruction, destination: destination, sound: sound))
+            let clef = value[3] as! String
+            challengesArray.addObject(Challenge(instruction: instruction, destination: destination, sound: sound, clef: clef))
         }
         
-        // take a look inside Challenge
+        // take an inspiring look inside Challenge
         for challenge in challengesArray {
             var c = challenge as! Challenge
-        println("take a look \(c.instruction)")
+        //println("take a look: \(c.instruction)")
+        println("take a look: \(c.clef)")
+        //println("take a look: \(c.destination)")
+        //println("take a look: \(c.sound)")
         }
     }
 

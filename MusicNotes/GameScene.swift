@@ -42,13 +42,13 @@ class GameScene: SKScene {
     var destination = String()
     var destinationNode = SKSpriteNode()
     var sound = String()
+    var clef = String()
     
     var background = SKSpriteNode()
     
-    // these are the "clefs"
     var clefTreble = SKSpriteNode()
     var clefBass = SKSpriteNode()
-    var clef = SKSpriteNode()
+    var cf = SKSpriteNode()
     var clefRotating = SKSpriteNode()
     
     var gameState = GameState.StartingLevel
@@ -136,28 +136,26 @@ class GameScene: SKScene {
                     let noti = node as! MusicNotes
                     noti.addMovingPoint(location)
                     movingNoti = noti
-            }
+                    // animate picking up noti
+                    let expand = SKAction.scaleBy(1.18, duration: 0.1)
+                    let rotR = SKAction.rotateByAngle(0.18, duration: 0.28)
+                    let rotL = SKAction.rotateByAngle(-0.18, duration: 0.28)
+                    let contract = SKAction.scaleBy(0.85, duration: 0.3)
+                    let pickUp = SKAction.sequence([expand, rotR, rotL, contract])
+                    noti.runAction(pickUp)
+                }
         }
     }
     
- // create an array of scoringNoti, then at touchesBegan, ignore scoring noti
-
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
         if (draggingNoti == false ) {
             return
         }
-        
         let touch = touches.first as? UITouch
         let location = touch!.locationInNode(scene)
         if let noti = movingNoti {
         noti.addMovingPoint(location)
         }
-    }
-    
-    func destinationRect(destination: CGRect) -> CGRect {
-        //return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/3, destination.size.width, destination.size.height/3)
-        return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/4, destination.size.width, destination.size.height/2)
     }
 
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -169,18 +167,10 @@ class GameScene: SKScene {
         }
         
         // check collision
- 
-//        if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
-//            movingNoti?.position.y = S3.position.y
         
         var didScore = false
         
         if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
-            //movingNoti?.position.y = destinationNode.position.y
-            
-            
-            //  trying to change noti id to scoringNoti - this is useless
-            //scoringNoti = movingNoti
             movingNoti?.position.y = destinationNode.position.y
            
             // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and (b) make scoring Noti unmovable
@@ -209,11 +199,17 @@ class GameScene: SKScene {
         }
     }
    
+    func destinationRect(destination: CGRect) -> CGRect {
+        //return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/3, destination.size.width, destination.size.height/3)
+        return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/4, destination.size.width, destination.size.height/2)
+    }
+
     func updateChallenge(challenge: Challenge) {
-        println(Challenge)
+        //println(Challenge)
         self.instructionLabel.text = challenge.instruction
         self.destinationNode = getSpriteNodeForString(challenge.destination)
         self.sound = challenge.sound
+        self.clef = challenge.clef
     }
     
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
@@ -257,7 +253,6 @@ class GameScene: SKScene {
             let noti = node as! MusicNotes
             noti.move(self.dt)
         })
-        
     }
 
     func addStartMsg() {
@@ -275,8 +270,6 @@ class GameScene: SKScene {
     }
 
     func updateBackground(background: String) { //func updateBackground() {
-//        var bg = SKSpriteNode(imageNamed: "bg9") // bg raw size is 2048x1536
-//        var bg = SKSpriteNode(imageNamed: "\(level?.background!)")
         var bg = SKSpriteNode(imageNamed: "\(background).png")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
@@ -372,6 +365,7 @@ class GameScene: SKScene {
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
         //noti.runAction(SKAction.repeatActionForever(followArc))
 /*
+        // an elliptical loci
         let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
         let pathDiameter = CGFloat(frame.height/2)
         let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 1.2)), nil)
@@ -383,18 +377,17 @@ class GameScene: SKScene {
 
     func updateClef(clef: String) {
         var cf = SKSpriteNode(imageNamed: "\(clef).png")
-        cf.name  = "\(clef)"
+        // cf.name  = "\(clef)"
         if (clef == "clefTreble") {
             cf.anchorPoint = CGPointMake(0.5, 0.33)
             cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
             cf.setScale(frame.width/3880)
-        } else  {
+        } else if (clef == "clefBass") {
             cf.anchorPoint = CGPointMake(0.5, 0.71)
             cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
             cf.setScale(frame.width/1880)
         }
-        //self.addChild(cf) // this works too
-        self.insertChild(cf, atIndex: 0)
+        self.addChild(cf) // self.insertChild(cf, atIndex: 0) // this works too
         clefRotating = cf
     }
     
@@ -412,7 +405,6 @@ class GameScene: SKScene {
     }
     
     func setupCountLabels() {
-        
         scoreLabel.fontColor = SKColor.redColor()
         scoreLabel.text = "Score: 0"
         scoreLabel.name = "scoreLabel"
@@ -460,14 +452,6 @@ class GameScene: SKScene {
         gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
         
         addChild(gameoverLabel)
-        
-/*        if (deadCount == 3) {
-            addChild(gameoverLabel)
-            // reset level, score, deadcount, segue back to LevelViewController
-        } else {
-            return
-        }
-*/
     }
     
     func celebrate() {

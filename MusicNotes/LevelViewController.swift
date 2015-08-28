@@ -15,10 +15,7 @@ class LevelViewController: UIViewController {
     var currentLevel : Level?
     var levels: NSMutableArray?
     var chooseLevelLabel: UILabel?
-
-    //var introductionBannerView = UIView()
-    var introductionBannerView = UIView(frame: CGRectMake(0, 0, 100, 100))
-    //let status = UIImageView(image: UIImage(named: "introductionBanner"))
+    //var introductionBannerView = UIView(frame: CGRectMake(0, 0, 100, 100))
     
     // could not put together a valid init method - does a viewController needs an init?
 
@@ -28,7 +25,6 @@ class LevelViewController: UIViewController {
         addChooseLevelLabel()
         
         var levelButton = UIButton.buttonWithType(.System) as! UIButton
-        
         var buttonWidth = self.view.frame.width / 5.8
         var buttonHeight = buttonWidth * 0.75
         var gap = buttonWidth / 10.0
@@ -36,14 +32,11 @@ class LevelViewController: UIViewController {
         var y5 = self.view.frame.height/2.0 - buttonHeight/2.0
         var dx: CGFloat = gap + buttonWidth
         var dy: CGFloat = gap + buttonHeight
-        //var i: Int = currentLevel
         
         let levels = getLevels()
         
         for i in 1...levels.count {
-            
             var levelButton = UIButton.buttonWithType(.System) as! UIButton
-  
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
             } else if i < 7 {
@@ -51,7 +44,6 @@ class LevelViewController: UIViewController {
             } else {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i - 6)*dx - dx - dx , y5 + dy + gap*3, buttonWidth, buttonHeight)
             }
-            
             levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
             levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
@@ -70,19 +62,19 @@ class LevelViewController: UIViewController {
         }
         
        // add introductionBanner
-        introductionBannerView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/2.8)
-        introductionBannerView.center = self.view.center
-        introductionBannerView.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
-        introductionBannerView.contentMode = UIViewContentMode.ScaleAspectFit
-        introductionBannerView.layer.borderWidth = 2
-        introductionBannerView.layer.cornerRadius = 25
-        self.view.addSubview(introductionBannerView)
+        //introductionBannerView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/2.8)
+        //introductionBannerView.center = self.view.center
+        //introductionBannerView.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
+        //introductionBannerView.contentMode = UIViewContentMode.ScaleAspectFit
+        //introductionBannerView.layer.borderWidth = 2
+        //introductionBannerView.layer.cornerRadius = 25
+        //self.view.addSubview(introductionBannerView)
     }
     
-    override func viewWillAppear(animated: Bool) {
+/*     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
  
-        // move banner off the screen to start
+       // move introductionBanner off the screen to start
         introductionBannerView.center.y -= view.bounds.width
         // animate banner back to the screen
         UIView.animateWithDuration(1.0, delay: 0.1,
@@ -94,8 +86,9 @@ class LevelViewController: UIViewController {
             options: .CurveEaseIn | .CurveEaseOut, animations: {
                 self.introductionBannerView.center.y += self.view.bounds.width
             }, completion: nil)
-
     }
+*/
+
 
     func getLevels() -> NSArray {
         
@@ -110,10 +103,11 @@ class LevelViewController: UIViewController {
                 var levelData = plistLevels[i] // this levelData carries data in levels 1...9
                 
                 let background = levelData["background"] as! String
-                let clef = levelData["clef"] as! String
+                //let clef = levelData["clef"] as! String
                 let challenges = levelData["challenges"] as! NSDictionary
                 
-                levels!.addObject(Level(background : background , clef : clef , challenges : challenges ))
+               // levels!.addObject(Level(background : background , clef : clef , challenges : challenges ))
+                levels!.addObject(Level(background: background, challenges: challenges ))
             }
         }
         return levels!
@@ -134,7 +128,6 @@ class LevelViewController: UIViewController {
     func addChooseLevelLabel() {
         
         var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3 , self.view.frame.size.height/6 , self.view.frame.size.width/3, self.view.frame.size.width/10))
-        //chooseLevelLabel.center = CGPointMake(self.view.frame.width/2 , self.view.frame.height)
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"
         chooseLevelLabel.textColor = UIColor.blackColor()

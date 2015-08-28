@@ -18,12 +18,11 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var instruction: String!
     var destination: String!
     var sound: String!
+    var clef: String!
     
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
-        //println("check level is \(level)")
-        //println("check level.background is \(level.background)")  // returns bg5 when button 5 is pressed
     }
       
     override func viewDidLoad() {
@@ -42,17 +41,17 @@ class GameViewController: UIViewController, GameSceneDelegate {
         /* Set the scale mode to scale to fit the window */
         scene.scaleMode = .AspectFill
         
-        // here is to pass information about the level to the GameScene Object
+        // pass information about the level to the GameScene Object
         scene.setLevel(level)
         
-        // here is to ask GameScene to update variables according to level
+        // pass background to GameScene
         scene.updateBackground(level.background)
-        scene.updateClef(level.clef)
         
-        //scene.updateChallenge(level.Challenge)
+        // randomize challenges and pass challenges and clef to GameScene
         level.randomizeChallenges()
         var currentChallenge = level.challengesArray[currentChallengeIndex] as! Challenge
         scene.updateChallenge(currentChallenge)
+        scene.updateClef(currentChallenge.clef)
         
         scene.gameSceneDelegate = self
         
@@ -64,7 +63,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         
         let skView = self.view as! SKView
         let scene = skView.scene as! GameScene
- //       scene.level = self.level
+        //scene.level = self.level
         
     }
 
@@ -96,6 +95,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         if (currentChallengeIndex < level.challengesArray.count){
             var challenge = level.challengesArray[currentChallengeIndex] as! Challenge
             scene.updateChallenge(challenge)
+            scene.updateClef(challenge.clef)
         } else {
             // congratulations you scored scoringNotiArray.count out of level.challengesArray.count! And segue to next level
         }

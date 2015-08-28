@@ -14,14 +14,13 @@ class Challenge {
     let instruction: String!
     let destination: String!
     let sound: String!
-    //var destinationNode: SKSpriteNode!
+    let clef: String!
     
-    required init(instruction: String, destination: String, sound: String) {
-  //required init(instruction: String, destination: String, sound: String, destinationNode: SKSpriteNode!) {
+    required init(instruction: String, destination: String, sound: String, clef: String) {
         //fatalError("NSCoding not supported")
         self.instruction = instruction
         self.destination = destination
         self.sound = sound
-        //self.destinationNode = destinationNode
+        self.clef = clef
     }
 }
