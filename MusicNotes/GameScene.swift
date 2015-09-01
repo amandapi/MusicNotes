@@ -28,16 +28,19 @@ class GameScene: SKScene {
     
     var lastUpdateTime: NSTimeInterval = 0.0
     var dt: NSTimeInterval = 0.0
+    var timerLabel: SKLabelNode!
+    var timer: NSTimer?
+    var levelTimeLimit: Int?
+    var timeLimit: Int?
     
-    var scoreLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+    var scoreLabel = SKLabelNode(fontNamed: "Komika Display")
     var score = 0
-    var deadCountLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+    var deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
     var deadCount = 0
-    //var startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
     var startMsg = SKLabelNode()
     
     var challenge = NSArray()
-    var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+    var instructionLabel = SKLabelNode(fontNamed: "Komika Display Bold")
     var instruction = String()
     var destination = String()
     var destinationNode = SKSpriteNode()
@@ -48,6 +51,8 @@ class GameScene: SKScene {
     
     var clefTreble = SKSpriteNode()
     var clefBass = SKSpriteNode()
+    //var clefTreble = SKSpriteNode(imageNamed: "clefTreble.png")
+    //var clefBass = SKSpriteNode(imageNamed: "clefBass.png")
     var cf = SKSpriteNode()
     var clefRotating = SKSpriteNode()
     
@@ -98,6 +103,7 @@ class GameScene: SKScene {
         addTrashcanAndTrashcanLid()
         addStartMsg()
         setupCountLabels()
+        setupTimerLabel()
         
         if gameState == .StartingLevel {
             paused = true  // would false serves a better purpose? and get rid of gameStates?
@@ -112,14 +118,15 @@ class GameScene: SKScene {
                 childNodeWithName("msgLabel")!.hidden = true
                 followRoamingPath()
                 setupInstructionLabel()
-                //updateChallenge(Challenge(instruction: instruction, destination: destination, sound: sound))
-                //instructionLabel.text = "\(instruction)"
                 paused = false
+                startCountdown()
                 gameState = .Playing
         
-            //fallthrough  //suppressing this time prevents phantom notes to appear
+            //fallthrough  //suppressing this time prevents initial phantom notes to appear
             
             case .Playing:
+                
+
                 roamingNoti!.removeAllActions()
                 roamingNoti?.name = "noti"
 
@@ -141,7 +148,7 @@ class GameScene: SKScene {
                     let rotR = SKAction.rotateByAngle(0.18, duration: 0.28)
                     let rotL = SKAction.rotateByAngle(-0.18, duration: 0.28)
                     let contract = SKAction.scaleBy(0.85, duration: 0.3)
-                    let pickUp = SKAction.sequence([expand, rotR, rotL, contract])
+                    let pickUp = SKAction.sequence([expand, rotR, rotL, contract, rotR, rotL])
                     noti.runAction(pickUp)
                 }
         }
@@ -186,11 +193,12 @@ class GameScene: SKScene {
             deadCount++
             deadCountLabel.text = "\(deadCount)"
             if deadCount >= 3 {
-                flashGameOver() // and reset level, score, deadcount, segue back to LevelViewController
+                flashGameOver()
+                // back to LevelViewController, score to 0, deadcount to 0, segue
             }
         }
         
-        //NSThread.sleepForTimeInterval(1) // how to make new Noti comes up after 1s?
+        //NSThread.sleepForTimeInterval(1) // how to delay appearance of Noti for 1s?
         addNoti()
         followRoamingPath()
         
@@ -200,7 +208,6 @@ class GameScene: SKScene {
     }
    
     func destinationRect(destination: CGRect) -> CGRect {
-        //return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/3, destination.size.width, destination.size.height/3)
         return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/4, destination.size.width, destination.size.height/2)
     }
 
@@ -232,10 +239,8 @@ class GameScene: SKScene {
     }
     
     func setupInstructionLabel() {
-        //var instructionLabel = SKLabelNode(fontNamed: "Verdana-Bold")
-        //instructionLabel.text = "C in a Space"
+        //var instructionLabel: SKLabelNode!
         instructionLabel.fontColor = SKColor.blackColor()
-        //instructionLabel.text = "Instruction"
         instructionLabel.name = "instructionLabel"
         instructionLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/5)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
@@ -245,26 +250,68 @@ class GameScene: SKScene {
         }
         addChild(instructionLabel)
     }
+    
+    func updateTimeLimit(timeLimit: Int) {
+        var levelTimeLimit = timeLimit
+        self.timeLimit = timeLimit
+        println("levelTimeLimit1 is \(levelTimeLimit)")
+    }
+    
+    func setupTimerLabel() {
+        timerLabel = SKLabelNode(fontNamed: "Komika Display")
+        var levelTimeLimit = timeLimit
+        println("levelTimeLimit2 is \(levelTimeLimit!)")
+        timerLabel.text = "Countdown: \(timeLimit!)"
+        //timerLabel.text = String(format: "Count Down: %2.2f", levelTimeLimit) // this works too
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            timerLabel.fontSize = 38
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            timerLabel.fontSize = 18
+        }
+        timerLabel.fontColor = SKColor.redColor()
+        timerLabel.horizontalAlignmentMode = .Left
+        timerLabel.position = CGPoint(x: frame.width/4 , y: frame.height*9/10)
+        timerLabel.zPosition = 100
+        if levelTimeLimit > 0 {
+            addChild(timerLabel)
+        }
+    }
+
+    func startCountdown() { // for countdown timer
+        var levelTimeLimit = timeLimit
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("tick:"), userInfo: nil, repeats: true)
+    }
+    
+    func tick(timer: NSTimer) {
+        if (timeLimit > 0) {
+        timeLimit?--
+        timerLabel.text = "Countdown: \(timeLimit!)"
+        println("timeLimit! is \(timeLimit!)")
+        } else {
+            timer.invalidate()
+        }
+    }
 
      override func update(currentTime: CFTimeInterval) {
-        dt = currentTime - lastUpdateTime
-        lastUpdateTime = currentTime
-        enumerateChildNodesWithName("noti", usingBlock: {node, stop in
+        // for movingNoti
+        dt = currentTime - lastUpdateTime  // original
+        lastUpdateTime = currentTime  // original
+        enumerateChildNodesWithName("noti", usingBlock: {node, stop in  // block original
             let noti = node as! MusicNotes
             noti.move(self.dt)
         })
     }
 
     func addStartMsg() {
-        let startMsg = SKLabelNode(fontNamed: "Verdana-Bold")
+        let startMsg = SKLabelNode(fontNamed: "Komika Axis")
         startMsg.name = "msgLabel"
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.greenColor()
         startMsg.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/8)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            startMsg.fontSize = 88
+            startMsg.fontSize = 68
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            startMsg.fontSize = 44
+            startMsg.fontSize = 32
         }
         addChild(startMsg)
     }
@@ -357,8 +404,6 @@ class GameScene: SKScene {
     
     func followRoamingPath() {
         var path = CGPathCreateMutable()
-        //CGPathMoveToPoint(path, nil, 560, 360)  // (path, nil, x, y)
-        //CGPathAddArc(path!, nil, 560, 360, 280, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
         CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
         // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
         var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
@@ -374,18 +419,20 @@ class GameScene: SKScene {
         println("didCallFollowRoamingPath")
 */
     }
-
-    func updateClef(clef: String) {
+    
+    func updateClef(clef: String) { // clefs overlapp!
+        
         var cf = SKSpriteNode(imageNamed: "\(clef).png")
-        // cf.name  = "\(clef)"
+       // var cf: SKSpriteNode = self.childNodeWithName("\(name)") as! SKSpriteNode
+        cf.name  = "\(clef)"
         if (clef == "clefTreble") {
-            cf.anchorPoint = CGPointMake(0.5, 0.33)
-            cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
-            cf.setScale(frame.width/3880)
-        } else if (clef == "clefBass") {
-            cf.anchorPoint = CGPointMake(0.5, 0.71)
-            cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
-            cf.setScale(frame.width/1880)
+        cf.anchorPoint = CGPointMake(0.5, 0.33)
+        cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
+        cf.setScale(frame.width/3880)
+    } else if (clef == "clefBass") {
+        cf.anchorPoint = CGPointMake(0.5, 0.71)
+        cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
+        cf.setScale(frame.width/1880)
         }
         self.addChild(cf) // self.insertChild(cf, atIndex: 0) // this works too
         clefRotating = cf
@@ -408,12 +455,13 @@ class GameScene: SKScene {
         scoreLabel.fontColor = SKColor.redColor()
         scoreLabel.text = "Score: 0"
         scoreLabel.name = "scoreLabel"
-        scoreLabel.verticalAlignmentMode = .Center
-        scoreLabel.position = CGPoint(x: frame.width/8 , y: frame.height*9/10)
+        //scoreLabel.verticalAlignmentMode = .Center
+        scoreLabel.horizontalAlignmentMode = .Left
+        scoreLabel.position = CGPoint(x: frame.width/28 , y: frame.height*9/10)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            scoreLabel.fontSize = 48
+            scoreLabel.fontSize = 38
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            scoreLabel.fontSize = 23
+            scoreLabel.fontSize = 18
         }
         addChild(scoreLabel)
         
@@ -421,29 +469,27 @@ class GameScene: SKScene {
         deadCountLabel.text = "0"
         deadCountLabel.name = "deadCountLabel"
         deadCountLabel.verticalAlignmentMode = .Center
-        //deadCountLabel.position = trashcan.position
-        deadCountLabel.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/2.3)
+        deadCountLabel.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/2.3)  // at trashcan.position
         deadCountLabel.zPosition = 20
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            deadCountLabel.fontSize = 48
+            deadCountLabel.fontSize = 42
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            deadCountLabel.fontSize = 23
+            deadCountLabel.fontSize = 21
         }
         addChild(deadCountLabel)
     }
     
-    func flashGameOver() { // when deadCount >= 3
-        let gameoverLabel = SKLabelNode(fontNamed: "Verdana-Bold")
+    func flashGameOver() {
+        let gameoverLabel = SKLabelNode(fontNamed: "Komika Axis")
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"
         gameoverLabel.zPosition = 4
         gameoverLabel.alpha = 0
-        //gameoverLabel.fontSize = 138
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            gameoverLabel.fontSize = 138
+            gameoverLabel.fontSize = 88
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            gameoverLabel.fontSize = 68
+            gameoverLabel.fontSize = 38
         }
 
         let fadeinAction = SKAction.fadeInWithDuration(0.5)
@@ -452,6 +498,27 @@ class GameScene: SKScene {
         gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
         
         addChild(gameoverLabel)
+    }
+    
+    func flashYouWin() {
+        let youWinLabel = SKLabelNode(fontNamed: "Komika Axis")
+        youWinLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
+        youWinLabel.fontColor = SKColor.redColor()
+        youWinLabel.text = "You Win"
+        youWinLabel.zPosition = 4
+        youWinLabel.alpha = 0
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            youWinLabel.fontSize = 88
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            youWinLabel.fontSize = 38
+        }
+        
+        let fadeinAction = SKAction.fadeInWithDuration(0.5)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
+        let deleteAction = SKAction.removeFromParent()
+        youWinLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
+        
+        addChild(youWinLabel)
     }
     
     func celebrate() {
@@ -505,6 +572,13 @@ class GameScene: SKScene {
         twinkle3.particleScaleRange = 0.6
         twinkle3.particleScaleSpeed = 0.5
         self.addChild(twinkle3)
+        
+        let rotR = SKAction.rotateByAngle(0.28, duration: 0.33)
+        let rotL = SKAction.rotateByAngle(-0.28, duration: 0.33)
+        let expand = SKAction.scaleBy(1.18, duration: 0.1)
+        let contract = SKAction.scaleBy(0.85, duration: 0.3)
+        let happy = SKAction.sequence([rotR, rotL, rotR, rotL, expand, contract])
+        movingNoti!.runAction(happy)
     }
     
     func rotateClef() {
@@ -512,7 +586,7 @@ class GameScene: SKScene {
         clefRotating.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
     }
     
-    func playSound(sound:String) { // method for GameViewController to play any sound file on demand
+    func playSound(sound:String) {
         runAction(SKAction.playSoundFileNamed(sound, waitForCompletion: false))
     }
     

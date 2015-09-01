@@ -8,7 +8,7 @@
 			<key>background</key>
 			<string>bg1</string>
 			<key>timeLimit</key>
-			<string>-1</string>
+			<integer>-1</integer>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -59,7 +59,7 @@
 			<key>background</key>
 			<string>bg2</string>
 			<key>timeLimit</key>
-			<string>-1</string>
+			<integer>-1</integer>
 			<key>challenges</key>
 			<dict>
 				<key>5</key>
@@ -103,7 +103,7 @@
 			<key>background</key>
 			<string>bg3</string>
 			<key>timeLimit</key>
-			<string>-1</string>
+			<integer>-1</integer>
 			<key>challenges</key>
 			<dict>
 				<key>5</key>
@@ -147,7 +147,7 @@
 			<key>background</key>
 			<string>bg4</string>
 			<key>timeLimit</key>
-			<string>-1</string>
+			<integer>-1</integer>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -198,7 +198,7 @@
 			<key>background</key>
 			<string>bg5</string>
 			<key>timeLimit</key>
-			<string>-1</string>
+			<integer>-1</integer>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -284,7 +284,7 @@
 			<key>background</key>
 			<string>bg6</string>
 			<key>timeLimit</key>
-			<string>-1</string>
+			<integer>-1</integer>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -370,7 +370,7 @@
 			<key>background</key>
 			<string>bg7</string>
 			<key>timeLimit</key>
-			<string>1</string>
+			<integer>60</integer>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -456,7 +456,7 @@
 			<key>background</key>
 			<string>bg8</string>
 			<key>timeLimit</key>
-			<string>1</string>
+			<integer>60</integer>
 			<key>challenges</key>
 			<dict>
 				<key>11</key>
@@ -542,7 +542,7 @@
 			<key>background</key>
 			<string>bg9</string>
 			<key>timeLimit</key>
-			<string>1</string>
+			<integer>120</integer>
 			<key>challenges</key>
 			<dict>
 				<key>22</key>
@@ -650,7 +650,7 @@
 				</array>
 				<key>8</key>
 				<array>
-					<string>G on a Line </string>
+					<string>G on a Line</string>
 					<string>L2</string>
 					<string>soundG4</string>
 					<string>clefTreble</string>

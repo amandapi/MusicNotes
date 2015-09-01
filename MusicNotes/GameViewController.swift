@@ -47,6 +47,9 @@ class GameViewController: UIViewController, GameSceneDelegate {
         // pass background to GameScene
         scene.updateBackground(level.background)
         
+        // pass timeLimit to GameScene
+        scene.updateTimeLimit(level.timeLimit)
+        
         // randomize challenges and pass challenges and clef to GameScene
         level.randomizeChallenges()
         var currentChallenge = level.challengesArray[currentChallengeIndex] as! Challenge

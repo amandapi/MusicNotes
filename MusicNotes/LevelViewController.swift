@@ -47,6 +47,7 @@ class LevelViewController: UIViewController {
             levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
             levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
+            //levelButton.titleLabel!.font = UIFont(name: "Komikax Axis", size: 38)
             levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
             //levelButton.titleLabel!.textColor = UIColor.blackColor()
             levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
@@ -105,9 +106,10 @@ class LevelViewController: UIViewController {
                 let background = levelData["background"] as! String
                 //let clef = levelData["clef"] as! String
                 let challenges = levelData["challenges"] as! NSDictionary
+                let timeLimit = levelData["timeLimit"] as! Int
                 
                // levels!.addObject(Level(background : background , clef : clef , challenges : challenges ))
-                levels!.addObject(Level(background: background, challenges: challenges ))
+                levels!.addObject(Level(background: background, timeLimit: timeLimit, challenges: challenges ))
             }
         }
         return levels!
@@ -127,12 +129,13 @@ class LevelViewController: UIViewController {
     
     func addChooseLevelLabel() {
         
-        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3 , self.view.frame.size.height/6 , self.view.frame.size.width/3, self.view.frame.size.width/10))
+        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3 , self.view.frame.size.height/6 , self.view.frame.size.width/2.6, self.view.frame.size.width/10))
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"
         chooseLevelLabel.textColor = UIColor.blackColor()
         //chooseLevelLabel.font = UIFont(name: "Verdana-Bold", size: chooseLevelLabel.font.pointSize)
-        chooseLevelLabel.font = UIFont(name: "Verdana-Bold", size: 33)
+        //chooseLevelLabel.font = UIFont(name: "Verdana-Bold", size: 33)
+        chooseLevelLabel.font = UIFont(name: "Komika Display", size: 48)
         chooseLevelLabel.sizeToFit()
         self.view.addSubview(chooseLevelLabel)
     }
