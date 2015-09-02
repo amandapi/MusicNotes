@@ -40,7 +40,7 @@ class GameScene: SKScene {
     var startMsg = SKLabelNode()
     
     var challenge = NSArray()
-    var instructionLabel = SKLabelNode(fontNamed: "Komika Display Bold")
+    var instructionLabel = SKLabelNode(fontNamed: "Komika Display")
     var instruction = String()
     var destination = String()
     var destinationNode = SKSpriteNode()
@@ -125,7 +125,6 @@ class GameScene: SKScene {
             //fallthrough  //suppressing this time prevents initial phantom notes to appear
             
             case .Playing:
-                
 
                 roamingNoti!.removeAllActions()
                 roamingNoti?.name = "noti"
@@ -143,7 +142,7 @@ class GameScene: SKScene {
                     let noti = node as! MusicNotes
                     noti.addMovingPoint(location)
                     movingNoti = noti
-                    // animate picking up noti
+                    // animate noti at pick up
                     let expand = SKAction.scaleBy(1.18, duration: 0.1)
                     let rotR = SKAction.rotateByAngle(0.18, duration: 0.28)
                     let rotL = SKAction.rotateByAngle(-0.18, duration: 0.28)
@@ -198,9 +197,10 @@ class GameScene: SKScene {
             }
         }
         
-        //NSThread.sleepForTimeInterval(1) // how to delay appearance of Noti for 1s?
-        addNoti()
-        followRoamingPath()
+        //addNoti() // included in following SKAction
+        //followRoamingPath()  // included in following SKAction
+        self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
+        animateInstructionLabel()
         
         if gameSceneDelegate != nil {
             gameSceneDelegate!.notiDidScore(didScore)
@@ -242,6 +242,7 @@ class GameScene: SKScene {
         //var instructionLabel: SKLabelNode!
         instructionLabel.fontColor = SKColor.blackColor()
         instructionLabel.name = "instructionLabel"
+        instructionLabel.alpha = 1
         instructionLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/5)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             instructionLabel.fontSize = 66
@@ -249,6 +250,14 @@ class GameScene: SKScene {
             instructionLabel.fontSize = 33
         }
         addChild(instructionLabel)
+    }
+    
+    func animateInstructionLabel() {  // so it appears in sync with Noti
+        let fadeAction = SKAction.fadeAlphaTo(0, duration: 0.01)
+        let waitAction = SKAction.waitForDuration(1.8)
+        let fadeInAction = SKAction.fadeAlphaTo(1, duration: 0.5)
+        let sequence = SKAction.sequence([fadeAction, waitAction, fadeInAction])
+        instructionLabel.runAction(sequence)
     }
     
     func updateTimeLimit(timeLimit: Int) {
@@ -303,7 +312,7 @@ class GameScene: SKScene {
     }
 
     func addStartMsg() {
-        let startMsg = SKLabelNode(fontNamed: "Komika Axis")
+        let startMsg = SKLabelNode(fontNamed: "Komika Display Bold")
         startMsg.name = "msgLabel"
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.greenColor()
@@ -408,20 +417,9 @@ class GameScene: SKScene {
         // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
         var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
-        //noti.runAction(SKAction.repeatActionForever(followArc))
-/*
-        // an elliptical loci
-        let pathCenter = CGPoint(x: frame.width/6 , y: frame.height/6)
-        let pathDiameter = CGFloat(frame.height/2)
-        let path = CGPathCreateWithEllipseInRect(CGRect(origin: pathCenter, size: CGSize(width: pathDiameter * 2.0, height: pathDiameter * 1.2)), nil)
-        let followPath = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
-        roamingNoti!.runAction(SKAction.repeatActionForever(followPath))
-        println("didCallFollowRoamingPath")
-*/
     }
     
     func updateClef(clef: String) { // clefs overlapp!
-        
         var cf = SKSpriteNode(imageNamed: "\(clef).png")
        // var cf: SKSpriteNode = self.childNodeWithName("\(name)") as! SKSpriteNode
         cf.name  = "\(clef)"
@@ -480,7 +478,7 @@ class GameScene: SKScene {
     }
     
     func flashGameOver() {
-        let gameoverLabel = SKLabelNode(fontNamed: "Komika Axis")
+        let gameoverLabel = SKLabelNode(fontNamed: "Komika Display Bold")
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"
@@ -501,7 +499,7 @@ class GameScene: SKScene {
     }
     
     func flashYouWin() {
-        let youWinLabel = SKLabelNode(fontNamed: "Komika Axis")
+        let youWinLabel = SKLabelNode(fontNamed: "Komika Display Bold")
         youWinLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
         youWinLabel.fontColor = SKColor.redColor()
         youWinLabel.text = "You Win"
@@ -591,14 +589,16 @@ class GameScene: SKScene {
     }
     
     func die() {
-        let shrinkAction = SKAction.scaleBy(0.38, duration: 1.0)
-        let rotateAction = SKAction.rotateByAngle(CGFloat(3*M_PI), duration: 1.0)
-        let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*2) , duration: 1.0)
-        let fallAction = SKAction.moveToY(30.0, duration: 1.0)
-        let removeAction = SKAction.removeFromParent()
-        roamingNoti!.runAction(SKAction.sequence([shrinkAction, rotateAction, recycleAction, fallAction, removeAction]))
+        let shrinkAction = SKAction.scaleBy(0.38, duration: 0.8)
+        let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 0.8)
+        let group1Action = SKAction.group([shrinkAction, rotateAction])
+        let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*1.2) , duration: 0.8)
+        let fallAction = SKAction.moveToY(30.0, duration: 0.8)
         
-        let openAction = SKAction.rotateByAngle(CGFloat(-M_PI / 2), duration: 1.0)
+        let removeAction = SKAction.removeFromParent()
+        roamingNoti!.runAction(SKAction.sequence([group1Action, recycleAction, fallAction, removeAction]))
+        
+        let openAction = SKAction.rotateByAngle(CGFloat(-M_PI / 2), duration: 0.8)
         let waitAction1 = SKAction.waitForDuration(3.0)
         let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
         trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
