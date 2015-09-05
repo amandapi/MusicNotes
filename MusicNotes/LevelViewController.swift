@@ -61,18 +61,21 @@ class LevelViewController: UIViewController {
             
             self.view.addSubview(levelButton)
         }
-        
-       // add introductionBanner
-        //introductionBannerView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/2.8)
-        //introductionBannerView.center = self.view.center
-        //introductionBannerView.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
-        //introductionBannerView.contentMode = UIViewContentMode.ScaleAspectFit
-        //introductionBannerView.layer.borderWidth = 2
-        //introductionBannerView.layer.cornerRadius = 25
-        //self.view.addSubview(introductionBannerView)
+
+        /*
+        //add introductionBanner
+        introductionBannerView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/2.8)
+        introductionBannerView.center = self.view.center
+        introductionBannerView.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
+        introductionBannerView.contentMode = UIViewContentMode.ScaleAspectFit
+        introductionBannerView.layer.borderWidth = 2
+        introductionBannerView.layer.cornerRadius = 25
+        self.view.addSubview(introductionBannerView)
+*/
     }
     
-/*     override func viewWillAppear(animated: Bool) {
+/*
+    override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
  
        // move introductionBanner off the screen to start
@@ -89,6 +92,7 @@ class LevelViewController: UIViewController {
             }, completion: nil)
     }
 */
+
 
 
     func getLevels() -> NSArray {

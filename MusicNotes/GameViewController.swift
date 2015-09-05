@@ -19,6 +19,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var destination: String!
     var sound: String!
     var clef: String!
+    var score: Int!
+    var congratulationsLabel: UILabel?
     
     var level: Level!
     func setLevel(level: Level) {
@@ -100,9 +102,34 @@ class GameViewController: UIViewController, GameSceneDelegate {
             scene.updateChallenge(challenge)
             scene.updateClef(challenge.clef)
         } else {
-            // congratulations you scored scoringNotiArray.count out of level.challengesArray.count! And segue to next level
+            score = scene.score // got score from GameScene
+            println("congratulations you scored \(score) or out of \(level.challengesArray.count)!")
+            addCongratulationsLabel()
+            endLevel()
         }
     }
-
+    
+    func endLevel() {  // stop noti and challenge and segue to LevelViewController
+        scene.instructionLabel.removeFromParent()
+        // how to stop the next noti from appearing
+        // how to segue to LevelViewController
+    }
+    
+    func addCongratulationsLabel() {
+       // var congratulationsLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3.8 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
+        var congratulationsLabel = UILabel(frame: CGRectMake(0 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
+        congratulationsLabel.textAlignment = NSTextAlignment.Center
+        congratulationsLabel.numberOfLines = 0
+        congratulationsLabel.text = "Congratulations! \n You scored \(score) out of \(level.challengesArray.count)"
+        congratulationsLabel.textColor = UIColor.redColor()
+        congratulationsLabel.font = UIFont(name: "Komika Display", size: 52)
+        congratulationsLabel.sizeToFit()
+        self.view.addSubview(congratulationsLabel)
+        
+        // animate congratulationsLabel
+        UIView.animateWithDuration(2.0, delay: 0.0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.0, options: .CurveLinear, animations: {
+        congratulationsLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
+            }, completion: nil)
+    }
 }
 

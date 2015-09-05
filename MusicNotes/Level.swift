@@ -25,7 +25,6 @@ class Level {
         
         challengesArray = NSMutableArray()
         for key in challenges.allKeys{
-            
             let value = challenges.objectForKey(key) as! NSArray
             let instruction = value[0] as! String
             let destination = value[1] as! String

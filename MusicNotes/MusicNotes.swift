@@ -14,11 +14,12 @@ class MusicNotes: SKSpriteNode {
     let pointsPerSec: CGFloat = 200.0
     var wayPoints: [CGPoint] = []
     var velocity = CGPoint(x: 0, y: 0)
+    var textures: [SKTexture] = []
     
     init(imageNamed name: String) {
         
         //create random noti's
-        var textures = [SKTexture]()
+        //var textures = [SKTexture]()
         textures.append(SKTexture(imageNamed: "notiPinkU.png"))
         textures.append(SKTexture(imageNamed: "notiBlueU.png"))
         textures.append(SKTexture(imageNamed: "notiGreenU.png"))
@@ -27,10 +28,8 @@ class MusicNotes: SKSpriteNode {
         textures.append(SKTexture(imageNamed: "notiYellowU.png"))
         textures.append(SKTexture(imageNamed: "notiBrownU.png"))
         let rand = Int(arc4random_uniform(UInt32(textures.count)))
-        let texture = textures[rand] as SKTexture
-        super.init(texture: texture, color: nil, size: texture.size())
-        
-        anchorPoint = CGPointMake(0.38, 0.25) // where should I put this line?
+        var texture = textures[rand] as SKTexture
+        super.init(texture: texture, color: nil, size: texture.size())        
     }
     
     required init?(coder aDecoder: NSCoder) {

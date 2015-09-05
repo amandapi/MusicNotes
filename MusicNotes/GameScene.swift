@@ -18,6 +18,8 @@ class GameScene: SKScene {
     
     var gameSceneDelegate: GameSceneDelegate?
     
+    var level: Level!
+    
     var noti = MusicNotes(imageNamed: String())
     var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
@@ -87,11 +89,8 @@ class GameScene: SKScene {
     func setGameSceneDelegate(delegate: GameSceneDelegate) {
         gameSceneDelegate = delegate
     }
-    
-    
-// This block will be called by GameViewController's scene.setLevel(level) before skView.presentScene
-    var level: Level!
-    func setLevel(level: Level) {
+
+    func setLevel(level: Level) { // This block will be called by GameViewController's scene.setLevel(level) before skView.presentScene
         self.level = level
     }
     
@@ -106,7 +105,7 @@ class GameScene: SKScene {
         setupTimerLabel()
         
         if gameState == .StartingLevel {
-            paused = true  // would false serves a better purpose? and get rid of gameStates?
+        paused = true
         }
     }
     
@@ -125,7 +124,6 @@ class GameScene: SKScene {
             //fallthrough  //suppressing this time prevents initial phantom notes to appear
             
             case .Playing:
-
                 roamingNoti!.removeAllActions()
                 roamingNoti?.name = "noti"
 
@@ -179,26 +177,28 @@ class GameScene: SKScene {
         if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
             movingNoti?.position.y = destinationNode.position.y
            
-            // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and (b) make scoring Noti unmovable
+            // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and let GameViewController know and (b) make scoring Noti unmovable
             scoringNotiArray.append(movingNoti!)
-            //println("scoringNotiArray is \(scoringNotiArray)")  // good
+            println("scoringNotiArray1 is \(scoringNotiArray)")  // good
  
             celebrate()
-            score++
+            score++  // score has been passed to GameViewController
             scoreLabel.text = "Score: \(score)"
             didScore = true
         } else {
             die()
-            deadCount++
+            deadCount++  // and pass deadCount to GameViewController
             deadCountLabel.text = "\(deadCount)"
             if deadCount >= 3 {
                 flashGameOver()
-                // back to LevelViewController, score to 0, deadcount to 0, segue
+                instructionLabel.removeFromParent()
+                // how to stop the next noti from appearing
+                // how to segue to LevelViewController
             }
         }
         
-        //addNoti() // included in following SKAction
-        //followRoamingPath()  // included in following SKAction
+        //addNoti() // add noti after wait for better player experience
+        //followRoamingPath()  // included in block
         self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
         animateInstructionLabel()
         
@@ -210,13 +210,60 @@ class GameScene: SKScene {
     func destinationRect(destination: CGRect) -> CGRect {
         return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/4, destination.size.width, destination.size.height/2)
     }
+    
+    func addNoti() {
+        //var noti = MusicNotes(imageNamed: "notiPinkU")
+        var noti = MusicNotes(imageNamed: String())
+        noti.name = "noti"
+        noti.setScale(S5.yScale * 0.83)
+        roamingNoti = noti
+        noti.anchorPoint = CGPointMake(0.38, 0.28)  // should this line be here or in MusicNotes?
+        noti.zPosition = 3
+        noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
+        addChild(noti)
+        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
+        //followRoamingPath()
+    }
+    
+    func followRoamingPath() {
+        var path = CGPathCreateMutable()
+        CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
+        var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
+        roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
+    }
 
     func updateChallenge(challenge: Challenge) {
-        //println(Challenge)
         self.instructionLabel.text = challenge.instruction
         self.destinationNode = getSpriteNodeForString(challenge.destination)
         self.sound = challenge.sound
         self.clef = challenge.clef
+    }
+    
+    func updateClef(clef: String) { // clefs overlapp!
+        var cf = SKSpriteNode(imageNamed: "\(clef).png")
+        //var cf: SKSpriteNode = self.childNodeWithName("\(clef)") as! SKSpriteNode
+        cf.name  = "\(clef)"
+        if (clef == "clefTreble") {
+            cf.anchorPoint = CGPointMake(0.5, 0.33)
+            cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
+            cf.setScale(frame.width/3880)
+        } else if (clef == "clefBass") {
+            cf.anchorPoint = CGPointMake(0.5, 0.71)
+            cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
+            cf.setScale(frame.width/1880)
+        }
+        self.addChild(cf) // self.insertChild(cf, atIndex: 0) // this works too
+        clefRotating = cf
+    }
+    
+    func updateBackground(background: String) { //func updateBackground() {
+        var bg = SKSpriteNode(imageNamed: "\(background).png")
+        bg.anchorPoint = CGPoint(x: 0, y: 0)
+        bg.size = self.frame.size
+        bg.zPosition = -1
+        //addChild(bg)  // this works too
+        insertChild(bg, atIndex: 0)   //self.insertChild(bg, atIndex: 0) work too
     }
     
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
@@ -253,7 +300,7 @@ class GameScene: SKScene {
     }
     
     func animateInstructionLabel() {  // so it appears in sync with Noti
-        let fadeAction = SKAction.fadeAlphaTo(0, duration: 0.01)
+        let fadeAction = SKAction.fadeAlphaTo(0, duration: 0.0)
         let waitAction = SKAction.waitForDuration(1.8)
         let fadeInAction = SKAction.fadeAlphaTo(1, duration: 0.5)
         let sequence = SKAction.sequence([fadeAction, waitAction, fadeInAction])
@@ -280,7 +327,7 @@ class GameScene: SKScene {
         timerLabel.fontColor = SKColor.redColor()
         timerLabel.horizontalAlignmentMode = .Left
         timerLabel.position = CGPoint(x: frame.width/4 , y: frame.height*9/10)
-        timerLabel.zPosition = 100
+        timerLabel.zPosition = 30
         if levelTimeLimit > 0 {
             addChild(timerLabel)
         }
@@ -315,25 +362,17 @@ class GameScene: SKScene {
         let startMsg = SKLabelNode(fontNamed: "Komika Display Bold")
         startMsg.name = "msgLabel"
         startMsg.text = "Start!"
-        startMsg.fontColor = SKColor.greenColor()
-        startMsg.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/8)
+        startMsg.fontColor = SKColor.blackColor()
+        startMsg.position = CGPoint(x: frame.width/2 , y: frame.height/1.58)
+        startMsg.zPosition = 30
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            startMsg.fontSize = 68
+            startMsg.fontSize = 88
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            startMsg.fontSize = 32
+            startMsg.fontSize = 38
         }
         addChild(startMsg)
     }
 
-    func updateBackground(background: String) { //func updateBackground() {
-        var bg = SKSpriteNode(imageNamed: "\(background).png")
-        bg.anchorPoint = CGPoint(x: 0, y: 0)
-        bg.size = self.frame.size
-        bg.zPosition = -1
-        //addChild(bg)  // this works too
-        insertChild(bg, atIndex: 0)   //self.insertChild(bg, atIndex: 0) work too
-        }
-    
     func addStaffLines() {
         var w = frame.width/2
         var h = frame.height/2
@@ -397,45 +436,6 @@ class GameScene: SKScene {
         L6.hidden = true  // ledger line for middle C for clefBass
     }
 
-    func addNoti() {
-        //var noti = MusicNotes(imageNamed: "notiPinkU")
-        var noti = MusicNotes(imageNamed: String())
-        noti.setScale(S5.yScale * 0.83)
-        roamingNoti = noti
-        noti.name = "noti"
-        noti.anchorPoint = CGPointMake(0.38, 0.28)  // should this line be here or in MusicNotes?
-        noti.zPosition = 3
-        noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
-        addChild(noti)
-        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
-        //followRoamingPath()
-    }
-    
-    func followRoamingPath() {
-        var path = CGPathCreateMutable()
-        CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
-        // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
-        var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
-        roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
-    }
-    
-    func updateClef(clef: String) { // clefs overlapp!
-        var cf = SKSpriteNode(imageNamed: "\(clef).png")
-       // var cf: SKSpriteNode = self.childNodeWithName("\(name)") as! SKSpriteNode
-        cf.name  = "\(clef)"
-        if (clef == "clefTreble") {
-        cf.anchorPoint = CGPointMake(0.5, 0.33)
-        cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
-        cf.setScale(frame.width/3880)
-    } else if (clef == "clefBass") {
-        cf.anchorPoint = CGPointMake(0.5, 0.71)
-        cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
-        cf.setScale(frame.width/1880)
-        }
-        self.addChild(cf) // self.insertChild(cf, atIndex: 0) // this works too
-        clefRotating = cf
-    }
-    
     func addTrashcanAndTrashcanLid() {
         trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: 0)
         trashcan.anchorPoint = CGPointMake(0.5, 0)
@@ -479,7 +479,7 @@ class GameScene: SKScene {
     
     func flashGameOver() {
         let gameoverLabel = SKLabelNode(fontNamed: "Komika Display Bold")
-        gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
+        gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"
         gameoverLabel.zPosition = 4
@@ -496,27 +496,6 @@ class GameScene: SKScene {
         gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
         
         addChild(gameoverLabel)
-    }
-    
-    func flashYouWin() {
-        let youWinLabel = SKLabelNode(fontNamed: "Komika Display Bold")
-        youWinLabel.position = CGPoint(x: frame.width/2 , y: frame.height/2)
-        youWinLabel.fontColor = SKColor.redColor()
-        youWinLabel.text = "You Win"
-        youWinLabel.zPosition = 4
-        youWinLabel.alpha = 0
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            youWinLabel.fontSize = 88
-        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            youWinLabel.fontSize = 38
-        }
-        
-        let fadeinAction = SKAction.fadeInWithDuration(0.5)
-        let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
-        let deleteAction = SKAction.removeFromParent()
-        youWinLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
-        
-        addChild(youWinLabel)
     }
     
     func celebrate() {
