@@ -121,7 +121,7 @@ class GameScene: SKScene {
                 startCountdown()
                 gameState = .Playing
         
-            //fallthrough  //suppressing this time prevents initial phantom notes to appear
+            //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
             case .Playing:
                 roamingNoti!.removeAllActions()
@@ -197,8 +197,7 @@ class GameScene: SKScene {
             }
         }
         
-        //addNoti() // add noti after wait for better player experience
-        //followRoamingPath()  // included in block
+        // this is to delay addNoti() for 1.8s for better player experience
         self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
         animateInstructionLabel()
         
@@ -563,11 +562,9 @@ class GameScene: SKScene {
         clefRotating.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
     }
     
-    func playSound(sound:String) {
-        runAction(SKAction.playSoundFileNamed(sound, waitForCompletion: false))
-    }
-    
     func die() {
+        playSound("noGood.wav")
+        
         let shrinkAction = SKAction.scaleBy(0.38, duration: 0.8)
         let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 0.8)
         let group1Action = SKAction.group([shrinkAction, rotateAction])
@@ -581,6 +578,10 @@ class GameScene: SKScene {
         let waitAction1 = SKAction.waitForDuration(3.0)
         let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
         trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
+    }    
+    
+    func playSound(sound:String) {
+        runAction(SKAction.playSoundFileNamed(sound, waitForCompletion: false))
     }
 
 }

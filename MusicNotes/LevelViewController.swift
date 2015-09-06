@@ -24,7 +24,8 @@ class LevelViewController: UIViewController {
         
         addChooseLevelLabel()
         
-        var levelButton = UIButton.buttonWithType(.System) as! UIButton
+        //var levelButton = UIButton.buttonWithType(.System) as! UIButton
+        var levelButton = UIButton()
         var buttonWidth = self.view.frame.width / 5.8
         var buttonHeight = buttonWidth * 0.75
         var gap = buttonWidth / 10.0
@@ -36,7 +37,10 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 1...levels.count {
-            var levelButton = UIButton.buttonWithType(.System) as! UIButton
+            //var levelButton = UIButton.buttonWithType(.Custom) as! UIButton
+             levelButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+            //var levelButton = UIButton.buttonWithType(.System) as! UIButton
+            //var levelButton = UIButton()
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
             } else if i < 7 {
@@ -44,21 +48,39 @@ class LevelViewController: UIViewController {
             } else {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i - 6)*dx - dx - dx , y5 + dy + gap*3, buttonWidth, buttonHeight)
             }
-            levelButton.setTitle("LEVEL \(i)", forState: UIControlState.Normal)
+            levelButton.setTitle("Level \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
-            levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
-            //levelButton.titleLabel!.font = UIFont(name: "Komikax Axis", size: 38)
-            levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
-            //levelButton.titleLabel!.textColor = UIColor.blackColor()
-            levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-            //levelButton.titleLabel!.shadowColor = UIColor.blackColor()
-            levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
-            levelButton.titleLabel!.shadowOffset = CGSize(width: 3, height: 3)
-            //find out about shadowOpacity and shadowRadius on layer
-            levelButton.titleLabel!.textAlignment = .Center
+            
+            //shadow for the 9 buttons
+            levelButton.layer.shadowColor = UIColor.grayColor().CGColor;
+            levelButton.layer.shadowOpacity = 0.8
+            levelButton.layer.shadowRadius = 8
+            levelButton.layer.shadowOffset = CGSizeMake(8.0, 8.0)
+            
+            // set background images
             levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
+            
+            // set titleLabel
+            //levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
+            levelButton.titleLabel!.font = UIFont.boldSystemFontOfSize(36)
+            //levelButton.titleLabel!.font = UIFont(name: "Komikax Display Bold", size: 38)
+            //levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
+            levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            levelButton.titleLabel!.shadowColor = UIColor.blackColor()
+            levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
+            levelButton.titleLabel!.shadowOffset = CGSize(width: 2.3, height: 2.3)
+            
+            // set image
+            var starImage = UIImage(named: "scoreStars")
+            levelButton.setImage(starImage, forState: UIControlState.Normal)
+            levelButton.imageEdgeInsets = UIEdgeInsets(top: 80, left: 10, bottom: 30, right: 20)
+            levelButton.titleEdgeInsets = UIEdgeInsets(top: 20, left: -200, bottom: 80, right: 0)
+            levelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0)
+            
+            // set action target for each button
             levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             
+            // add the 9 buttons
             self.view.addSubview(levelButton)
         }
 

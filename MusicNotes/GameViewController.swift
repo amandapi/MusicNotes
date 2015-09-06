@@ -113,11 +113,23 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scene.instructionLabel.removeFromParent()
         // how to stop the next noti from appearing
         // how to segue to LevelViewController
+        
+        //var noti = MusicNotes(imageNamed: String())
+        //scene.noti.removeFromParent()
+        //scene.noti.removeAllChildren()
+        //MusicNotes.removeFromParent(noti)
+        //MusicNotes.removeChildrenInArray(MusicNotes.textures)
+        //scene.noti.removeAllActions() //this does not work
+        //scene.roamingNoti?.removeAllActions()  // this does not work
+        //scene.noti.removeFromParent()  // this does not work
+        //scene.movingNoti?.removeFromParent()  // this does not work
+        //scene.roamingNoti!.removeFromParent() // this removes the last noti(roamingNoti)
+        //scene.removeAllChildren() // this removes too many things
+        //scene.removeChildrenInArray(MusicNotes) //this does not work
     }
     
     func addCongratulationsLabel() {
-       // var congratulationsLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3.8 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
-        var congratulationsLabel = UILabel(frame: CGRectMake(0 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
+        var congratulationsLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
         congratulationsLabel.textAlignment = NSTextAlignment.Center
         congratulationsLabel.numberOfLines = 0
         congratulationsLabel.text = "Congratulations! \n You scored \(score) out of \(level.challengesArray.count)"
@@ -127,9 +139,29 @@ class GameViewController: UIViewController, GameSceneDelegate {
         self.view.addSubview(congratulationsLabel)
         
         // animate congratulationsLabel
-        UIView.animateWithDuration(2.0, delay: 0.0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.0, options: .CurveLinear, animations: {
+        UIView.animateWithDuration(2.0, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: .CurveLinear, animations: {
         congratulationsLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
             }, completion: nil)
+        
+        // add stars
+        addStars()
     }
+    
+    func addStars() {
+ /*
+            var star = SKSpriteNode(imageNamed: "particleGoldStar.png")
+            star.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170)
+            star.setScale(frame.width/3880)
+            level.levelButton.addChild(star)
+        
+        if score = 2 {
+            
+        } else if score >= level.challengesArray.count/2 {
+            
+        } else if score = level.challengesArray.count {
+            
+        }
+    }
+*/
 }
-
+}
