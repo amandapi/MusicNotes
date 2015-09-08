@@ -11,7 +11,7 @@
 		0A1733001B8E580300AE4373 /* MainMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A1732FF1B8E580300AE4373 /* MainMenu.png */; };
 		0A2B3C211B279DAD005269BE /* Levels.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A2B3C201B279DAD005269BE /* Levels.plist */; };
 		0A488C591B215658006CDA4B /* MainMenu2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A488C581B215658006CDA4B /* MainMenu2.png */; };
-		0A52E6C51B9D053B00C6FB54 /* scoreStars.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A52E6C41B9D053B00C6FB54 /* scoreStars.png */; };
+		0A52E6C51B9D053B00C6FB54 /* scoreStars3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A52E6C41B9D053B00C6FB54 /* scoreStars3.png */; };
 		0A59646D1B5F022100CC86CC /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A59646C1B5F022100CC86CC /* Level.swift */; };
 		0A59646F1B5F063000CC86CC /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A59646E1B5F063000CC86CC /* Challenge.swift */; };
 		0A5EC1431B5C3E7D0007C734 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5EC1421B5C3E7D0007C734 /* Types.swift */; };
@@ -66,6 +66,9 @@
 		0AABA05E1B9CD86300DE7D07 /* G4.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0AABA0461B9CD86300DE7D07 /* G4.wav */; };
 		0AABA05F1B9CD86300DE7D07 /* G5.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0AABA0471B9CD86300DE7D07 /* G5.wav */; };
 		0AABA0601B9CD86300DE7D07 /* noGood.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0AABA0481B9CD86300DE7D07 /* noGood.wav */; };
+		0AE89EF81B9F651500E6AB22 /* MozartSymphony40.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0AE89EF71B9F651500E6AB22 /* MozartSymphony40.caf */; };
+		0AE89EFA1B9F693700E6AB22 /* scoreStars2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AE89EF91B9F693700E6AB22 /* scoreStars2.png */; };
+		0AE89EFC1B9F693C00E6AB22 /* scoreStar1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AE89EFB1B9F693C00E6AB22 /* scoreStar1.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,7 +86,7 @@
 		0A1732FF1B8E580300AE4373 /* MainMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MainMenu.png; sourceTree = "<group>"; };
 		0A2B3C201B279DAD005269BE /* Levels.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Levels.plist; sourceTree = "<group>"; };
 		0A488C581B215658006CDA4B /* MainMenu2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MainMenu2.png; sourceTree = "<group>"; };
-		0A52E6C41B9D053B00C6FB54 /* scoreStars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scoreStars.png; sourceTree = "<group>"; };
+		0A52E6C41B9D053B00C6FB54 /* scoreStars3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scoreStars3.png; sourceTree = "<group>"; };
 		0A59646C1B5F022100CC86CC /* Level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
 		0A59646E1B5F063000CC86CC /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		0A5EC1421B5C3E7D0007C734 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -143,6 +146,9 @@
 		0AABA0461B9CD86300DE7D07 /* G4.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = G4.wav; sourceTree = "<group>"; };
 		0AABA0471B9CD86300DE7D07 /* G5.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = G5.wav; sourceTree = "<group>"; };
 		0AABA0481B9CD86300DE7D07 /* noGood.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = noGood.wav; sourceTree = "<group>"; };
+		0AE89EF71B9F651500E6AB22 /* MozartSymphony40.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MozartSymphony40.caf; sourceTree = "<group>"; };
+		0AE89EF91B9F693700E6AB22 /* scoreStars2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scoreStars2.png; sourceTree = "<group>"; };
+		0AE89EFB1B9F693C00E6AB22 /* scoreStar1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scoreStar1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,7 +176,9 @@
 				0A488C581B215658006CDA4B /* MainMenu2.png */,
 				0A03FA8E1B5AF6FF00DA5EED /* hint.png */,
 				0A1732FF1B8E580300AE4373 /* MainMenu.png */,
-				0A52E6C41B9D053B00C6FB54 /* scoreStars.png */,
+				0AE89EF91B9F693700E6AB22 /* scoreStars2.png */,
+				0AE89EFB1B9F693C00E6AB22 /* scoreStar1.png */,
+				0A52E6C41B9D053B00C6FB54 /* scoreStars3.png */,
 				0A9CCA001B8D025C0064EA65 /* howToBanner04.png */,
 				0A8B3A001B64640500681A86 /* bg1.png */,
 				0A8B3A021B64640E00681A86 /* bg2.png */,
@@ -195,6 +203,7 @@
 				0AABA0321B9CD86300DE7D07 /* A3.wav */,
 				0AABA0331B9CD86300DE7D07 /* A4.wav */,
 				0AABA0341B9CD86300DE7D07 /* B2.wav */,
+				0AE89EF71B9F651500E6AB22 /* MozartSymphony40.caf */,
 				0AABA0351B9CD86300DE7D07 /* B3.wav */,
 				0AABA0361B9CD86300DE7D07 /* B4.wav */,
 				0AABA0371B9CD86300DE7D07 /* C3.wav */,
@@ -400,6 +409,7 @@
 				0A7285721B913BFB006BB7C4 /* KMKDSP__.ttf in Resources */,
 				0A8B3A031B64640E00681A86 /* bg2.png in Resources */,
 				0A03FA8F1B5AF6FF00DA5EED /* hint.png in Resources */,
+				0AE89EFC1B9F693C00E6AB22 /* scoreStar1.png in Resources */,
 				0AABA05A1B9CD86300DE7D07 /* F4.wav in Resources */,
 				0A7285741B913C88006BB7C4 /* KMKDSPB_.ttf in Resources */,
 				0AABA04D1B9CD86300DE7D07 /* B3.wav in Resources */,
@@ -409,13 +419,14 @@
 				0AABA0551B9CD86300DE7D07 /* E3.wav in Resources */,
 				0AABA05B1B9CD86300DE7D07 /* F5.wav in Resources */,
 				0AABA0561B9CD86300DE7D07 /* E4.wav in Resources */,
-				0A52E6C51B9D053B00C6FB54 /* scoreStars.png in Resources */,
+				0A52E6C51B9D053B00C6FB54 /* scoreStars3.png in Resources */,
 				0AABA0531B9CD86300DE7D07 /* D4.wav in Resources */,
 				0AABA0541B9CD86300DE7D07 /* D5.wav in Resources */,
 				0AABA05E1B9CD86300DE7D07 /* G4.wav in Resources */,
 				0A8B3A091B64642200681A86 /* bg5.png in Resources */,
 				0AABA04E1B9CD86300DE7D07 /* B4.wav in Resources */,
 				0A8B3A051B64641300681A86 /* bg3.png in Resources */,
+				0AE89EF81B9F651500E6AB22 /* MozartSymphony40.caf in Resources */,
 				0A8B3A0B1B64642700681A86 /* bg6.png in Resources */,
 				0A8EBD2E1B1BD2FA0075B37D /* LaunchScreen.xib in Resources */,
 				0AA5EF7C1B5B073E0099DE8A /* background1menu.png in Resources */,
@@ -429,6 +440,7 @@
 				0AABA04C1B9CD86300DE7D07 /* B2.wav in Resources */,
 				0AABA04B1B9CD86300DE7D07 /* A4.wav in Resources */,
 				0A8B3A071B64641C00681A86 /* bg4.png in Resources */,
+				0AE89EFA1B9F693700E6AB22 /* scoreStars2.png in Resources */,
 				0AABA0521B9CD86300DE7D07 /* D3.wav in Resources */,
 				0A2B3C211B279DAD005269BE /* Levels.plist in Resources */,
 				0AABA0501B9CD86300DE7D07 /* C4.wav in Resources */,

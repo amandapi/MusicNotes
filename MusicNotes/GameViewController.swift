@@ -143,25 +143,34 @@ class GameViewController: UIViewController, GameSceneDelegate {
         congratulationsLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
             }, completion: nil)
         
+        // play sound
+        scene.playSound("MozartSymphony40.caf")
+        
         // add stars
         addStars()
     }
     
     func addStars() {
- /*
-            var star = SKSpriteNode(imageNamed: "particleGoldStar.png")
-            star.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170)
-            star.setScale(frame.width/3880)
-            level.levelButton.addChild(star)
+        //let scoreStarsImage = UIImage(named: "scoreStars2.png")
+        let scoreStar1ImageView = UIImageView(image: UIImage(named: "scoreStar1.png")!)
+        let scoreStars2ImageView = UIImageView(image: UIImage(named: "scoreStars2.png")!)
+        let scoreStars3ImageView = UIImageView(image: UIImage(named: "scoreStars3.png")!)
+        scoreStar1ImageView.contentMode = .ScaleAspectFit
+        scoreStars2ImageView.contentMode = .ScaleAspectFit
+        scoreStars3ImageView.contentMode = .ScaleAspectFit
+        scoreStar1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
+        scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
+        scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
         
-        if score = 2 {
-            
-        } else if score >= level.challengesArray.count/2 {
-            
-        } else if score = level.challengesArray.count {
-            
+        if (score <= level.challengesArray.count - 3) {
+            view.addSubview(scoreStar1ImageView)
+        } else if (score < level.challengesArray.count) {
+            view.addSubview(scoreStars2ImageView)
+        } else if (score == level.challengesArray.count) {
+            view.addSubview(scoreStars3ImageView)
         }
+
     }
-*/
+
 }
-}
+

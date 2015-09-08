@@ -55,7 +55,7 @@ class GameScene: SKScene {
     var clefBass = SKSpriteNode()
     //var clefTreble = SKSpriteNode(imageNamed: "clefTreble.png")
     //var clefBass = SKSpriteNode(imageNamed: "clefBass.png")
-    var cf = SKSpriteNode()
+    var cf: SKSpriteNode?
     var clefRotating = SKSpriteNode()
     
     var gameState = GameState.StartingLevel
@@ -180,11 +180,17 @@ class GameScene: SKScene {
             // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and let GameViewController know and (b) make scoring Noti unmovable
             scoringNotiArray.append(movingNoti!)
             println("scoringNotiArray1 is \(scoringNotiArray)")  // good
- 
-            celebrate()
+            
             score++  // score has been passed to GameViewController
             scoreLabel.text = "Score: \(score)"
             didScore = true
+ 
+            celebrate({
+                if self.gameSceneDelegate != nil {
+                    self.gameSceneDelegate!.notiDidScore(didScore)
+                }
+            })
+
         } else {
             die()
             deadCount++  // and pass deadCount to GameViewController
@@ -192,18 +198,19 @@ class GameScene: SKScene {
             if deadCount >= 3 {
                 flashGameOver()
                 instructionLabel.removeFromParent()
+                roamingNoti!.removeAllActions()
                 // how to stop the next noti from appearing
                 // how to segue to LevelViewController
+            }
+            
+            if self.gameSceneDelegate != nil {
+                self.gameSceneDelegate!.notiDidScore(didScore)
             }
         }
         
         // this is to delay addNoti() for 1.8s for better player experience
         self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
-        animateInstructionLabel()
-        
-        if gameSceneDelegate != nil {
-            gameSceneDelegate!.notiDidScore(didScore)
-        }
+        animateInstructionLabel()        
     }
    
     func destinationRect(destination: CGRect) -> CGRect {
@@ -240,20 +247,26 @@ class GameScene: SKScene {
     }
     
     func updateClef(clef: String) { // clefs overlapp!
-        var cf = SKSpriteNode(imageNamed: "\(clef).png")
+        //var cf = SKSpriteNode(imageNamed: "\(clef).png")
         //var cf: SKSpriteNode = self.childNodeWithName("\(clef)") as! SKSpriteNode
-        cf.name  = "\(clef)"
-        if (clef == "clefTreble") {
-            cf.anchorPoint = CGPointMake(0.5, 0.33)
-            cf.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
-            cf.setScale(frame.width/3880)
-        } else if (clef == "clefBass") {
-            cf.anchorPoint = CGPointMake(0.5, 0.71)
-            cf.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
-            cf.setScale(frame.width/1880)
+        
+        if self.cf != nil {
+            self.removeChildrenInArray([self.cf!])
         }
-        self.addChild(cf) // self.insertChild(cf, atIndex: 0) // this works too
-        clefRotating = cf
+        
+        self.cf = SKSpriteNode(imageNamed: "\(clef).png")
+        self.cf!.name  = "\(clef)"
+        if (clef == "clefTreble") {
+            self.cf!.anchorPoint = CGPointMake(0.5, 0.33)
+            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
+            self.cf!.setScale(frame.width/3880)
+        } else if (clef == "clefBass") {
+            self.cf!.anchorPoint = CGPointMake(0.5, 0.71)
+            self.cf!.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
+            self.cf!.setScale(frame.width/1880)
+        }
+        self.addChild(self.cf!) // self.insertChild(cf, atIndex: 0) // this works too
+        clefRotating = self.cf!
     }
     
     func updateBackground(background: String) { //func updateBackground() {
@@ -497,8 +510,10 @@ class GameScene: SKScene {
         addChild(gameoverLabel)
     }
     
-    func celebrate() {
-        rotateClef()
+    
+    func celebrate(completionHandler: () -> ()) {
+        
+        rotateClef(completionHandler)
         playSound("\(sound).wav")
         
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
@@ -557,9 +572,8 @@ class GameScene: SKScene {
         movingNoti!.runAction(happy)
     }
     
-    func rotateClef() {
-        //let clef = clefRotating
-        clefRotating.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8))
+    func rotateClef(completionHandler: () -> ()) {   // closure
+        clefRotating.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8), completion: completionHandler)
     }
     
     func die() {
