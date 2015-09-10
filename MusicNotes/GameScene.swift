@@ -25,7 +25,6 @@ class GameScene: SKScene {
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
     var scoringNoti: MusicNotes?
-    //var scoringNotiArray: NSArray?
     var scoringNotiArray = [SKSpriteNode]()
     
     var lastUpdateTime: NSTimeInterval = 0.0
@@ -43,8 +42,8 @@ class GameScene: SKScene {
     
     var challenge = NSArray()
     var instructionLabel = SKLabelNode(fontNamed: "Komika Display")
-    var instruction = String()
-    var destination = String()
+    var instruction: String?
+    var destination: String?
     var destinationNode = SKSpriteNode()
     var sound = String()
     var clef = String()
@@ -53,15 +52,13 @@ class GameScene: SKScene {
     
     var clefTreble = SKSpriteNode()
     var clefBass = SKSpriteNode()
-    //var clefTreble = SKSpriteNode(imageNamed: "clefTreble.png")
-    //var clefBass = SKSpriteNode(imageNamed: "clefBass.png")
     var cf: SKSpriteNode?
     var clefRotating = SKSpriteNode()
     
     var gameState = GameState.StartingLevel
     
     // these are the "destinations" defined by sizes of "staffLines"
-    let L0 = SKSpriteNode(imageNamed: "L0")
+    let L0 = SKSpriteNode(imageNamed: "L0") // middle C at clefTreble
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
     let S1 = SKSpriteNode(imageNamed: "S1")
@@ -73,7 +70,7 @@ class GameScene: SKScene {
     let S4 = SKSpriteNode(imageNamed: "S4")
     let L5 = SKSpriteNode(imageNamed: "L5")
     let S5 = SKSpriteNode(imageNamed: "S5")
-    let L6 = SKSpriteNode(imageNamed: "L6")
+    let L6 = SKSpriteNode(imageNamed: "L6")  // middle C with clefBass
     
     let trashcan = SKSpriteNode(imageNamed: "trashcan")
     let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
@@ -190,27 +187,20 @@ class GameScene: SKScene {
                     self.gameSceneDelegate!.notiDidScore(didScore)
                 }
             })
+            
+            animateInstructionLabel() // delay instructionLabel to be in sync with noti appearance
 
         } else {
             die()
-            deadCount++  // and pass deadCount to GameViewController
+            deadCount++  // deadCount has been passed to GameViewController
             deadCountLabel.text = "\(deadCount)"
-            if deadCount >= 3 {
-                flashGameOver()
-                instructionLabel.removeFromParent()
-                roamingNoti!.removeAllActions()
-                // how to stop the next noti from appearing
-                // how to segue to LevelViewController
-            }
-            
+
             if self.gameSceneDelegate != nil {
                 self.gameSceneDelegate!.notiDidScore(didScore)
             }
         }
-        
-        // this is to delay addNoti() for 1.8s for better player experience
-        self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
-        animateInstructionLabel()        
+                
+        //self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
     }
    
     func destinationRect(destination: CGRect) -> CGRect {
@@ -246,23 +236,19 @@ class GameScene: SKScene {
         self.clef = challenge.clef
     }
     
-    func updateClef(clef: String) { // clefs overlapp!
-        //var cf = SKSpriteNode(imageNamed: "\(clef).png")
-        //var cf: SKSpriteNode = self.childNodeWithName("\(clef)") as! SKSpriteNode
-        
+    func updateClef(clef: String) {
         if self.cf != nil {
             self.removeChildrenInArray([self.cf!])
         }
-        
         self.cf = SKSpriteNode(imageNamed: "\(clef).png")
         self.cf!.name  = "\(clef)"
         if (clef == "clefTreble") {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.33)
-            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2 - 20*frame.width/170) // y at L2.y
+            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28 - 68*frame.width/575) // y at L2.y
             self.cf!.setScale(frame.width/3880)
         } else if (clef == "clefBass") {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.71)
-            self.cf!.position = CGPoint(x: L2.position.x + frame.width/5.2, y: frame.height/2) // y at L4.y
+            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28) // y at L4.y
             self.cf!.setScale(frame.width/1880)
         }
         self.addChild(self.cf!) // self.insertChild(cf, atIndex: 0) // this works too
@@ -387,7 +373,7 @@ class GameScene: SKScene {
 
     func addStaffLines() {
         var w = frame.width/2
-        var h = frame.height/2
+        var h = frame.height/2.28   //2
         var d = 68*frame.width/2300
         var yScale = frame.width/2300
         var xScale = frame.width/1680
@@ -396,7 +382,7 @@ class GameScene: SKScene {
         L0.yScale = yScale
         L0.xScale = xScale
         self.addChild(L0)
-        L0.hidden = true  // ledger line for middle C for clefTreble
+        //L0.hidden = true  // ledger line for middle C for clefTreble
         S0.position = CGPoint(x:w , y:h-7*d)
         S0.yScale = yScale
         S0.xScale = xScale
@@ -445,7 +431,7 @@ class GameScene: SKScene {
         L6.yScale = yScale
         L6.xScale = xScale
         self.addChild(L6)
-        L6.hidden = true  // ledger line for middle C for clefBass
+        //L6.hidden = true  // ledger line for middle C for clefBass
     }
 
     func addTrashcanAndTrashcanLid() {
@@ -462,10 +448,10 @@ class GameScene: SKScene {
     }
     
     func setupCountLabels() {
+        //var scoreLabel = SKLabelNode(fontNamed: "Komika Display")
         scoreLabel.fontColor = SKColor.redColor()
         scoreLabel.text = "Score: 0"
         scoreLabel.name = "scoreLabel"
-        //scoreLabel.verticalAlignmentMode = .Center
         scoreLabel.horizontalAlignmentMode = .Left
         scoreLabel.position = CGPoint(x: frame.width/28 , y: frame.height*9/10)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
@@ -475,6 +461,7 @@ class GameScene: SKScene {
         }
         addChild(scoreLabel)
         
+        //var deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
         deadCountLabel.fontColor = SKColor.redColor()
         deadCountLabel.text = "0"
         deadCountLabel.name = "deadCountLabel"
@@ -504,8 +491,8 @@ class GameScene: SKScene {
 
         let fadeinAction = SKAction.fadeInWithDuration(0.5)
         let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
-        let deleteAction = SKAction.removeFromParent()
-        gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, deleteAction]))
+        //let deleteAction = SKAction.removeFromParent()
+        gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
         
         addChild(gameoverLabel)
     }

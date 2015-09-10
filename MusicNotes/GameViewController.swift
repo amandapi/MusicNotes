@@ -21,6 +21,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var clef: String!
     var score: Int!
     var congratulationsLabel: UILabel?
+    var deadCount: Int!
     
     var level: Level!
     func setLevel(level: Level) {
@@ -69,7 +70,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         let skView = self.view as! SKView
         let scene = skView.scene as! GameScene
         //scene.level = self.level
-        
     }
 
     override func shouldAutorotate() -> Bool {
@@ -96,39 +96,37 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
     func notiDidScore(didScore: Bool) {
-        currentChallengeIndex++
-        if (currentChallengeIndex < level.challengesArray.count){
-            var challenge = level.challengesArray[currentChallengeIndex] as! Challenge
-            scene.updateChallenge(challenge)
-            scene.updateClef(challenge.clef)
+        deadCount = scene.deadCount
+        if deadCount < 3 {
+            currentChallengeIndex++
+            if (currentChallengeIndex < level.challengesArray.count){
+                var challenge = level.challengesArray[currentChallengeIndex] as! Challenge
+                scene.updateChallenge(challenge)
+                scene.updateClef(challenge.clef)
+                scene.addNoti()
+                scene.followRoamingPath()
+            } else {
+                score = scene.score // get score from GameScene
+                congratulations()
+                endLevelWithSuccess()
+            }
         } else {
-            score = scene.score // got score from GameScene
-            println("congratulations you scored \(score) or out of \(level.challengesArray.count)!")
-            addCongratulationsLabel()
-            endLevel()
+            gameOver()
         }
     }
     
-    func endLevel() {  // stop noti and challenge and segue to LevelViewController
+    func gameOver() {
+        scene.flashGameOver()
         scene.instructionLabel.removeFromParent()
-        // how to stop the next noti from appearing
         // how to segue to LevelViewController
-        
-        //var noti = MusicNotes(imageNamed: String())
-        //scene.noti.removeFromParent()
-        //scene.noti.removeAllChildren()
-        //MusicNotes.removeFromParent(noti)
-        //MusicNotes.removeChildrenInArray(MusicNotes.textures)
-        //scene.noti.removeAllActions() //this does not work
-        //scene.roamingNoti?.removeAllActions()  // this does not work
-        //scene.noti.removeFromParent()  // this does not work
-        //scene.movingNoti?.removeFromParent()  // this does not work
-        //scene.roamingNoti!.removeFromParent() // this removes the last noti(roamingNoti)
-        //scene.removeAllChildren() // this removes too many things
-        //scene.removeChildrenInArray(MusicNotes) //this does not work
     }
     
-    func addCongratulationsLabel() {
+    func endLevelWithSuccess() {
+        scene.instructionLabel.removeFromParent()
+        // how to segue to LevelViewController
+    }
+    
+    func congratulations() {
         var congratulationsLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
         congratulationsLabel.textAlignment = NSTextAlignment.Center
         congratulationsLabel.numberOfLines = 0
@@ -152,6 +150,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     
     func addStars() {
         //let scoreStarsImage = UIImage(named: "scoreStars2.png")
+        
         let scoreStar1ImageView = UIImageView(image: UIImage(named: "scoreStar1.png")!)
         let scoreStars2ImageView = UIImageView(image: UIImage(named: "scoreStars2.png")!)
         let scoreStars3ImageView = UIImageView(image: UIImage(named: "scoreStars3.png")!)
@@ -169,7 +168,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         } else if (score == level.challengesArray.count) {
             view.addSubview(scoreStars3ImageView)
         }
-
     }
 
 }
