@@ -17,7 +17,6 @@ class Challenge {
     let clef: String!
     
     required init(instruction: String, destination: String, sound: String, clef: String) {
-        //fatalError("NSCoding not supported")
         self.instruction = instruction
         self.destination = destination
         self.sound = sound

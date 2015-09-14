@@ -16,7 +16,9 @@ class LevelViewController: UIViewController {
     var levels: NSMutableArray?
     var chooseLevelLabel: UILabel?
     var introductionView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var introductionView2 = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
+    var goButton: UIButton?
     
     // could not put together a valid init method - does a viewController needs an init?
 
@@ -46,10 +48,7 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 1...levels.count {
-            //var levelButton = UIButton.buttonWithType(.Custom) as! UIButton
              levelButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
-            //var levelButton = UIButton.buttonWithType(.System) as! UIButton
-            //var levelButton = UIButton()
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
             } else if i < 7 {
@@ -70,10 +69,8 @@ class LevelViewController: UIViewController {
             levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
             
             // set titleLabel
-            //levelButton.titleLabel!.font = UIFont.systemFontOfSize(36)
             levelButton.titleLabel!.font = UIFont.boldSystemFontOfSize(36)
             //levelButton.titleLabel!.font = UIFont(name: "Komikax Display Bold", size: 38)
-            //levelButton.titleLabel!.adjustsFontSizeToFitWidth = true
             levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             levelButton.titleLabel!.shadowColor = UIColor.blackColor()
             levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
@@ -99,32 +96,43 @@ class LevelViewController: UIViewController {
     func addIntroduction() {
         
         // create introductionView
-        self.introductionView = UIImageView(image: UIImage(named: "introduction.png"))
+        self.introductionView = UIImageView(image: UIImage(named: "bgMainMenu.png"))
         introductionView.frame = view.frame
         introductionView.userInteractionEnabled = true
-        
         introductionView.alpha = 0.0
         view.addSubview(introductionView)
         
-        // create "OK!" button in introductionView
-        var goButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        goButton.setTitle("OK!", forState: UIControlState.Normal)
-        goButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
-        goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
-        goButton.backgroundColor = UIColor.clearColor()
-        goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView.bounds.width, introductionView.bounds.height/6)
-        goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
-        introductionView.addSubview(goButton)
+        self.introductionView2 = UIImageView(image: UIImage(named: "introduction.png"))
+        introductionView2.frame = view.frame
+        introductionView2.userInteractionEnabled = true
+        introductionView2.alpha = 0.0
+        view.addSubview(introductionView2)
         
         // animate appearance of introductionView
         introductionView.center = self.view.center
         UIView.animateWithDuration(0.0, delay: 0.0, options: .CurveEaseOut, animations:{
             self.introductionView.alpha = 1.0
             }, completion: nil)
+        
+        introductionView2.center = self.view.center
+        UIView.animateWithDuration(1.0, delay: 1.0, options: .CurveEaseOut, animations:{
+            self.introductionView2.alpha = 1.0
+            }, completion: nil)
+        
+        // create "Let's go!" button in introductionView
+        var goButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        goButton.setTitle("Let's go!", forState: UIControlState.Normal)
+        goButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        goButton.backgroundColor = UIColor.clearColor()
+        goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView2.bounds.width, introductionView2.bounds.height/6)
+        goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        introductionView2.addSubview(goButton)
     }
     
     func goButtonPressed() {
-        UIView.animateWithDuration(3.8, animations: { () -> Void in
+        UIView.animateWithDuration(1.8, animations: { () -> Void in
+            self.introductionView2.alpha = 0.0
             self.introductionView.alpha = 0.0
         })
     }

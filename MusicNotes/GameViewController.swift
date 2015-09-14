@@ -20,7 +20,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         var shareToFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
         shareToFacebook.setInitialText("Hello I am playing MusicNotes")
         shareToFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
-        //shareToFacebook.addURL(NSURL(www....))
         self.presentViewController(shareToFacebook, animated: true, completion: nil)
     }
     
@@ -136,34 +135,30 @@ class GameViewController: UIViewController, GameSceneDelegate {
         
         // create hintView
         self.hintView = UIImageView(image: UIImage(named: "hintContent.png"))
-        //hintView!.frame = CGRectMake(self.view.center.x, self.view.center.y, view.bounds.width/1.28, view.bounds.height/1.28)
-        //hintView.center = self.view.center
         hintView!.frame = view.frame
         hintView!.userInteractionEnabled = true
-        
         hintView!.alpha = 0.0
         view.addSubview(hintView!)
         
-        // create "OK!" button in hintView
+        // create "I got it!" button in hintView
         var returnButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        returnButton.setTitle("OK!", forState: UIControlState.Normal)
+        returnButton.setTitle("I got it!", forState: UIControlState.Normal)
         returnButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
         returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         returnButton.backgroundColor = UIColor.clearColor()
-        //returnButton.frame = CGRectMake(0 , hintView.center.y*1.2, hintView.bounds.width, hintView.bounds.height/6)
         returnButton.frame = CGRectMake(0 , 550, hintView!.bounds.width, hintView!.bounds.height/6)
         returnButton.addTarget(self, action: "returnButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         hintView!.addSubview(returnButton)
         
         // animate appearance of hintView
         hintView!.center = self.view.center
-        UIView.animateWithDuration(2.8, delay: 0.0, options: .CurveEaseOut, animations:{
+        UIView.animateWithDuration(1.8, delay: 0.0, options: .CurveEaseOut, animations:{
             self.hintView!.alpha = 1.0
             }, completion: nil)
     }
     
     func returnButtonPressed() {
-        UIView.animateWithDuration(2.8, animations: { () -> Void in
+        UIView.animateWithDuration(1.8, animations: { () -> Void in
             self.hintView!.alpha = 0.0
         })
        // self.hintView?.removeFromSuperview()  // if hintView is not removed, will it stack up?
@@ -172,7 +167,9 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func gameOver() {
         scene.flashGameOver()
         scene.instructionLabel.removeFromParent()
+        // < BACK
         // how to segue to LevelViewController
+        //self.presentViewController(LevelViewController(), animated: true, completion: nil)
     }
     
     func endLevelWithSuccess() {
@@ -203,7 +200,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
     func playRewardSong() {
-        var rewardSongArray = ["rewardMozartSymphony40.wav" , "rewardProkofievPeterWolf.wav" , "rewardTchaikovskySugarplum.wav"]
+        var rewardSongArray = ["rewardMozartSymphony40.wav" , "rewardProkofievPeterWolf.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav"]
         var randomSongIndex = 0
         randomSongIndex = Int(arc4random_uniform(UInt32(rewardSongArray.count)))
         var selectedSong = rewardSongArray[randomSongIndex]

@@ -64,12 +64,13 @@ class MusicNotes: SKSpriteNode {
         }
     }
     
-    func scoringRect() -> CGRect {
+/*    func scoringRect() -> CGRect {
         // this function returns a tightened rect for noti
         // raw RoamingNoti.frame has width 116 and height 132
         // noti.anchorPoint = CGPointMake(0.38, 0.25)
         return CGRectMake(self.frame.origin.x, self.frame.origin.y + frame.size.height/6, self.frame.size.width * 0.76, self.frame.size.height/6)
         }
+*/
 
 }
 

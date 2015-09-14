@@ -119,18 +119,15 @@ class GameScene: SKScene {
             //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
             case .Playing:
-                roamingNoti!.removeAllActions()
-                roamingNoti?.name = "noti"
-
-/*                if CGRectIntersectsRect(destinationRect(S3.frame), roamingNoti!.scoringRect()) {
-                    draggingNoti = false
-                    return         // this block doesnt seem to be useful
-                }
-*/
                 let touch = touches.first as? UITouch
                 let location = touch!.locationInNode(self)
                 let node = nodeAtPoint(location)
-                if node.name == "noti" {
+                
+                if node.name == "noti" && !contains(scoringNotiArray, node as! SKSpriteNode) {
+                    
+                    roamingNoti!.removeAllActions()
+                    roamingNoti?.name = "noti"
+                    
                     draggingNoti = true
                     let noti = node as! MusicNotes
                     noti.addMovingPoint(location)
@@ -169,10 +166,12 @@ class GameScene: SKScene {
         
         var didScore = false
         
-        if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) {
+        //if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) { // totally relax destinationRect and scoringRect to no contraints works even better
+            
+        if CGRectIntersectsRect((destinationNode.frame), roamingNoti!.frame) {
+            
             movingNoti?.position.y = destinationNode.position.y
            
-            // make an array of the scoringNoti, later to (a) compare scoringNotiArray.count to challengesArray.count and let GameViewController know and (b) make scoring Noti unmovable
             scoringNotiArray.append(movingNoti!)
             println("scoringNotiArray1 is \(scoringNotiArray)")  // good
             
@@ -201,12 +200,12 @@ class GameScene: SKScene {
         //self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
     }
    
-    func destinationRect(destination: CGRect) -> CGRect {
+/*    func destinationRect(destination: CGRect) -> CGRect {
         return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/4, destination.size.width, destination.size.height/2)
     }
+*/
     
     func addNoti() {
-        //var noti = MusicNotes(imageNamed: "notiPinkU")
         var noti = MusicNotes(imageNamed: String())
         noti.name = "noti"
         noti.setScale(S5.yScale * 0.83)
@@ -216,7 +215,6 @@ class GameScene: SKScene {
         noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
         addChild(noti)
         println("noti is \(noti)")  // note this does specify exactly which noti is roaming
-        //followRoamingPath()
     }
     
     func followRoamingPath() {
@@ -244,12 +242,13 @@ class GameScene: SKScene {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.33)
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28 - 68*frame.width/575) // y at L2.y
             self.cf!.setScale(frame.width/3880)
-            //L6.alpha = 0
+            L6.alpha = 0.0
+            
         } else if (clef == "clefBass") {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.71)
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28) // y at L4.y
             self.cf!.setScale(frame.width/1880)
-            //L0.alpha = 0
+            L0.alpha = 0
         }
         self.addChild(self.cf!) // self.insertChild(cf, atIndex: 0) // this works too
         clefRotating = self.cf!
