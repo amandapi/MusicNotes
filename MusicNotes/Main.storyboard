@@ -49,6 +49,9 @@
                                 <state key="normal" image="hint.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="hint:" destination="BV1-FR-VrT" eventType="touchUpInside" id="bei-ZY-Dy3"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r69-YQ-kem">
                                 <rect key="frame" x="524" y="72" width="60" height="60"/>
@@ -57,6 +60,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" title="Button" image="facebook.png"/>
+                                <connections>
+                                    <action selector="shareOnFacebook:" destination="BV1-FR-VrT" eventType="touchUpInside" id="sO6-OY-NAN"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1vx-ea-1L8">
                                 <rect key="frame" x="388" y="72" width="60" height="60"/>

@@ -15,13 +15,22 @@ class LevelViewController: UIViewController {
     var currentLevel : Level?
     var levels: NSMutableArray?
     var chooseLevelLabel: UILabel?
-    //var introductionBannerView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var introductionView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var backgroundImageView: UIView?
     
     // could not put together a valid init method - does a viewController needs an init?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // add background
+        let backgroundImageView = UIImageView(image: UIImage(named: "bgMainMenu.png"))
+        backgroundImageView.frame = view.frame
+        backgroundImageView.contentMode = .ScaleAspectFill
+        self.view.addSubview(backgroundImageView)
+        self.view.sendSubviewToBack(backgroundImageView)
+        
+        // add page title
         addChooseLevelLabel()
         
         //var levelButton = UIButton.buttonWithType(.System) as! UIButton
@@ -73,9 +82,9 @@ class LevelViewController: UIViewController {
             // set image
             var starImage = UIImage(named: "scoreStars")
             levelButton.setImage(starImage, forState: UIControlState.Normal)
-            levelButton.imageEdgeInsets = UIEdgeInsets(top: 80, left: 10, bottom: 30, right: 20)
-            levelButton.titleEdgeInsets = UIEdgeInsets(top: 20, left: -200, bottom: 80, right: 0)
-            levelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0)
+            levelButton.imageEdgeInsets = UIEdgeInsets(top: 70, left: 20, bottom: 20, right: 20)
+            levelButton.titleEdgeInsets = UIEdgeInsets(top: 20, left: -200, bottom: 80, right: 0) // suppressing this line aligns title in iPad
+            //levelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0)
             
             // set action target for each button
             levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -83,40 +92,43 @@ class LevelViewController: UIViewController {
             // add the 9 buttons
             self.view.addSubview(levelButton)
         }
-
-        /*
-        //add introductionBanner
-        introductionBannerView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/2.8)
-        introductionBannerView.center = self.view.center
-        introductionBannerView.backgroundColor = UIColor(patternImage: UIImage(named: "introductionBanner.png")!)
-        introductionBannerView.contentMode = UIViewContentMode.ScaleAspectFit
-        introductionBannerView.layer.borderWidth = 2
-        introductionBannerView.layer.cornerRadius = 25
-        self.view.addSubview(introductionBannerView)
-*/
+        
+        addIntroduction()
     }
     
-/*
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
- 
-       // move introductionBanner off the screen to start
-        introductionBannerView.center.y -= view.bounds.width
-        // animate banner back to the screen
-        UIView.animateWithDuration(1.0, delay: 0.1,
-            options: .CurveEaseIn, animations: {
-                self.introductionBannerView.center.y += self.view.bounds.width
-            }, completion: nil)
-        // animate banner away
-        UIView.animateWithDuration(3.8, delay: 4.8,
-            options: .CurveEaseIn | .CurveEaseOut, animations: {
-                self.introductionBannerView.center.y += self.view.bounds.width
+    func addIntroduction() {
+        
+        // create introductionView
+        self.introductionView = UIImageView(image: UIImage(named: "introduction.png"))
+        introductionView.frame = view.frame
+        introductionView.userInteractionEnabled = true
+        
+        introductionView.alpha = 0.0
+        view.addSubview(introductionView)
+        
+        // create "OK!" button in introductionView
+        var goButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        goButton.setTitle("OK!", forState: UIControlState.Normal)
+        goButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        goButton.backgroundColor = UIColor.clearColor()
+        goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView.bounds.width, introductionView.bounds.height/6)
+        goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        introductionView.addSubview(goButton)
+        
+        // animate appearance of introductionView
+        introductionView.center = self.view.center
+        UIView.animateWithDuration(0.0, delay: 0.0, options: .CurveEaseOut, animations:{
+            self.introductionView.alpha = 1.0
             }, completion: nil)
     }
-*/
-
-
-
+    
+    func goButtonPressed() {
+        UIView.animateWithDuration(3.8, animations: { () -> Void in
+            self.introductionView.alpha = 0.0
+        })
+    }
+        
     func getLevels() -> NSArray {
         
         if levels == nil {
@@ -155,14 +167,12 @@ class LevelViewController: UIViewController {
     
     func addChooseLevelLabel() {
         
-        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3 , self.view.frame.size.height/6 , self.view.frame.size.width/2.6, self.view.frame.size.width/10))
+        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3.3 , self.view.frame.size.height/8.8 , self.view.frame.size.width/2.3, self.view.frame.size.width/10))
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"
         chooseLevelLabel.textColor = UIColor.blackColor()
-        //chooseLevelLabel.font = UIFont(name: "Verdana-Bold", size: chooseLevelLabel.font.pointSize)
-        //chooseLevelLabel.font = UIFont(name: "Verdana-Bold", size: 33)
         chooseLevelLabel.font = UIFont(name: "Komika Display", size: 48)
-        chooseLevelLabel.sizeToFit()
+        chooseLevelLabel.backgroundColor = UIColor.clearColor()
         self.view.addSubview(chooseLevelLabel)
     }
     

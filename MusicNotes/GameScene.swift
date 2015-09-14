@@ -58,7 +58,7 @@ class GameScene: SKScene {
     var gameState = GameState.StartingLevel
     
     // these are the "destinations" defined by sizes of "staffLines"
-    let L0 = SKSpriteNode(imageNamed: "L0") // middle C at clefTreble
+    let L0 = SKSpriteNode(imageNamed: "L0") // middle C with clefTreble
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
     let S1 = SKSpriteNode(imageNamed: "S1")
@@ -92,10 +92,8 @@ class GameScene: SKScene {
     }
     
     override func didMoveToView(view: SKView) {
-        //updateBackground()
         addStaffLines()
         addNoti()
-        //updateClef()
         addTrashcanAndTrashcanLid()
         addStartMsg()
         setupCountLabels()
@@ -179,7 +177,7 @@ class GameScene: SKScene {
             println("scoringNotiArray1 is \(scoringNotiArray)")  // good
             
             score++  // score has been passed to GameViewController
-            scoreLabel.text = "Score: \(score)"
+            scoreLabel.text = "Score: \(score) / \(level.challengesArray.count)"
             didScore = true
  
             celebrate({
@@ -246,10 +244,12 @@ class GameScene: SKScene {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.33)
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28 - 68*frame.width/575) // y at L2.y
             self.cf!.setScale(frame.width/3880)
+            //L6.alpha = 0
         } else if (clef == "clefBass") {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.71)
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28) // y at L4.y
             self.cf!.setScale(frame.width/1880)
+            //L0.alpha = 0
         }
         self.addChild(self.cf!) // self.insertChild(cf, atIndex: 0) // this works too
         clefRotating = self.cf!
@@ -314,9 +314,7 @@ class GameScene: SKScene {
     func setupTimerLabel() {
         timerLabel = SKLabelNode(fontNamed: "Komika Display")
         var levelTimeLimit = timeLimit
-        println("levelTimeLimit2 is \(levelTimeLimit!)")
         timerLabel.text = "Countdown: \(timeLimit!)"
-        //timerLabel.text = String(format: "Count Down: %2.2f", levelTimeLimit) // this works too
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             timerLabel.fontSize = 38
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -324,7 +322,7 @@ class GameScene: SKScene {
         }
         timerLabel.fontColor = SKColor.redColor()
         timerLabel.horizontalAlignmentMode = .Left
-        timerLabel.position = CGPoint(x: frame.width/4 , y: frame.height*9/10)
+        timerLabel.position = CGPoint(x: frame.width/2.8 , y: frame.height*9/10)
         timerLabel.zPosition = 30
         if levelTimeLimit > 0 {
             addChild(timerLabel)
@@ -357,7 +355,7 @@ class GameScene: SKScene {
     }
 
     func addStartMsg() {
-        let startMsg = SKLabelNode(fontNamed: "Komika Display Bold")
+        let startMsg = SKLabelNode(fontNamed: "Komika Display")
         startMsg.name = "msgLabel"
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.blackColor()
@@ -382,7 +380,7 @@ class GameScene: SKScene {
         L0.yScale = yScale
         L0.xScale = xScale
         self.addChild(L0)
-        //L0.hidden = true  // ledger line for middle C for clefTreble
+        L0.alpha = 0.2  // ledger line for middle C for clefTreble
         S0.position = CGPoint(x:w , y:h-7*d)
         S0.yScale = yScale
         S0.xScale = xScale
@@ -431,7 +429,7 @@ class GameScene: SKScene {
         L6.yScale = yScale
         L6.xScale = xScale
         self.addChild(L6)
-        //L6.hidden = true  // ledger line for middle C for clefBass
+        L6.alpha = 0.2  // ledger line for middle C for clefBass
     }
 
     func addTrashcanAndTrashcanLid() {
@@ -450,7 +448,7 @@ class GameScene: SKScene {
     func setupCountLabels() {
         //var scoreLabel = SKLabelNode(fontNamed: "Komika Display")
         scoreLabel.fontColor = SKColor.redColor()
-        scoreLabel.text = "Score: 0"
+        scoreLabel.text = "Score: 0 / \(level.challengesArray.count)"
         scoreLabel.name = "scoreLabel"
         scoreLabel.horizontalAlignmentMode = .Left
         scoreLabel.position = CGPoint(x: frame.width/28 , y: frame.height*9/10)

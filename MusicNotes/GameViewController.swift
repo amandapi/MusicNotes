@@ -8,8 +8,21 @@
 
 import UIKit
 import SpriteKit
+import Social
 
 class GameViewController: UIViewController, GameSceneDelegate {
+    
+    @IBAction func hint(sender: UIButton) {
+        showHint()
+    }
+    
+    @IBAction func shareOnFacebook(sender: UIButton) {
+        var shareToFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+        shareToFacebook.setInitialText("Hello I am playing MusicNotes")
+        shareToFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
+        //shareToFacebook.addURL(NSURL(www....))
+        self.presentViewController(shareToFacebook, animated: true, completion: nil)
+    }
     
     var scene: GameScene!
     var destinationNode = SKSpriteNode()
@@ -22,6 +35,10 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var score: Int!
     var congratulationsLabel: UILabel?
     var deadCount: Int!
+    
+    //var hintView = UIImageView()
+    var hintView: UIImageView?
+    var returnButton: UIButton?
     
     var level: Level!
     func setLevel(level: Level) {
@@ -69,20 +86,20 @@ class GameViewController: UIViewController, GameSceneDelegate {
         
         let skView = self.view as! SKView
         let scene = skView.scene as! GameScene
-        //scene.level = self.level
     }
-
+    
+    
     override func shouldAutorotate() -> Bool {
         return true
     }
     
     override func supportedInterfaceOrientations() -> Int {
-/*        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
+        /*        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+        return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
         } else {
-            return Int(UIInterfaceOrientationMask.All.rawValue)
+        return Int(UIInterfaceOrientationMask.All.rawValue)
         }
-*/
+        */
         return Int(UIInterfaceOrientationMask.LandscapeLeft.rawValue)
     }
     
@@ -94,7 +111,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
-    
+
     func notiDidScore(didScore: Bool) {
         deadCount = scene.deadCount
         if deadCount < 3 {
@@ -115,6 +132,43 @@ class GameViewController: UIViewController, GameSceneDelegate {
         }
     }
     
+    func showHint() {
+        
+        // create hintView
+        self.hintView = UIImageView(image: UIImage(named: "hintContent.png"))
+        //hintView!.frame = CGRectMake(self.view.center.x, self.view.center.y, view.bounds.width/1.28, view.bounds.height/1.28)
+        //hintView.center = self.view.center
+        hintView!.frame = view.frame
+        hintView!.userInteractionEnabled = true
+        
+        hintView!.alpha = 0.0
+        view.addSubview(hintView!)
+        
+        // create "OK!" button in hintView
+        var returnButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        returnButton.setTitle("OK!", forState: UIControlState.Normal)
+        returnButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        returnButton.backgroundColor = UIColor.clearColor()
+        //returnButton.frame = CGRectMake(0 , hintView.center.y*1.2, hintView.bounds.width, hintView.bounds.height/6)
+        returnButton.frame = CGRectMake(0 , 550, hintView!.bounds.width, hintView!.bounds.height/6)
+        returnButton.addTarget(self, action: "returnButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        hintView!.addSubview(returnButton)
+        
+        // animate appearance of hintView
+        hintView!.center = self.view.center
+        UIView.animateWithDuration(2.8, delay: 0.0, options: .CurveEaseOut, animations:{
+            self.hintView!.alpha = 1.0
+            }, completion: nil)
+    }
+    
+    func returnButtonPressed() {
+        UIView.animateWithDuration(2.8, animations: { () -> Void in
+            self.hintView!.alpha = 0.0
+        })
+       // self.hintView?.removeFromSuperview()  // if hintView is not removed, will it stack up?
+    }
+    
     func gameOver() {
         scene.flashGameOver()
         scene.instructionLabel.removeFromParent()
@@ -132,7 +186,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         congratulationsLabel.numberOfLines = 0
         congratulationsLabel.text = "Congratulations! \n You scored \(score) out of \(level.challengesArray.count)"
         congratulationsLabel.textColor = UIColor.redColor()
-        congratulationsLabel.font = UIFont(name: "Komika Display", size: 52)
+        congratulationsLabel.font = UIFont(name: "Komika Display", size: 38)
         congratulationsLabel.sizeToFit()
         self.view.addSubview(congratulationsLabel)
         
@@ -142,10 +196,18 @@ class GameViewController: UIViewController, GameSceneDelegate {
             }, completion: nil)
         
         // play sound
-        scene.playSound("MozartSymphony40.caf")
+        playRewardSong()
         
         // add stars
         addStars()
+    }
+    
+    func playRewardSong() {
+        var rewardSongArray = ["rewardMozartSymphony40.wav" , "rewardProkofievPeterWolf.wav" , "rewardTchaikovskySugarplum.wav"]
+        var randomSongIndex = 0
+        randomSongIndex = Int(arc4random_uniform(UInt32(rewardSongArray.count)))
+        var selectedSong = rewardSongArray[randomSongIndex]
+        scene.runAction(SKAction.playSoundFileNamed(selectedSong, waitForCompletion: false))
     }
     
     func addStars() {
@@ -169,6 +231,5 @@ class GameViewController: UIViewController, GameSceneDelegate {
             view.addSubview(scoreStars3ImageView)
         }
     }
-
 }
 
