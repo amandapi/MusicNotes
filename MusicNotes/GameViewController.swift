@@ -9,6 +9,7 @@
 import UIKit
 import SpriteKit
 import Social
+import AVFoundation
 
 class GameViewController: UIViewController, GameSceneDelegate {
     
@@ -18,7 +19,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     
     @IBAction func shareOnFacebook(sender: UIButton) {
         var shareToFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-        shareToFacebook.setInitialText("Hello I am playing MusicNotes")
+        shareToFacebook.setInitialText("Hello I am playing MusicNotes.")
         shareToFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
         self.presentViewController(shareToFacebook, animated: true, completion: nil)
     }
@@ -34,10 +35,16 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var score: Int!
     var congratulationsLabel: UILabel?
     var deadCount: Int!
+//    var timeLimit: Int!
+//    var timesUp: Int!
     
-    //var hintView = UIImageView()
+    var audioPlayer = AVAudioPlayer()
+    
     var hintView: UIImageView?
-    var returnButton: UIButton?
+    var returnButton: UIButton?  // for congratulations
+    var backButton: UIButton?  // for gameOver
+    
+    var selectedSong: NSArray?
     
     var level: Level!
     func setLevel(level: Level) {
@@ -76,7 +83,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scene.updateClef(currentChallenge.clef)
         
         scene.gameSceneDelegate = self
-        
+                
         skView.presentScene(scene)
     }
     
@@ -86,7 +93,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         let skView = self.view as! SKView
         let scene = skView.scene as! GameScene
     }
-    
     
     override func shouldAutorotate() -> Bool {
         return true
@@ -112,8 +118,10 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
 
     func notiDidScore(didScore: Bool) {
-        deadCount = scene.deadCount
-        if deadCount < 3 {
+ //       timeLimit = scene.timeLimit
+        deadCount = scene.deadCount  // get deadCount from GameScene
+        
+        if deadCount < 3  {
             currentChallengeIndex++
             if (currentChallengeIndex < level.challengesArray.count){
                 var challenge = level.challengesArray[currentChallengeIndex] as! Challenge
@@ -131,6 +139,34 @@ class GameViewController: UIViewController, GameSceneDelegate {
         }
     }
     
+    func timesUpDelegateFunc() {  // when timesUp
+        
+        // add condition "if deadCount < 3"?
+        scene.flashTimesUp()
+        scene.instructionLabel.removeFromParent()
+        scene.timer!.invalidate()         // stop timer
+        // how to stop noti from appearing
+        //level.challengesArray = []
+        
+        // create button to return to fresh gameScene
+        var backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        backButton.setTitle("Try again", forState: UIControlState.Normal)
+        backButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+        backButton.backgroundColor = UIColor.clearColor()
+        backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
+        backButton.center.x = view.center.x
+        backButton.addTarget(self, action: "tryAgainButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(backButton)
+        
+        // animate button
+        let bounds = backButton.bounds
+        UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, animations: {
+            backButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
+            backButton.enabled = true
+            }, completion: nil)
+    }
+    
     func showHint() {
         
         // create hintView
@@ -146,8 +182,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
         returnButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
         returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         returnButton.backgroundColor = UIColor.clearColor()
-        returnButton.frame = CGRectMake(0 , 550, hintView!.bounds.width, hintView!.bounds.height/6)
-        returnButton.addTarget(self, action: "returnButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        returnButton.frame = CGRectMake(0 , hintView!.bounds.height*3/4, hintView!.bounds.width, hintView!.bounds.height/6)
+        returnButton.addTarget(self, action: "hintViewReturnButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         hintView!.addSubview(returnButton)
         
         // animate appearance of hintView
@@ -157,24 +193,38 @@ class GameViewController: UIViewController, GameSceneDelegate {
             }, completion: nil)
     }
     
-    func returnButtonPressed() {
+    func hintViewReturnButtonPressed() {
         UIView.animateWithDuration(1.8, animations: { () -> Void in
             self.hintView!.alpha = 0.0
         })
-       // self.hintView?.removeFromSuperview()  // if hintView is not removed, will it stack up?
     }
     
     func gameOver() {
         scene.flashGameOver()
         scene.instructionLabel.removeFromParent()
-        // < BACK
-        // how to segue to LevelViewController
-        //self.presentViewController(LevelViewController(), animated: true, completion: nil)
+        scene.timer!.invalidate()         // stop timer
+        
+        // create button to return to fresh gameScene
+        var backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        backButton.setTitle("Try again", forState: UIControlState.Normal)
+        backButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+        backButton.backgroundColor = UIColor.clearColor()
+        backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
+        backButton.center.x = view.center.x
+        backButton.addTarget(self, action: "tryAgainButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(backButton)
+        
+        // animate button
+        let bounds = backButton.bounds
+        UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, animations: {
+            backButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
+            backButton.enabled = true
+            }, completion: nil)        
     }
     
     func endLevelWithSuccess() {
         scene.instructionLabel.removeFromParent()
-        // how to segue to LevelViewController
     }
     
     func congratulations() {
@@ -192,19 +242,33 @@ class GameViewController: UIViewController, GameSceneDelegate {
         congratulationsLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
             }, completion: nil)
         
+        // stop timer
+        scene.timer!.invalidate()
+        
         // play sound
         playRewardSong()
         
         // add stars
         addStars()
+        
+        // add BACK button
+        addBackButton()
     }
     
     func playRewardSong() {
-        var rewardSongArray = ["rewardMozartSymphony40.wav" , "rewardProkofievPeterWolf.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav"]
-        var randomSongIndex = 0
-        randomSongIndex = Int(arc4random_uniform(UInt32(rewardSongArray.count)))
-        var selectedSong = rewardSongArray[randomSongIndex]
-        scene.runAction(SKAction.playSoundFileNamed(selectedSong, waitForCompletion: false))
+        let soundFilenames = ["rewardMozartSymphony40" , "rewardProkofievPeterWolf" , "rewardTchaikovskySugarplum" , "rewardBachBrandenburg3" , "rewardChopinMazurkaE" , "rewardVivaldiSpring"]
+        let randomIndex = Int(arc4random_uniform(UInt32(soundFilenames.count)))
+        let selectedFilename = soundFilenames[randomIndex]
+        // AVAudioPlayer play song
+        audioPlayer = AVAudioPlayer()
+        let soundFileURL = NSBundle.mainBundle().URLForResource(selectedFilename, withExtension: "wav")
+        var error : NSError? = nil
+        audioPlayer = AVAudioPlayer(contentsOfURL: soundFileURL, error: &error)
+        if (error != nil) {
+            println("Failed to load \(error)")
+        }
+        audioPlayer.prepareToPlay()
+        audioPlayer.play()
     }
     
     func addStars() {
@@ -228,5 +292,27 @@ class GameViewController: UIViewController, GameSceneDelegate {
             view.addSubview(scoreStars3ImageView)
         }
     }
-}
+    
+    func addBackButton() { // after winning level
+        var backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        backButton.setTitle("More!", forState: UIControlState.Normal)
+        backButton.setTitleColor(UIColor.yellowColor(), forState: .Normal)
+        backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        backButton.backgroundColor = UIColor.clearColor()
+        backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
+        backButton.center.x = view.center.x
+        backButton.addTarget(self, action: "wonMoreButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(backButton)
+    }
+    
+    func wonMoreButtonPressed() { // after winning level
+        audioPlayer.stop()
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func tryAgainButtonPressed() {  // after gameOver and after timesUp
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+ }
 

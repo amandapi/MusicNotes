@@ -13,6 +13,7 @@ class MusicNotes: SKSpriteNode {
     
     let pointsPerSec: CGFloat = 200.0
     var wayPoints: [CGPoint] = []
+//    var destination: CGPoint
     var velocity = CGPoint(x: 0, y: 0)
     var textures: [SKTexture] = []
     
@@ -29,22 +30,23 @@ class MusicNotes: SKSpriteNode {
         textures.append(SKTexture(imageNamed: "notiBrownU.png"))
         let rand = Int(arc4random_uniform(UInt32(textures.count)))
         var texture = textures[rand] as SKTexture
-        super.init(texture: texture, color: nil, size: texture.size())        
+        super.init(texture: texture, color: nil, size: texture.size())
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    func addMovingPoint(point: CGPoint) {
+    func addMovingPoint(point: CGPoint) {  // MovingPoint needed in gameScene for roaming
         wayPoints.append(point)
     }
+
     
     func move(dt: NSTimeInterval) {
         let currentPosition = position
         var newPosition = position
         
-        if wayPoints.count > 0 {
+        if wayPoints.count > 0 {  // if distance > targetPoint = destinationPoint
             let targetPoint = wayPoints[0]
             
             // calculate vector to point to direction of pig travel
@@ -59,18 +61,17 @@ class MusicNotes: SKSpriteNode {
             
             //  check if noti reached wayPoint
             if frame.contains(targetPoint) {
-                wayPoints.removeAtIndex(0)
+                wayPoints.removeAtIndex(0)      
             }
         }
     }
     
-/*    func scoringRect() -> CGRect {
+    func scoringRect() -> CGRect {
         // this function returns a tightened rect for noti
         // raw RoamingNoti.frame has width 116 and height 132
         // noti.anchorPoint = CGPointMake(0.38, 0.25)
         return CGRectMake(self.frame.origin.x, self.frame.origin.y + frame.size.height/6, self.frame.size.width * 0.76, self.frame.size.height/6)
         }
-*/
 
 }
 

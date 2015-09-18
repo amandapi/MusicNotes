@@ -77,14 +77,14 @@ class LevelViewController: UIViewController {
             levelButton.titleLabel!.shadowOffset = CGSize(width: 2.3, height: 2.3)
             
             // set image
-            var starImage = UIImage(named: "scoreStars")
-            levelButton.setImage(starImage, forState: UIControlState.Normal)
-            levelButton.imageEdgeInsets = UIEdgeInsets(top: 70, left: 20, bottom: 20, right: 20)
-            levelButton.titleEdgeInsets = UIEdgeInsets(top: 20, left: -200, bottom: 80, right: 0) // suppressing this line aligns title in iPad
+            //var starImage = UIImage(named: "scoreStars3")
+            //levelButton.setImage(starImage, forState: UIControlState.Normal)
+            //levelButton.imageEdgeInsets = UIEdgeInsets(top: 80, left: 20, bottom: 20, right: 20)
+            //levelButton.titleEdgeInsets = UIEdgeInsets(top: 20, left: -200, bottom: 80, right: 0)
             //levelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0)
             
             // set action target for each button
-            levelButton.addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+            levelButton.addTarget(self, action: "levelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             
             // add the 9 buttons
             self.view.addSubview(levelButton)
@@ -128,6 +128,12 @@ class LevelViewController: UIViewController {
         goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView2.bounds.width, introductionView2.bounds.height/6)
         goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         introductionView2.addSubview(goButton)
+        
+        let bounds = goButton.bounds
+        UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, animations: {
+            goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
+            goButton.enabled = true
+            }, completion: nil)
     }
     
     func goButtonPressed() {
@@ -138,30 +144,24 @@ class LevelViewController: UIViewController {
     }
         
     func getLevels() -> NSArray {
-        
         if levels == nil {
             let myPlist = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Levels", ofType: "plist")!)!
             let plistLevels = myPlist["levels"] as! [[String:AnyObject]] // the array of levels
             
             levels = NSMutableArray()
-            
             for i in 0...(plistLevels.count-1) {  //plistLevels.count=9
                 
                 var levelData = plistLevels[i] // this levelData carries data in levels 1...9
-                
                 let background = levelData["background"] as! String
-                //let clef = levelData["clef"] as! String
                 let challenges = levelData["challenges"] as! NSDictionary
                 let timeLimit = levelData["timeLimit"] as! Int
-                
-               // levels!.addObject(Level(background : background , clef : clef , challenges : challenges ))
                 levels!.addObject(Level(background: background, timeLimit: timeLimit, challenges: challenges ))
             }
         }
         return levels!
     }
     
-    func buttonPressed(sender: AnyObject) {
+    func levelButtonPressed(sender: AnyObject) {
         var levelNumber = sender.tag
         let levels = getLevels()
         currentLevel = levels.objectAtIndex(levelNumber - 1) as? Level 
@@ -174,7 +174,6 @@ class LevelViewController: UIViewController {
     }
     
     func addChooseLevelLabel() {
-        
         var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3.3 , self.view.frame.size.height/8.8 , self.view.frame.size.width/2.3, self.view.frame.size.width/10))
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"

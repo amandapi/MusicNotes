@@ -12,6 +12,7 @@ import Foundation   // neccessary?
 
 protocol GameSceneDelegate {
     func notiDidScore(didScore: Bool)
+    func timesUpDelegateFunc()
 }
 
 class GameScene: SKScene {
@@ -32,7 +33,7 @@ class GameScene: SKScene {
     var timerLabel: SKLabelNode!
     var timer: NSTimer?
     var levelTimeLimit: Int?
-    var timeLimit: Int?
+    var timeLimit: Int!
     
     var scoreLabel = SKLabelNode(fontNamed: "Komika Display")
     var score = 0
@@ -59,6 +60,7 @@ class GameScene: SKScene {
     
     // these are the "destinations" defined by sizes of "staffLines"
     let L0 = SKSpriteNode(imageNamed: "L0") // middle C with clefTreble
+    let L0leger = SKSpriteNode(imageNamed: "Lleger") // leger line for middle C
     let S0 = SKSpriteNode(imageNamed: "S0")
     let L1 = SKSpriteNode(imageNamed: "L1")
     let S1 = SKSpriteNode(imageNamed: "S1")
@@ -71,6 +73,7 @@ class GameScene: SKScene {
     let L5 = SKSpriteNode(imageNamed: "L5")
     let S5 = SKSpriteNode(imageNamed: "S5")
     let L6 = SKSpriteNode(imageNamed: "L6")  // middle C with clefBass
+    let L6leger = SKSpriteNode(imageNamed: "Lleger") // leger line for middle C
     
     let trashcan = SKSpriteNode(imageNamed: "trashcan")
     let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
@@ -162,18 +165,29 @@ class GameScene: SKScene {
             draggingNoti = false
         }
         
-        // check collision
+        // check intersaction
         
         var didScore = false
         
-        //if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) { // totally relax destinationRect and scoringRect to no contraints works even better
+        //if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) { // how much to relax destinationRect / scoringRect?
             
-        if CGRectIntersectsRect((destinationNode.frame), roamingNoti!.frame) {
+        if CGRectIntersectsRect((destinationNode.frame), roamingNoti!.scoringRect()) {
             
             movingNoti?.position.y = destinationNode.position.y
            
             scoringNotiArray.append(movingNoti!)
             println("scoringNotiArray1 is \(scoringNotiArray)")  // good
+            
+            // add leger for Middle C
+            if (destinationNode == L0)   {
+                L0leger.alpha = 1
+                L0leger.position.x = movingNoti!.position.x
+                L0leger.position.y = L0.position.y
+            } else if (destinationNode == L6)   {
+                L6leger.alpha = 1
+                L6leger.position.x = movingNoti!.position.x
+                L6leger.position.y = L6.position.y
+            }
             
             score++  // score has been passed to GameViewController
             scoreLabel.text = "Score: \(score) / \(level.challengesArray.count)"
@@ -214,7 +228,7 @@ class GameScene: SKScene {
         noti.zPosition = 3
         noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
         addChild(noti)
-        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
+//        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
     }
     
     func followRoamingPath() {
@@ -242,15 +256,13 @@ class GameScene: SKScene {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.33)
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28 - 68*frame.width/575) // y at L2.y
             self.cf!.setScale(frame.width/3880)
-            L6.alpha = 0.0
             
         } else if (clef == "clefBass") {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.71)
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28) // y at L4.y
             self.cf!.setScale(frame.width/1880)
-            L0.alpha = 0
         }
-        self.addChild(self.cf!) // self.insertChild(cf, atIndex: 0) // this works too
+        self.insertChild(cf, atIndex: 0) // self.addChild(self.cf!) works too
         clefRotating = self.cf!
     }
     
@@ -259,8 +271,7 @@ class GameScene: SKScene {
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
-        //addChild(bg)  // this works too
-        insertChild(bg, atIndex: 0)   //self.insertChild(bg, atIndex: 0) work too
+        insertChild(bg, atIndex: 0)  //addChild(bg) works too
     }
     
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
@@ -307,7 +318,6 @@ class GameScene: SKScene {
     func updateTimeLimit(timeLimit: Int) {
         var levelTimeLimit = timeLimit
         self.timeLimit = timeLimit
-        println("levelTimeLimit1 is \(levelTimeLimit)")
     }
     
     func setupTimerLabel() {
@@ -321,7 +331,7 @@ class GameScene: SKScene {
         }
         timerLabel.fontColor = SKColor.redColor()
         timerLabel.horizontalAlignmentMode = .Left
-        timerLabel.position = CGPoint(x: frame.width/2.8 , y: frame.height*9/10)
+        timerLabel.position = CGPoint(x: frame.width/28 , y: frame.height*0.82)
         timerLabel.zPosition = 30
         if levelTimeLimit > 0 {
             addChild(timerLabel)
@@ -334,12 +344,19 @@ class GameScene: SKScene {
     }
     
     func tick(timer: NSTimer) {
+//        var timesUp = false
+
         if (timeLimit > 0) {
         timeLimit?--
         timerLabel.text = "Countdown: \(timeLimit!)"
-        println("timeLimit! is \(timeLimit!)")
-        } else {
-            timer.invalidate()
+        } else if timeLimit == 0 {
+            //timer.invalidate()
+            //instructionLabel.removeFromParent()  // pause instruction
+            //flashTimesUp()
+            //addReturnToVCButton()
+            gameSceneDelegate!.timesUpDelegateFunc()  // get GameViewController to BACK one vc
+            //println("do the rest of stuff GameScene")
+            // how to pause noti
         }
     }
 
@@ -353,6 +370,25 @@ class GameScene: SKScene {
         })
     }
 
+    func flashTimesUp() {
+        let timesUpLabel = SKLabelNode(fontNamed: "Komika Display")
+        timesUpLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
+        timesUpLabel.fontColor = SKColor.redColor()
+        timesUpLabel.text = "Time's Up"
+        timesUpLabel.zPosition = 4
+        timesUpLabel.alpha = 0
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            timesUpLabel.fontSize = 88
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            timesUpLabel.fontSize = 38
+        }
+        // animate label
+        let fadeinAction = SKAction.fadeInWithDuration(0.5)
+        let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
+        timesUpLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
+        addChild(timesUpLabel)
+    }
+    
     func addStartMsg() {
         let startMsg = SKLabelNode(fontNamed: "Komika Display")
         startMsg.name = "msgLabel"
@@ -374,12 +410,16 @@ class GameScene: SKScene {
         var d = 68*frame.width/2300
         var yScale = frame.width/2300
         var xScale = frame.width/1680
-        
+        L0leger.position = L0.position
+        L0leger.alpha = 0
+        L0leger.xScale = xScale
+        L0leger.yScale = yScale
+        self.addChild(L0leger)
         L0.position = CGPoint(x:w , y:h-8*d)
         L0.yScale = yScale
         L0.xScale = xScale
         self.addChild(L0)
-        L0.alpha = 0.2  // ledger line for middle C for clefTreble
+        L0.alpha = 0.08  // ledger line for middle C for clefTreble
         S0.position = CGPoint(x:w , y:h-7*d)
         S0.yScale = yScale
         S0.xScale = xScale
@@ -428,7 +468,12 @@ class GameScene: SKScene {
         L6.yScale = yScale
         L6.xScale = xScale
         self.addChild(L6)
-        L6.alpha = 0.2  // ledger line for middle C for clefBass
+        L6.alpha = 0.08  // ledger line for middle C for clefBass
+        L6leger.position = L0.position
+        L6leger.alpha = 0
+        L6leger.xScale = xScale
+        L6leger.yScale = yScale
+        self.addChild(L6leger)
     }
 
     func addTrashcanAndTrashcanLid() {
@@ -474,7 +519,7 @@ class GameScene: SKScene {
     }
     
     func flashGameOver() {
-        let gameoverLabel = SKLabelNode(fontNamed: "Komika Display Bold")
+        let gameoverLabel = SKLabelNode(fontNamed: "Komika Display")
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"
@@ -486,14 +531,12 @@ class GameScene: SKScene {
             gameoverLabel.fontSize = 38
         }
 
+        // animate label
         let fadeinAction = SKAction.fadeInWithDuration(0.5)
         let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
-        //let deleteAction = SKAction.removeFromParent()
-        gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
-        
+        gameoverLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))        
         addChild(gameoverLabel)
-    }
-    
+}
     
     func celebrate(completionHandler: () -> ()) {
         

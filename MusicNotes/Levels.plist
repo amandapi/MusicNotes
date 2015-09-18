@@ -8,7 +8,7 @@
 			<key>background</key>
 			<string>bg1</string>
 			<key>timeLimit</key>
-			<integer>-1</integer>
+			<integer>-10</integer>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -59,7 +59,7 @@
 			<key>background</key>
 			<string>bg2</string>
 			<key>timeLimit</key>
-			<integer>-1</integer>
+			<integer>-10</integer>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -110,7 +110,7 @@
 			<key>background</key>
 			<string>bg3</string>
 			<key>timeLimit</key>
-			<integer>-1</integer>
+			<integer>-10</integer>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -161,7 +161,7 @@
 			<key>background</key>
 			<string>bg4</string>
 			<key>timeLimit</key>
-			<integer>-1</integer>
+			<integer>-10</integer>
 			<key>challenges</key>
 			<dict>
 				<key>6</key>
@@ -212,7 +212,7 @@
 			<key>background</key>
 			<string>bg5</string>
 			<key>timeLimit</key>
-			<integer>-1</integer>
+			<integer>-10</integer>
 			<key>challenges</key>
 			<dict>
 				<key>12</key>
@@ -305,7 +305,7 @@
 			<key>background</key>
 			<string>bg6</string>
 			<key>timeLimit</key>
-			<integer>-1</integer>
+			<integer>-10</integer>
 			<key>challenges</key>
 			<dict>
 				<key>12</key>
