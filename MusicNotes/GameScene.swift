@@ -123,9 +123,10 @@ class GameScene: SKScene {
             
             case .Playing:
                 let touch = touches.first as? UITouch
-                let location = touch!.locationInNode(self)
+                let location = touch!.locationInNode(scene)
                 let node = nodeAtPoint(location)
                 
+
                 if node.name == "noti" && !contains(scoringNotiArray, node as! SKSpriteNode) {
                     
                     roamingNoti!.removeAllActions()
@@ -133,7 +134,8 @@ class GameScene: SKScene {
                     
                     draggingNoti = true
                     let noti = node as! MusicNotes
-                    noti.addMovingPoint(location)
+        //            noti.addMovingPoint(location)  // do not want to use wayPoints for dragging
+                  
                     movingNoti = noti
                     // animate noti at pick up
                     let expand = SKAction.scaleBy(1.18, duration: 0.1)
@@ -152,9 +154,17 @@ class GameScene: SKScene {
         }
         let touch = touches.first as? UITouch
         let location = touch!.locationInNode(scene)
+        
+        // block newly added
         if let noti = movingNoti {
-        noti.addMovingPoint(location)
+              noti.position = location
         }
+       
+/*      // do not want to use wayPoints for dragging
+        if let noti = movingNoti {
+            noti.addMovingPoint(location)  // do not add moving point
+       }
+*/
     }
 
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -170,7 +180,6 @@ class GameScene: SKScene {
         var didScore = false
         
         //if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) { // how much to relax destinationRect / scoringRect?
-            
         if CGRectIntersectsRect((destinationNode.frame), roamingNoti!.scoringRect()) {
             
             movingNoti?.position.y = destinationNode.position.y
@@ -344,27 +353,19 @@ class GameScene: SKScene {
     }
     
     func tick(timer: NSTimer) {
-//        var timesUp = false
-
         if (timeLimit > 0) {
         timeLimit?--
         timerLabel.text = "Countdown: \(timeLimit!)"
         } else if timeLimit == 0 {
-            //timer.invalidate()
-            //instructionLabel.removeFromParent()  // pause instruction
-            //flashTimesUp()
-            //addReturnToVCButton()
             gameSceneDelegate!.timesUpDelegateFunc()  // get GameViewController to BACK one vc
-            //println("do the rest of stuff GameScene")
             // how to pause noti
         }
     }
 
-     override func update(currentTime: CFTimeInterval) {
-        // for movingNoti
-        dt = currentTime - lastUpdateTime  // original
-        lastUpdateTime = currentTime  // original
-        enumerateChildNodesWithName("noti", usingBlock: {node, stop in  // block original
+     override func update(currentTime: CFTimeInterval) {     // for movingNoti
+        dt = currentTime - lastUpdateTime
+        lastUpdateTime = currentTime
+        enumerateChildNodesWithName("noti", usingBlock: {node, stop in
             let noti = node as! MusicNotes
             noti.move(self.dt)
         })

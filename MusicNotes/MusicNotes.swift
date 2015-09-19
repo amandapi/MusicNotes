@@ -13,7 +13,6 @@ class MusicNotes: SKSpriteNode {
     
     let pointsPerSec: CGFloat = 200.0
     var wayPoints: [CGPoint] = []
-//    var destination: CGPoint
     var velocity = CGPoint(x: 0, y: 0)
     var textures: [SKTexture] = []
     
