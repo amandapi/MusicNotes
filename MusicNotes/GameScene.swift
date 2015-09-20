@@ -9,6 +9,7 @@
 import SpriteKit
 import UIKit  // neccessary?
 import Foundation   // neccessary?
+import AVFoundation
 
 protocol GameSceneDelegate {
     func notiDidScore(didScore: Bool)
@@ -542,7 +543,9 @@ class GameScene: SKScene {
     func celebrate(completionHandler: () -> ()) {
         
         rotateClef(completionHandler)
-        playSound("\(sound).wav")
+        println("sound1 is \(sound)")
+//        playSound(sound)
+
         
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
         let twinkle1 = SKEmitterNode()
@@ -605,7 +608,7 @@ class GameScene: SKScene {
     }
     
     func die() {
-        playSound("noGood.wav")
+//        playSound("soundNoGood.wav")
         
         let shrinkAction = SKAction.scaleBy(0.38, duration: 0.8)
         let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 0.8)
@@ -622,8 +625,10 @@ class GameScene: SKScene {
         trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
     }    
     
-    func playSound(sound:String) {
-        runAction(SKAction.playSoundFileNamed(sound, waitForCompletion: false))
+    func playSound(sound: String) {
+        println("sound2 is \(sound)")
+        println("sound3 is \(sound).wav")
+        runAction(SKAction.playSoundFileNamed("\(sound).wav", waitForCompletion: false))
     }
 
 }

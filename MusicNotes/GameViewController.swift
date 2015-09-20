@@ -221,8 +221,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
             }, completion: nil)
         
         scene.timer!.invalidate()
-        playRewardSong()
-        addStars()
+//        playRewardSong()
+//        addStars()
         addBackButton()
     }
     
@@ -274,7 +274,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
     func wonMoreButtonPressed() { // after winning level
-        audioPlayer.stop()
+//        audioPlayer.stop()
         self.navigationController?.popViewControllerAnimated(true)
     }
     
