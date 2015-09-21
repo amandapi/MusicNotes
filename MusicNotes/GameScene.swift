@@ -191,7 +191,7 @@ class GameScene: SKScene {
             // add leger for Middle C
             if (destinationNode == L0)   {
                 L0leger.alpha = 1
-                L0leger.position.x = movingNoti!.position.x
+                L0leger.position.x = movingNoti!.position.x + movingNoti!.frame.width * 0.06
                 L0leger.position.y = L0.position.y
             } else if (destinationNode == L6)   {
                 L6leger.alpha = 1

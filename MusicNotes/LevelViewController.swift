@@ -15,8 +15,11 @@ class LevelViewController: UIViewController {
     var currentLevel : Level?
     var levels: NSMutableArray?
     var chooseLevelLabel: UILabel?
-    var introductionView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    //var introductionView1: UIView?
+    //var introductionView2: UIView?
+    var introductionView1 = UIView(frame: CGRectMake(0, 0, 100, 100))
     var introductionView2 = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var introductionNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
     var goButton: UIButton?
     
@@ -96,50 +99,107 @@ class LevelViewController: UIViewController {
     func addIntroduction() {
         
         // create introductionView
-        self.introductionView = UIImageView(image: UIImage(named: "bgMainMenu.png"))
-        introductionView.frame = view.frame
-        introductionView.userInteractionEnabled = true
-        introductionView.alpha = 0.0
-        view.addSubview(introductionView)
+        self.introductionView1 = UIImageView(image: UIImage(named: "introduction1.png"))
+        introductionView1.frame = view.frame
+        introductionView1.userInteractionEnabled = true
+        introductionView1.alpha = 0.0
+        view.addSubview(introductionView1)
         
-        self.introductionView2 = UIImageView(image: UIImage(named: "introduction.png"))
+        self.introductionView2 = UIImageView(image: UIImage(named: "introduction2.png"))
         introductionView2.frame = view.frame
         introductionView2.userInteractionEnabled = true
         introductionView2.alpha = 0.0
         view.addSubview(introductionView2)
         
-        // animate appearance of introductionView
-        introductionView.center = self.view.center
+        let introductionNotiImage = UIImage(named: "introductionNoti.png")!
+        self.introductionNotiView = UIImageView(image: introductionNotiImage)
+        introductionNotiView.frame = CGRectMake(0, 0, introductionNotiImage.size.width/2, introductionNotiImage.size.height/2)
+        introductionNotiView.frame.size.width = view.frame.width * 0.38
+        introductionNotiView.contentMode = UIViewContentMode.ScaleAspectFit
+        introductionNotiView.userInteractionEnabled = true
+        introductionNotiView.alpha = 0.0
+        view.addSubview(introductionNotiView)
+        
+        introductionView1.center = self.view.center
         UIView.animateWithDuration(0.0, delay: 0.0, options: .CurveEaseOut, animations:{
-            self.introductionView.alpha = 1.0
+            self.introductionView1.alpha = 1.0
             }, completion: nil)
         
         introductionView2.center = self.view.center
-        UIView.animateWithDuration(1.0, delay: 1.0, options: .CurveEaseOut, animations:{
+        UIView.animateWithDuration(1.8, delay: 0.8, options: .CurveEaseOut, animations:{
             self.introductionView2.alpha = 1.0
             }, completion: nil)
+        
+        introductionNotiView.center = CGPointMake(self.view.frame.width/2 - introductionNotiView.frame.width/2 , self.view.frame.height/2)
+        UIView.animateWithDuration(0.1,  delay: 1.8, // this got called first
+            options:  nil,
+            animations: {
+                self.introductionNotiView.alpha = 1.0
+            },
+            completion: {  // then this got called
+                (value: Bool ) in
+                UIView.animateWithDuration(2.8, delay: 0.0,
+                    options: UIViewAnimationOptions.Repeat | .CurveEaseInOut | .Autoreverse ,
+                    animations: {
+                        self.introductionNotiView.layer.position.x += self.view.frame.width/5
+                    }, completion: {
+                        (value: Bool ) in
+                    }
+                )
+            } )
         
         // create "Let's go!" button in introductionView
         var goButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         goButton.setTitle("Let's go!", forState: UIControlState.Normal)
-        goButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        goButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         goButton.backgroundColor = UIColor.clearColor()
         goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView2.bounds.width, introductionView2.bounds.height/6)
         goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        goButton.userInteractionEnabled = true
         introductionView2.addSubview(goButton)
+        goButton.alpha = 0
         
         let bounds = goButton.bounds
-        UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, animations: {
+        
+        UIView.animateWithDuration(0.0,  delay: 3.8, // this got called first
+            options:  nil,
+            animations: {
+                goButton.alpha = 1
+            },
+            completion: {  // then this got called
+                (value: Bool ) in
+                
+                self.introductionView2.addSubview(goButton)
+                UIView.animateWithDuration(1.0, delay: 1.0, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil,
+                    animations: {
+                    goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
+                    goButton.enabled = true
+                    }, completion: {
+                        (value: Bool ) in
+                    }
+                )
+        } )
+        
+        
+        
+        
+/*
+        
+//        UIView.animateWithDuration(2.0, delay: 2.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: .Repeat | .Autoreverse, animations: {
+         UIView.animateWithDuration(2.0, delay: 2.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, animations: {
             goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
             goButton.enabled = true
             }, completion: nil)
     }
+*/
+    }
     
     func goButtonPressed() {
         UIView.animateWithDuration(1.8, animations: { () -> Void in
+            self.introductionView1.alpha = 0.0
             self.introductionView2.alpha = 0.0
-            self.introductionView.alpha = 0.0
+            self.introductionNotiView.alpha = 0.0
         })
     }
         
