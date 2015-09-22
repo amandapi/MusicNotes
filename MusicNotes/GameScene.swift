@@ -108,7 +108,8 @@ class GameScene: SKScene {
         }
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+ //   override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent?) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         switch gameState {
             
@@ -123,13 +124,12 @@ class GameScene: SKScene {
             //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
             case .Playing:
-                let touch = touches.first as? UITouch
-                let location = touch!.locationInNode(scene)
+  //              let touch = touches.first as? UITouch
+                let touch = touches.first
+                let location = touch!.locationInNode(scene!)
                 let node = nodeAtPoint(location)
-                
 
-                if node.name == "noti" && !contains(scoringNotiArray, node as! SKSpriteNode) {
-                    
+                 if node.name == "noti" && !scoringNotiArray.contains(node as! SKSpriteNode) {
                     roamingNoti!.removeAllActions()
                     roamingNoti?.name = "noti"
                     
@@ -149,12 +149,15 @@ class GameScene: SKScene {
         }
     }
     
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        if (draggingNoti == false ) {
+    //override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    
+    if (draggingNoti == false ) {
             return
         }
-        let touch = touches.first as? UITouch
-        let location = touch!.locationInNode(scene)
+        //let touch = touches.first as? UITouch
+        let touch = touches.first
+        let location = touch!.locationInNode(scene!)
         
         // block newly added
         if let noti = movingNoti {
@@ -168,7 +171,8 @@ class GameScene: SKScene {
 */
     }
 
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    //override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         if (draggingNoti == false ) {
             return
@@ -186,7 +190,7 @@ class GameScene: SKScene {
             movingNoti?.position.y = destinationNode.position.y
            
             scoringNotiArray.append(movingNoti!)
-            println("scoringNotiArray1 is \(scoringNotiArray)")  // good
+            print("scoringNotiArray1 is \(scoringNotiArray)")  // good
             
             // add leger for Middle C
             if (destinationNode == L0)   {
@@ -230,7 +234,7 @@ class GameScene: SKScene {
 */
     
     func addNoti() {
-        var noti = MusicNotes(imageNamed: String())
+        let noti = MusicNotes(imageNamed: String())
         noti.name = "noti"
         noti.setScale(S5.yScale * 0.9)
         roamingNoti = noti
@@ -245,13 +249,13 @@ class GameScene: SKScene {
     }
     
     func followRoamingPath() {
-        var path = CGPathCreateMutable()
+        let path = CGPathCreateMutable()
         //CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
         
-        CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.5, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        CGPathAddArc(path, nil, frame.width/2.0, frame.height*0.5, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
         
         // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
-        var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
+        let followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
     }
 
@@ -278,12 +282,12 @@ class GameScene: SKScene {
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/1.9) // y at L4.y
             self.cf!.setScale(frame.width/1880)
         }
-        self.insertChild(cf, atIndex: 0) // self.addChild(self.cf!) works too
+        self.insertChild(cf!, atIndex: 0) // self.addChild(self.cf!) works too
         clefRotating = self.cf!
     }
     
     func updateBackground(background: String) { //func updateBackground() {
-        var bg = SKSpriteNode(imageNamed: "\(background).png")
+        let bg = SKSpriteNode(imageNamed: "\(background).png")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
@@ -332,13 +336,13 @@ class GameScene: SKScene {
     }
     
     func updateTimeLimit(timeLimit: Int) {
-        var levelTimeLimit = timeLimit
+        _ = timeLimit
         self.timeLimit = timeLimit
     }
     
     func setupTimerLabel() {
         timerLabel = SKLabelNode(fontNamed: "Komika Display")
-        var levelTimeLimit = timeLimit
+        let levelTimeLimit = timeLimit
         timerLabel.text = "Countdown: \(timeLimit!)"
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             timerLabel.fontSize = 38
@@ -355,7 +359,7 @@ class GameScene: SKScene {
     }
 
     func startCountdown() { // for countdown timer
-        var levelTimeLimit = timeLimit
+        _ = timeLimit
         timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("tick:"), userInfo: nil, repeats: true)
     }
     
@@ -413,11 +417,11 @@ class GameScene: SKScene {
     }
 
     func addStaffLines() {
-        var w = frame.width/2
-        var h = frame.height/1.9   //2.28
-        var d = 68*frame.width/2300
-        var yScale = frame.width/2300
-        var xScale = frame.width/1680
+        let w = frame.width/2
+        let h = frame.height/1.9   //2.28
+        let d = 68*frame.width/2300
+        let yScale = frame.width/2300
+        let xScale = frame.width/1680
         L0leger.position = L0.position
         L0leger.alpha = 0
         L0leger.xScale = xScale
@@ -549,7 +553,7 @@ class GameScene: SKScene {
     func celebrate(completionHandler: () -> ()) {
         
         rotateClef(completionHandler)
-        println("sound1 is \(sound)")
+        print("sound1 is \(sound)")
 //        playSound(sound)
 
         
@@ -632,8 +636,8 @@ class GameScene: SKScene {
     }    
     
     func playSound(sound: String) {
-        println("sound2 is \(sound)")
-        println("sound3 is \(sound).wav")
+        print("sound2 is \(sound)")
+        print("sound3 is \(sound).wav")
         runAction(SKAction.playSoundFileNamed("\(sound).wav", waitForCompletion: false))
     }
 

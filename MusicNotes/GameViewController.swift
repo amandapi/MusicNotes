@@ -79,7 +79,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     // Required by interface MFMailComposeViewControllerDelegate
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         // Close the mail dialog
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -111,7 +111,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         
         // randomize challenges and pass challenges and clef to GameScene
         level.randomizeChallenges()
-        var currentChallenge = level.challengesArray[currentChallengeIndex] as! Challenge
+        let currentChallenge = level.challengesArray[currentChallengeIndex] as! Challenge
         scene.updateChallenge(currentChallenge)
         scene.updateClef(currentChallenge.clef)
         
@@ -124,21 +124,16 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         super.viewWillAppear(animated)
         
         let skView = self.view as! SKView
-        let scene = skView.scene as! GameScene
+        _ = skView.scene as! GameScene
     }
     
     override func shouldAutorotate() -> Bool {
         return true
     }
     
-    override func supportedInterfaceOrientations() -> Int {
-        /*        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-        return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
-        } else {
-        return Int(UIInterfaceOrientationMask.All.rawValue)
-        }
-        */
-        return Int(UIInterfaceOrientationMask.LandscapeLeft.rawValue)
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        let orientation: UIInterfaceOrientationMask = [UIInterfaceOrientationMask.Portrait, UIInterfaceOrientationMask.PortraitUpsideDown]
+        return orientation
     }
     
     override func didReceiveMemoryWarning() {
@@ -156,7 +151,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         if deadCount < 3  {
             currentChallengeIndex++
             if (currentChallengeIndex < level.challengesArray.count){
-                var challenge = level.challengesArray[currentChallengeIndex] as! Challenge
+                let challenge = level.challengesArray[currentChallengeIndex] as! Challenge
                 scene.updateChallenge(challenge)
                 scene.updateClef(challenge.clef)
                 scene.addNoti()
@@ -203,7 +198,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func addIGotItButton() {
-        var returnButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        let returnButton = UIButton(type: .System)
         returnButton.setTitle("I got it!", forState: UIControlState.Normal)
         returnButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
         returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
@@ -220,7 +215,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func addTryAgainButton() {
-        var backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        let backButton = UIButton(type: .System)
         backButton.setTitle("Try again", forState: UIControlState.Normal)
         backButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
         backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
@@ -231,7 +226,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         view.addSubview(backButton)
         // animate button
         let bounds = backButton.bounds
-        UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, animations: {
+        UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options:[], animations: {
             backButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
             backButton.enabled = true
             }, completion: nil)        
@@ -242,7 +237,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func congratulations() {
-        var congratulationsLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
+        let congratulationsLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
         congratulationsLabel.textAlignment = NSTextAlignment.Center
         congratulationsLabel.numberOfLines = 0
         congratulationsLabel.text = "Congratulations! \n You scored \(score) out of \(level.challengesArray.count)"
@@ -269,7 +264,12 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         audioPlayer = AVAudioPlayer()
         let path = NSBundle.mainBundle().pathForResource(selectedFilename, ofType:"wav")
         let fileURL = NSURL(fileURLWithPath: path!)
-        audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, error: nil)
+        //audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, error: nil)
+        do {
+            try audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, fileTypeHint: nil)
+        } catch {
+            // how to handle error
+        }
         audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
@@ -297,7 +297,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func addBackButton() { // after winning level
-        var backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        let backButton = UIButton(type: .System)
         backButton.setTitle("More!", forState: UIControlState.Normal)
         backButton.setTitleColor(UIColor.yellowColor(), forState: .Normal)
         backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)

@@ -46,7 +46,7 @@ class Level {
     }
 
     func randomizeChallenges() {
-        for i in 0..<challengesArray.count {
+        for _ in 0..<challengesArray.count {
             let randomNumber = Int(arc4random_uniform(UInt32(challengesArray.count)))
             let object: AnyObject = challengesArray[randomNumber]
             challengesArray.removeObjectAtIndex(randomNumber)

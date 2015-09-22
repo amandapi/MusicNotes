@@ -40,18 +40,18 @@ class LevelViewController: UIViewController {
         
         //var levelButton = UIButton.buttonWithType(.System) as! UIButton
         var levelButton = UIButton()
-        var buttonWidth = self.view.frame.width / 5.8
-        var buttonHeight = buttonWidth * 0.75
-        var gap = buttonWidth / 8.0
-        var x5 = self.view.frame.width/2.0 - buttonWidth/2.0
-        var y5 = self.view.frame.height/2.0 - buttonHeight/1.2
-        var dx: CGFloat = gap + 1.2*buttonWidth
-        var dy: CGFloat = gap + buttonHeight
+        let buttonWidth = self.view.frame.width / 5.8
+        let buttonHeight = buttonWidth * 0.75
+        let gap = buttonWidth / 8.0
+        let x5 = self.view.frame.width/2.0 - buttonWidth/2.0
+        let y5 = self.view.frame.height/2.0 - buttonHeight/1.2
+        let dx: CGFloat = gap + 1.2*buttonWidth
+        let dy: CGFloat = gap + buttonHeight
         
         let levels = getLevels()
         
         for i in 1...levels.count {
-             levelButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+             levelButton = UIButton(type: .Custom)
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
             } else if i < 7 {
@@ -133,14 +133,15 @@ class LevelViewController: UIViewController {
         
         introductionNotiView.center = CGPointMake(self.view.frame.width/2 - introductionNotiView.frame.width/2 , self.view.frame.height/2)
         UIView.animateWithDuration(0.1,  delay: 1.8, // this got called first
-            options:  nil,
+            options: [],
             animations: {
                 self.introductionNotiView.alpha = 1.0
             },
             completion: {  // then this got called
                 (value: Bool ) in
                 UIView.animateWithDuration(2.8, delay: 0.0,
-                    options: UIViewAnimationOptions.Repeat | .CurveEaseInOut | .Autoreverse ,
+                  //  options: UIViewAnimationOptions.Repeat | .CurveEaseInOut | .Autoreverse ,
+                    options: [.Repeat, .CurveEaseInOut, .Autoreverse] ,
                     animations: {
                         self.introductionNotiView.layer.position.x += self.view.frame.width/5
                     }, completion: {
@@ -150,7 +151,7 @@ class LevelViewController: UIViewController {
             } )
         
         // create "Ready!" button in introductionView
-        var goButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        let goButton = UIButton(type: .System)
         goButton.setTitle("Ready!", forState: UIControlState.Normal)
         goButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
@@ -164,14 +165,14 @@ class LevelViewController: UIViewController {
         let bounds = goButton.bounds
         
         UIView.animateWithDuration(0.0,  delay: 3.8, // this got called first
-            options:  nil,
+            options: [],
             animations: {
                 goButton.alpha = 1
             },
             completion: {  // then this got called
                 (value: Bool ) in
                 self.introductionView2.addSubview(goButton)
-                UIView.animateWithDuration(1.0, delay: 1.0, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, //.Repeat | .Autoreverse,
+                UIView.animateWithDuration(1.0, delay: 1.0, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: [], //.Repeat | .Autoreverse,
                     animations: {
                     goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
                     goButton.enabled = true
@@ -209,20 +210,20 @@ class LevelViewController: UIViewController {
     }
     
     func levelButtonPressed(sender: AnyObject) {
-        var levelNumber = sender.tag
+        let levelNumber = sender.tag
         let levels = getLevels()
         currentLevel = levels.objectAtIndex(levelNumber - 1) as? Level 
         self.performSegueWithIdentifier("levelViewToGameView", sender: self)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        var destinationViewController: GameViewController = segue.destinationViewController as! GameViewController
+        let destinationViewController: GameViewController = segue.destinationViewController as! GameViewController
         destinationViewController.setLevel(currentLevel!)
     }
     
     func addChooseLevelLabel() {
 //        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.01 , self.view.frame.width/2.3, self.view.frame.width/10))
-        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.001 , self.view.frame.width/2.3, self.view.frame.height/8))
+        let chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.001 , self.view.frame.width/2.3, self.view.frame.height/8))
         //chooseLevelLabel.center = view.center
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"
