@@ -42,10 +42,10 @@ class LevelViewController: UIViewController {
         var levelButton = UIButton()
         var buttonWidth = self.view.frame.width / 5.8
         var buttonHeight = buttonWidth * 0.75
-        var gap = buttonWidth / 10.0
+        var gap = buttonWidth / 8.0
         var x5 = self.view.frame.width/2.0 - buttonWidth/2.0
-        var y5 = self.view.frame.height/2.0 - buttonHeight/2.0
-        var dx: CGFloat = gap + buttonWidth
+        var y5 = self.view.frame.height/2.0 - buttonHeight/1.2
+        var dx: CGFloat = gap + 1.2*buttonWidth
         var dy: CGFloat = gap + buttonHeight
         
         let levels = getLevels()
@@ -62,18 +62,19 @@ class LevelViewController: UIViewController {
             levelButton.setTitle("Level \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
             
+            // set background images
+            levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
+            
             //shadow for the 9 buttons
             levelButton.layer.shadowColor = UIColor.grayColor().CGColor;
             levelButton.layer.shadowOpacity = 0.8
             levelButton.layer.shadowRadius = 8
             levelButton.layer.shadowOffset = CGSizeMake(8.0, 8.0)
             
-            // set background images
-            levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-            
             // set titleLabel
             levelButton.titleLabel!.font = UIFont.boldSystemFontOfSize(36)
-            //levelButton.titleLabel!.font = UIFont(name: "Komikax Display Bold", size: 38)
+            //levelButton.titleLabel!.font = UIFont(name: "Komikax Display", size: 38)
+            levelButton.titleLabel?.adjustsFontSizeToFitWidth = true
             levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             levelButton.titleLabel!.shadowColor = UIColor.blackColor()
             levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
@@ -148,9 +149,9 @@ class LevelViewController: UIViewController {
                 )
             } )
         
-        // create "Let's go!" button in introductionView
+        // create "Ready!" button in introductionView
         var goButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        goButton.setTitle("Let's go!", forState: UIControlState.Normal)
+        goButton.setTitle("Ready!", forState: UIControlState.Normal)
         goButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         goButton.backgroundColor = UIColor.clearColor()
@@ -169,9 +170,8 @@ class LevelViewController: UIViewController {
             },
             completion: {  // then this got called
                 (value: Bool ) in
-                
                 self.introductionView2.addSubview(goButton)
-                UIView.animateWithDuration(1.0, delay: 1.0, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil,
+                UIView.animateWithDuration(1.0, delay: 1.0, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, //.Repeat | .Autoreverse,
                     animations: {
                     goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
                     goButton.enabled = true
@@ -180,19 +180,6 @@ class LevelViewController: UIViewController {
                     }
                 )
         } )
-        
-        
-        
-        
-/*
-        
-//        UIView.animateWithDuration(2.0, delay: 2.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: .Repeat | .Autoreverse, animations: {
-         UIView.animateWithDuration(2.0, delay: 2.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: nil, animations: {
-            goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
-            goButton.enabled = true
-            }, completion: nil)
-    }
-*/
     }
     
     func goButtonPressed() {
@@ -234,7 +221,9 @@ class LevelViewController: UIViewController {
     }
     
     func addChooseLevelLabel() {
-        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/3.3 , self.view.frame.size.height/20 , self.view.frame.size.width/2.3, self.view.frame.size.width/10))
+//        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.01 , self.view.frame.width/2.3, self.view.frame.width/10))
+        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.001 , self.view.frame.width/2.3, self.view.frame.height/8))
+        //chooseLevelLabel.center = view.center
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"
         chooseLevelLabel.textColor = UIColor.blackColor()

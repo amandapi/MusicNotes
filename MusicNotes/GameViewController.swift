@@ -9,20 +9,10 @@
 import UIKit
 import SpriteKit
 import Social
+import MessageUI
 import AVFoundation
 
-class GameViewController: UIViewController, GameSceneDelegate {
-    
-    @IBAction func hint(sender: UIButton) {
-        showHint()
-    }
-    
-    @IBAction func shareOnFacebook(sender: UIButton) {
-        var shareToFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-        shareToFacebook.setInitialText("Hello I am playing MusicNotes.")
-        shareToFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
-        self.presentViewController(shareToFacebook, animated: true, completion: nil)
-    }
+class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeViewControllerDelegate {
     
     var scene: GameScene!
     var destinationNode = SKSpriteNode()
@@ -47,6 +37,51 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
+    }
+
+    @IBAction func stop(sender: UIButton) {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    @IBAction func hint(sender: UIButton) {
+        showHint()
+    }
+    
+    @IBAction func gameCenter(sender: UIButton) {
+        
+    }
+    
+    @IBAction func shareOnFacebook(sender: UIButton) {
+        let shareToFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+        shareToFacebook.setInitialText("I want to share this App called MusicNotes")
+        shareToFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
+        self.presentViewController(shareToFacebook, animated: true, completion: nil)
+    }
+    
+    @IBAction func shareOnEmail(sender: UIButton) {
+        // Check if Mail is available
+        if(MFMailComposeViewController.canSendMail()){
+            // Create the mail message
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            mail.setSubject("Music Notes")
+            mail.setMessageBody("I want to share this App called MusicNotes", isHTML: false)
+            // Attach the image
+            let imageData = UIImagePNGRepresentation(UIImage(named: "MusicNotesAppIconSmall.png")!)
+            mail.addAttachmentData(imageData!, mimeType: "image/png", fileName: "Image")
+            self.presentViewController(mail, animated: true, completion: nil)
+        } else {
+            // Mail not available. Show a warning
+            let alert = UIAlertController(title: "Email", message: "Email not available", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+    
+    // Required by interface MFMailComposeViewControllerDelegate
+    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+        // Close the mail dialog
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
       
     override func viewDidLoad() {

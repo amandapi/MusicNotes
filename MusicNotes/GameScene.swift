@@ -232,18 +232,24 @@ class GameScene: SKScene {
     func addNoti() {
         var noti = MusicNotes(imageNamed: String())
         noti.name = "noti"
-        noti.setScale(S5.yScale * 0.83)
+        noti.setScale(S5.yScale * 0.9)
         roamingNoti = noti
         noti.anchorPoint = CGPointMake(0.38, 0.28)  // should this line be here or in MusicNotes?
         noti.zPosition = 3
-        noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
+        //noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
+        
+        noti.position = CGPoint(x: frame.width/2, y: frame.height*0.86)
+        
         addChild(noti)
 //        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
     }
     
     func followRoamingPath() {
         var path = CGPathCreateMutable()
-        CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        //CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        
+        CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.5, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
+        
         // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
         var followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
@@ -264,12 +270,12 @@ class GameScene: SKScene {
         self.cf!.name  = "\(clef)"
         if (clef == "clefTreble") {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.33)
-            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28 - 68*frame.width/575) // y at L2.y
+            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/1.9 - 68*frame.width/580) // y at L2.y
             self.cf!.setScale(frame.width/3880)
             
         } else if (clef == "clefBass") {
             self.cf!.anchorPoint = CGPointMake(0.5, 0.71)
-            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/2.28) // y at L4.y
+            self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/1.9) // y at L4.y
             self.cf!.setScale(frame.width/1880)
         }
         self.insertChild(cf, atIndex: 0) // self.addChild(self.cf!) works too
@@ -308,7 +314,7 @@ class GameScene: SKScene {
         instructionLabel.fontColor = SKColor.blackColor()
         instructionLabel.name = "instructionLabel"
         instructionLabel.alpha = 1
-        instructionLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/5)
+        instructionLabel.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + frame.height/3)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             instructionLabel.fontSize = 66
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -396,7 +402,7 @@ class GameScene: SKScene {
         startMsg.name = "msgLabel"
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.blackColor()
-        startMsg.position = CGPoint(x: frame.width/2 , y: frame.height/1.58)
+        startMsg.position = CGPoint(x: frame.width/2 , y: frame.height/1.38) // 1.58
         startMsg.zPosition = 30
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             startMsg.fontSize = 88
@@ -408,7 +414,7 @@ class GameScene: SKScene {
 
     func addStaffLines() {
         var w = frame.width/2
-        var h = frame.height/2.28   //2
+        var h = frame.height/1.9   //2.28
         var d = 68*frame.width/2300
         var yScale = frame.width/2300
         var xScale = frame.width/1680
