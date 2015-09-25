@@ -27,10 +27,12 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var deadCount: Int!
     
     var audioPlayer = AVAudioPlayer()
+    var fileNSURL = NSURL()  // today
     
     var hintView: UIImageView?
     var returnButton: UIButton?  // for congratulations
     var backButton: UIButton?  // for gameOver
+    var isPause: Bool = false // for playPauseButton
     
     var selectedSong: NSArray?
     
@@ -40,7 +42,43 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
 
     @IBAction func stop(sender: UIButton) {
+
         self.navigationController?.popViewControllerAnimated(true)
+        
+/*      // how to make audioPlayer stop is reward song is playing
+        if audioPlayer.playing == true { // or audioPlayer.rate != 0
+            audioPlayer.stop() // or audioPlayer.volume = 0.0
+        } else {
+             return
+        }
+*/
+        
+    }
+
+    @IBOutlet weak var playPause: UIButton!
+    
+    @IBAction func playPause(sender: UIButton) {
+        setPaused(!isPause)
+    }
+    
+    func setPaused(paused: Bool) {
+        
+        isPause = paused
+        if isPause {
+            playPause.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
+            if scene.timer != nil {
+                scene.timer!.invalidate()
+            }
+            scene.instructionLabel.alpha = 0.38
+            scene.roamingNoti!.alpha = 0.38
+            scene.self.speed = 0
+        } else {
+            playPause.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
+            scene.startCountdown()
+            scene.instructionLabel.alpha = 1.0
+            scene.roamingNoti!.alpha = 1.0
+            scene.self.speed = 1
+        }
     }
     
     @IBAction func hint(sender: UIButton) {
@@ -168,11 +206,27 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     
     func timesUpDelegateFunc() {  // when timesUp
         // add condition "if deadCount < 3"?
-        scene.flashTimesUp()
-        scene.instructionLabel.removeFromParent()
+        flashTimesUp()
+        scene.instructionLabel.alpha = 0.38
+        scene.roamingNoti!.alpha = 0.38
         scene.timer!.invalidate()
-        //roamingNoti.removeFromParent // delete last noti
+        scene.self.speed = 0
         addTryAgainButton()
+    }
+ 
+    func flashTimesUp() {  // moved from gameScene
+        let timesUpLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
+        timesUpLabel.textAlignment = NSTextAlignment.Center
+        timesUpLabel.numberOfLines = 0
+        timesUpLabel.text = "Time's Up!"
+        timesUpLabel.textColor = UIColor.redColor()
+        timesUpLabel.font = UIFont(name: "Komika Display", size: 38)
+        timesUpLabel.sizeToFit()
+        self.view.addSubview(timesUpLabel)
+        // animate label
+        UIView.animateWithDuration(2.0, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: .CurveLinear, animations: {
+            timesUpLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
+            }, completion: nil)
     }
     
     func showHint() {
@@ -251,25 +305,26 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
             }, completion: nil)
         
         scene.timer!.invalidate()
-//        playRewardSong()
+        playRewardSong()
 //        addStars()
         addBackButton()
     }
     
     func playRewardSong() {
-        let soundFilenames = ["rewardMozartSymphony40" , "rewardProkofievPeterWolf" , "rewardTchaikovskySugarplum" , "rewardBachBrandenburg3" , "rewardChopinMazurkaE" , "rewardVivaldiSpring"]
+        let soundFilenames = ["rewardMozartSymphony40.wav" , "rewardProkofievPeterWolf.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav" , "rewardChopinMazurkaE.wav" , "rewardVivaldiSpring.wav"]
         let randomIndex = Int(arc4random_uniform(UInt32(soundFilenames.count)))
         let selectedFilename = soundFilenames[randomIndex]
         // AVAudioPlayer play song
         audioPlayer = AVAudioPlayer()
-        let path = NSBundle.mainBundle().pathForResource(selectedFilename, ofType:"wav")
+        let path = NSBundle.mainBundle().pathForResource(selectedFilename, ofType:nil)
         let fileURL = NSURL(fileURLWithPath: path!)
         //audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, error: nil)
-        do {
+               do {
             try audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, fileTypeHint: nil)
         } catch {
-            // how to handle error
+            print("error at audioPlayer")
         }
+
         audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
@@ -309,7 +364,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func wonMoreButtonPressed() { // after winning level
-//        audioPlayer.stop()
+        audioPlayer.stop()
         self.navigationController?.popViewControllerAnimated(true)
     }
     

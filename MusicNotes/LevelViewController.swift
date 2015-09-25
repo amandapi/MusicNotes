@@ -222,8 +222,9 @@ class LevelViewController: UIViewController {
     }
     
     func addChooseLevelLabel() {
-//        var chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.01 , self.view.frame.width/2.3, self.view.frame.width/10))
-        let chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.001 , self.view.frame.width/2.3, self.view.frame.height/8))
+        let chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.01 , self.view.frame.width/2.3, self.view.frame.height/8))
+        
+        self.view.frame.height/2.0
         //chooseLevelLabel.center = view.center
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"

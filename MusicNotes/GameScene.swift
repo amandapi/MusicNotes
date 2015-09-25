@@ -56,6 +56,7 @@ class GameScene: SKScene {
     var clefBass = SKSpriteNode()
     var cf: SKSpriteNode?
     var clefRotating = SKSpriteNode()
+    var playPause: UIButton?
     
     var gameState = GameState.StartingLevel
     
@@ -108,7 +109,7 @@ class GameScene: SKScene {
         }
     }
     
- //   override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent?) {
+ //   override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent?) {  // old syntax
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         switch gameState {
@@ -119,17 +120,18 @@ class GameScene: SKScene {
                 setupInstructionLabel()
                 paused = false
                 startCountdown()
+        
                 gameState = .Playing
         
             //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
-            case .Playing:
-  //              let touch = touches.first as? UITouch
+            case .Playing:                
+  //              let touch = touches.first as? UITouch  // old syntax
                 let touch = touches.first
                 let location = touch!.locationInNode(scene!)
                 let node = nodeAtPoint(location)
 
-                 if node.name == "noti" && !scoringNotiArray.contains(node as! SKSpriteNode) {
+                if node.name == "noti" && !scoringNotiArray.contains(node as! SKSpriteNode) {
                     roamingNoti!.removeAllActions()
                     roamingNoti?.name = "noti"
                     
@@ -190,7 +192,6 @@ class GameScene: SKScene {
             movingNoti?.position.y = destinationNode.position.y
            
             scoringNotiArray.append(movingNoti!)
-            print("scoringNotiArray1 is \(scoringNotiArray)")  // good
             
             // add leger for Middle C
             if (destinationNode == L0)   {
@@ -240,20 +241,14 @@ class GameScene: SKScene {
         roamingNoti = noti
         noti.anchorPoint = CGPointMake(0.38, 0.28)  // should this line be here or in MusicNotes?
         noti.zPosition = 3
-        //noti.position = CGPoint(x: frame.width/2, y: frame.height*0.76)
-        
         noti.position = CGPoint(x: frame.width/2, y: frame.height*0.86)
-        
         addChild(noti)
-//        println("noti is \(noti)")  // note this does specify exactly which noti is roaming
     }
     
     func followRoamingPath() {
         let path = CGPathCreateMutable()
         //CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
-        
         CGPathAddArc(path, nil, frame.width/2.0, frame.height*0.5, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
-        
         // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
         let followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
@@ -343,7 +338,7 @@ class GameScene: SKScene {
     func setupTimerLabel() {
         timerLabel = SKLabelNode(fontNamed: "Komika Display")
         let levelTimeLimit = timeLimit
-        timerLabel.text = "Countdown: \(timeLimit!)"
+        timerLabel.text = "Time: \(timeLimit!)"
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             timerLabel.fontSize = 38
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -366,7 +361,7 @@ class GameScene: SKScene {
     func tick(timer: NSTimer) {
         if (timeLimit > 0) {
         timeLimit?--
-        timerLabel.text = "Countdown: \(timeLimit!)"
+        timerLabel.text = "Time: \(timeLimit!)"
         } else if timeLimit == 0 {
             gameSceneDelegate!.timesUpDelegateFunc()  // get GameViewController to BACK one vc
             // how to pause noti
@@ -382,6 +377,7 @@ class GameScene: SKScene {
         })
     }
 
+/*    moved to gameViewController
     func flashTimesUp() {
         let timesUpLabel = SKLabelNode(fontNamed: "Komika Display")
         timesUpLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
@@ -400,6 +396,7 @@ class GameScene: SKScene {
         timesUpLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
         addChild(timesUpLabel)
     }
+*/
     
     func addStartMsg() {
         let startMsg = SKLabelNode(fontNamed: "Komika Display")
@@ -553,9 +550,7 @@ class GameScene: SKScene {
     func celebrate(completionHandler: () -> ()) {
         
         rotateClef(completionHandler)
-        print("sound1 is \(sound)")
-//        playSound(sound)
-
+        playSound(sound)
         
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
         let twinkle1 = SKEmitterNode()
@@ -618,7 +613,7 @@ class GameScene: SKScene {
     }
     
     func die() {
-//        playSound("soundNoGood.wav")
+        playSound("soundNoGood")
         
         let shrinkAction = SKAction.scaleBy(0.38, duration: 0.8)
         let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 0.8)
@@ -636,8 +631,6 @@ class GameScene: SKScene {
     }    
     
     func playSound(sound: String) {
-        print("sound2 is \(sound)")
-        print("sound3 is \(sound).wav")
         runAction(SKAction.playSoundFileNamed("\(sound).wav", waitForCompletion: false))
     }
 
