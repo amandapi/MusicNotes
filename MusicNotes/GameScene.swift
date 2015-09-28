@@ -376,27 +376,6 @@ class GameScene: SKScene {
             noti.move(self.dt)
         })
     }
-
-/*    moved to gameViewController
-    func flashTimesUp() {
-        let timesUpLabel = SKLabelNode(fontNamed: "Komika Display")
-        timesUpLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
-        timesUpLabel.fontColor = SKColor.redColor()
-        timesUpLabel.text = "Time's Up"
-        timesUpLabel.zPosition = 4
-        timesUpLabel.alpha = 0
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            timesUpLabel.fontSize = 88
-        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            timesUpLabel.fontSize = 38
-        }
-        // animate label
-        let fadeinAction = SKAction.fadeInWithDuration(0.5)
-        let fadeoutAction = SKAction.fadeOutWithDuration(0.5)
-        timesUpLabel.runAction(SKAction.sequence([fadeinAction, fadeoutAction, fadeinAction, fadeoutAction, fadeinAction]))
-        addChild(timesUpLabel)
-    }
-*/
     
     func addStartMsg() {
         let startMsg = SKLabelNode(fontNamed: "Komika Display")

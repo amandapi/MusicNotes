@@ -29,7 +29,7 @@ class LevelViewController: UIViewController {
         super.viewDidLoad()
         
         // add background
-        let backgroundImageView = UIImageView(image: UIImage(named: "bgMainMenu.png"))
+        let backgroundImageView = UIImageView(image: UIImage(named: "introduction1.png"))
         backgroundImageView.frame = view.frame
         backgroundImageView.contentMode = .ScaleAspectFill
         self.view.addSubview(backgroundImageView)
@@ -72,26 +72,63 @@ class LevelViewController: UIViewController {
             levelButton.layer.shadowOffset = CGSizeMake(8.0, 8.0)
             
             // set titleLabel
-            levelButton.titleLabel!.font = UIFont.boldSystemFontOfSize(36)
-            //levelButton.titleLabel!.font = UIFont(name: "Komikax Display", size: 38)
+            if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+                levelButton.titleLabel!.font = UIFont(name: "Komika Display", size: 43)
+            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+                levelButton.titleLabel!.font = UIFont(name: "Komika Display", size: 23)
+            }
+            
+            //levelButton.titleLabel!.font = UIFont(name: "Komika Display", size: 43)
             levelButton.titleLabel?.adjustsFontSizeToFitWidth = true
             levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             levelButton.titleLabel!.shadowColor = UIColor.blackColor()
             levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
             levelButton.titleLabel!.shadowOffset = CGSize(width: 2.3, height: 2.3)
+            //levelButton.titleLabel?.backgroundColor = UIColor.yellowColor()
             
-            // set image
-            //var starImage = UIImage(named: "scoreStars3")
-            //levelButton.setImage(starImage, forState: UIControlState.Normal)
-            //levelButton.imageEdgeInsets = UIEdgeInsets(top: 80, left: 20, bottom: 20, right: 20)
-            //levelButton.titleEdgeInsets = UIEdgeInsets(top: 20, left: -200, bottom: 80, right: 0)
-            //levelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0)
+            // setbutton image
+            
+            let buttonImage = UIImage(named: "starsOutline")
+            levelButton.setImage(buttonImage, forState: UIControlState.Normal)
+            //levelButton.imageView?.backgroundColor = UIColor.orangeColor()
+            levelButton.imageView?.contentMode = .ScaleAspectFit
+ 
+            // adjust insets
+            
+            //levelButton.imageEdgeInsets = UIEdgeInsets(top: 100, left: -25, bottom: 0, right: -70)
+            //levelButton.titleEdgeInsets = UIEdgeInsets(top: 10, left: -180, bottom: 50, right: 20)
+            
+            let w = levelButton.frame.size.width
+       
+            if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) { // base:176.55 all iPads
+                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0.57*w, left: -0.14*w, bottom: 0, right: -0.4*w)
+                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0.06*w, left: -1.02*w, bottom: 0.28*w, right: 0.11*w)
+                print("iPad")  // fixed
+            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height == 736.0) {  // base: 126.9 iPhone 6+,6+S
+                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0*w, left: 0*w, bottom: 0, right: 0*w)
+                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0*w, left: -0*w, bottom: 0*w, right: 0*w)
+                print("iPhone6+")
+            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height == 667.0) {  // base: 115.0 iPhone 6,6S
+                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0.79*w, left: 10*w, bottom: 0, right: 8*w)
+                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0.08*w, left: -1.42*w, bottom: 0.39*w, right: 0.16*w)
+                print("iPhone6")
+            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height == 568.0) { // base: 97.93 iPhone 5,5S
+                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0*w, left: 0*w, bottom: 0, right: 0*w)
+                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0*w, left: 0*w, bottom: 00*w, right: 0*w)
+                print("iPhone5")  // fixed
+            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height < 568.0) { // base:82.76 iPhone 4 or less
+                    levelButton.imageEdgeInsets = UIEdgeInsets(top: 0.55*w, left: 0.2*w, bottom: 0, right: 0.2*w)
+                    levelButton.titleEdgeInsets = UIEdgeInsets(top: 0.1*w, left: -2.0*w, bottom: 0.45*w, right: 0.05*w)
+                print("iPhone4") // this is run when iPhone 5 is choosen! 
+            }
             
             // set action target for each button
             levelButton.addTarget(self, action: "levelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             
             // add the 9 buttons
             self.view.addSubview(levelButton)
+            
+            //print("levelButton.frame.size.width is \(levelButton.frame.size.width)")
         }
         
         addIntroduction()
