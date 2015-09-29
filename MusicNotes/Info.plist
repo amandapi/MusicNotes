@@ -26,9 +26,9 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>KMKDSPSH.ttf</string>
 		<string>KMKDSP__.ttf</string>
 		<string>KMKDSPB_.ttf</string>
-		<string>KOMIKAX_.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

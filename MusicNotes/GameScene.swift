@@ -507,7 +507,7 @@ class GameScene: SKScene {
     }
     
     func flashGameOver() {
-        let gameoverLabel = SKLabelNode(fontNamed: "Komika Display")
+        let gameoverLabel = SKLabelNode(fontNamed: "Komika Display - Shadow")
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"

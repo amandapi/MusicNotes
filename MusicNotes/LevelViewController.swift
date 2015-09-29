@@ -21,6 +21,8 @@ class LevelViewController: UIViewController {
     var introductionView2 = UIView(frame: CGRectMake(0, 0, 100, 100))
     var introductionNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
+    var starImage = UIImage(named: "starsOutline.png")
+    var starImageView = UIImageView()
     var goButton: UIButton?
     
     // could not put together a valid init method - does a viewController needs an init?
@@ -38,7 +40,7 @@ class LevelViewController: UIViewController {
         // add page title
         addChooseLevelLabel()
         
-        //var levelButton = UIButton.buttonWithType(.System) as! UIButton
+        // add buttons
         var levelButton = UIButton()
         let buttonWidth = self.view.frame.width / 5.8
         let buttonHeight = buttonWidth * 0.75
@@ -51,7 +53,9 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 1...levels.count {
-             levelButton = UIButton(type: .Custom)
+            levelButton = UIButton(type: .Custom)
+            starImageView = UIImageView(image: starImage!)
+
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
             } else if i < 7 {
@@ -62,10 +66,14 @@ class LevelViewController: UIViewController {
             levelButton.setTitle("Level \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
             
+            // add stars
+            starImageView.frame = CGRectMake(levelButton.frame.origin.x - buttonWidth/18, levelButton.frame.origin.y + buttonHeight/1.6, buttonWidth*1.1, buttonHeight/2.3)
+            starImageView.tag = i
+            
             // set background images
             levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
             
-            //shadow for the 9 buttons
+            // shadow for the 9 buttons
             levelButton.layer.shadowColor = UIColor.grayColor().CGColor;
             levelButton.layer.shadowOpacity = 0.8
             levelButton.layer.shadowRadius = 8
@@ -77,58 +85,20 @@ class LevelViewController: UIViewController {
             } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
                 levelButton.titleLabel!.font = UIFont(name: "Komika Display", size: 23)
             }
-            
-            //levelButton.titleLabel!.font = UIFont(name: "Komika Display", size: 43)
             levelButton.titleLabel?.adjustsFontSizeToFitWidth = true
             levelButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             levelButton.titleLabel!.shadowColor = UIColor.blackColor()
             levelButton.setTitleShadowColor(UIColor.blackColor(), forState: UIControlState.Normal)
             levelButton.titleLabel!.shadowOffset = CGSize(width: 2.3, height: 2.3)
-            //levelButton.titleLabel?.backgroundColor = UIColor.yellowColor()
-            
-            // setbutton image
-            
-            let buttonImage = UIImage(named: "starsOutline")
-            levelButton.setImage(buttonImage, forState: UIControlState.Normal)
-            //levelButton.imageView?.backgroundColor = UIColor.orangeColor()
-            levelButton.imageView?.contentMode = .ScaleAspectFit
- 
-            // adjust insets
-            
-            //levelButton.imageEdgeInsets = UIEdgeInsets(top: 100, left: -25, bottom: 0, right: -70)
-            //levelButton.titleEdgeInsets = UIEdgeInsets(top: 10, left: -180, bottom: 50, right: 20)
-            
-            let w = levelButton.frame.size.width
-       
-            if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) { // base:176.55 all iPads
-                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0.57*w, left: -0.14*w, bottom: 0, right: -0.4*w)
-                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0.06*w, left: -1.02*w, bottom: 0.28*w, right: 0.11*w)
-                print("iPad")  // fixed
-            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height == 736.0) {  // base: 126.9 iPhone 6+,6+S
-                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0*w, left: 0*w, bottom: 0, right: 0*w)
-                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0*w, left: -0*w, bottom: 0*w, right: 0*w)
-                print("iPhone6+")
-            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height == 667.0) {  // base: 115.0 iPhone 6,6S
-                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0.79*w, left: 10*w, bottom: 0, right: 8*w)
-                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0.08*w, left: -1.42*w, bottom: 0.39*w, right: 0.16*w)
-                print("iPhone6")
-            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height == 568.0) { // base: 97.93 iPhone 5,5S
-                levelButton.imageEdgeInsets = UIEdgeInsets(top: 0*w, left: 0*w, bottom: 0, right: 0*w)
-                levelButton.titleEdgeInsets = UIEdgeInsets(top: 0*w, left: 0*w, bottom: 00*w, right: 0*w)
-                print("iPhone5")  // fixed
-            } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().bounds.size.height < 568.0) { // base:82.76 iPhone 4 or less
-                    levelButton.imageEdgeInsets = UIEdgeInsets(top: 0.55*w, left: 0.2*w, bottom: 0, right: 0.2*w)
-                    levelButton.titleEdgeInsets = UIEdgeInsets(top: 0.1*w, left: -2.0*w, bottom: 0.45*w, right: 0.05*w)
-                print("iPhone4") // this is run when iPhone 5 is choosen! 
-            }
+            levelButton.titleLabel!.contentMode = .ScaleAspectFit
+            levelButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: buttonHeight/8, right: 0)
             
             // set action target for each button
             levelButton.addTarget(self, action: "levelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             
-            // add the 9 buttons
+            // add the 9 buttons and stars
             self.view.addSubview(levelButton)
-            
-            //print("levelButton.frame.size.width is \(levelButton.frame.size.width)")
+            self.view.insertSubview(starImageView, aboveSubview: levelButton)
         }
         
         addIntroduction()
@@ -191,7 +161,11 @@ class LevelViewController: UIViewController {
         let goButton = UIButton(type: .System)
         goButton.setTitle("Ready!", forState: UIControlState.Normal)
         goButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-        goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 128)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        }
         goButton.backgroundColor = UIColor.clearColor()
         goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView2.bounds.width, introductionView2.bounds.height/6)
         goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
@@ -232,11 +206,9 @@ class LevelViewController: UIViewController {
         if levels == nil {
             let myPlist = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Levels", ofType: "plist")!)!
             let plistLevels = myPlist["levels"] as! [[String:AnyObject]] // the array of levels
-            
             levels = NSMutableArray()
-            for i in 0...(plistLevels.count-1) {  //plistLevels.count=9
-                
-                var levelData = plistLevels[i] // this levelData carries data in levels 1...9
+            for i in 0...(plistLevels.count-1) {
+                var levelData = plistLevels[i]
                 let background = levelData["background"] as! String
                 let challenges = levelData["challenges"] as! NSDictionary
                 let timeLimit = levelData["timeLimit"] as! Int
@@ -262,7 +234,6 @@ class LevelViewController: UIViewController {
         let chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.01 , self.view.frame.width/2.3, self.view.frame.height/8))
         
         self.view.frame.height/2.0
-        //chooseLevelLabel.center = view.center
         chooseLevelLabel.textAlignment = NSTextAlignment.Center
         chooseLevelLabel.text = "Choose Your Level"
         chooseLevelLabel.textColor = UIColor.blackColor()

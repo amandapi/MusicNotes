@@ -34,6 +34,10 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
     
+    var scoreStar1ImageView: UIImageView?
+    var scoreStar2ImageView: UIImageView?
+    var scoreStar3ImageView: UIImageView?
+    
     var selectedSong: NSArray?
     
     var level: Level!
@@ -109,7 +113,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
             mail.addAttachmentData(imageData!, mimeType: "image/png", fileName: "Image")
             self.presentViewController(mail, animated: true, completion: nil)
         } else {
-            // Mail not available. Show a warning
+            // if mail not available. Show a warning
             let alert = UIAlertController(title: "Email", message: "Email not available", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
@@ -197,6 +201,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
             } else {
                 score = scene.score // get score from GameScene
                 congratulations()
+                addStars()
                 endLevelWithSuccess()
             }
         } else {
@@ -214,13 +219,17 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         addTryAgainButton()
     }
  
-    func flashTimesUp() {  // moved from gameScene
+    func flashTimesUp() {  // moved from gameScene to here
         let timesUpLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
         timesUpLabel.textAlignment = NSTextAlignment.Center
         timesUpLabel.numberOfLines = 0
         timesUpLabel.text = "Time's Up!"
         timesUpLabel.textColor = UIColor.redColor()
-        timesUpLabel.font = UIFont(name: "Komika Display", size: 38)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            timesUpLabel.font = UIFont(name: "Komika Display", size: 88)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            timesUpLabel.font = UIFont(name: "Komika Display", size: 38)
+        }
         timesUpLabel.sizeToFit()
         self.view.addSubview(timesUpLabel)
         // animate label
@@ -272,12 +281,17 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         let backButton = UIButton(type: .System)
         backButton.setTitle("Try again", forState: UIControlState.Normal)
         backButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
-        backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 38)
+        }
         backButton.backgroundColor = UIColor.clearColor()
         backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
         backButton.center.x = view.center.x
         backButton.addTarget(self, action: "tryAgainButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(backButton)
+        
         // animate button
         let bounds = backButton.bounds
         UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options:[], animations: {
@@ -296,17 +310,19 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         congratulationsLabel.numberOfLines = 0
         congratulationsLabel.text = "Congratulations! \n You scored \(score) out of \(level.challengesArray.count)"
         congratulationsLabel.textColor = UIColor.redColor()
-        congratulationsLabel.font = UIFont(name: "Komika Display", size: 38)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            congratulationsLabel.font = UIFont(name: "Komika Display", size: 68)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            congratulationsLabel.font = UIFont(name: "Komika Display", size: 38)
+        }
         congratulationsLabel.sizeToFit()
         self.view.addSubview(congratulationsLabel)
         // animate label
         UIView.animateWithDuration(2.0, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: .CurveLinear, animations: {
         congratulationsLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
             }, completion: nil)
-        
         scene.timer!.invalidate()
         playRewardSong()
-//        addStars()
         addBackButton()
     }
     
@@ -324,15 +340,13 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         } catch {
             print("error at audioPlayer")
         }
-
         audioPlayer.prepareToPlay()
         audioPlayer.play()
     }
     
     func addStars() {
-        //let scoreStarsImage = UIImage(named: "scoreStars2.png")
-        
-        let scoreStar1ImageView = UIImageView(image: UIImage(named: "scoreStar1.png")!)
+        let scoreStar1ImageView = UIImageView()
+        _ = UIImage(named: "scoreStar1.png")
         let scoreStars2ImageView = UIImageView(image: UIImage(named: "scoreStars2.png")!)
         let scoreStars3ImageView = UIImageView(image: UIImage(named: "scoreStars3.png")!)
         scoreStar1ImageView.contentMode = .ScaleAspectFit
@@ -340,7 +354,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         scoreStars3ImageView.contentMode = .ScaleAspectFit
         scoreStar1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
         scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
-        scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
+        scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600 , height: 100)
         
         if (score <= level.challengesArray.count - 3) {
             view.addSubview(scoreStar1ImageView)
@@ -355,7 +369,12 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         let backButton = UIButton(type: .System)
         backButton.setTitle("More!", forState: UIControlState.Normal)
         backButton.setTitleColor(UIColor.yellowColor(), forState: .Normal)
-        backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 38)
+        }
+        //backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         backButton.backgroundColor = UIColor.clearColor()
         backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
         backButton.center.x = view.center.x

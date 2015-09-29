@@ -53,5 +53,4 @@ class Level {
             challengesArray.insertObject(object, atIndex: 0)
             }
         }
-    
-    }
+}
