@@ -22,7 +22,6 @@ class LevelViewController: UIViewController {
     var introductionNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
     var starImage = UIImage(named: "starsOutline.png")
-    var starImageView = UIImageView()
     var goButton: UIButton?
     
     // could not put together a valid init method - does a viewController needs an init?
@@ -53,8 +52,22 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 1...levels.count {
+            let level = levels.objectAtIndex(i - 1) as! Level
+            let numStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
+            var starImageName: String!
+            
+            if (numStars == 1) {
+                starImageName = "stars1.png"
+            } else if (numStars == 2) {
+                starImageName = "stars2.png"
+            } else if (numStars == 3) {
+                starImageName = "stars3.png"
+            } else {
+                starImageName = "starsOutline.png"
+            }
+            
             levelButton = UIButton(type: .Custom)
-            starImageView = UIImageView(image: starImage!)
+            let starImageView = UIImageView(image: UIImage(named: starImageName))
 
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
@@ -212,7 +225,7 @@ class LevelViewController: UIViewController {
                 let background = levelData["background"] as! String
                 let challenges = levelData["challenges"] as! NSDictionary
                 let timeLimit = levelData["timeLimit"] as! Int
-                levels!.addObject(Level(background: background, timeLimit: timeLimit, challenges: challenges ))
+                levels!.addObject(Level(number: i, background: background, timeLimit: timeLimit, challenges: challenges ))
             }
         }
         return levels!

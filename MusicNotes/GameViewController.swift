@@ -356,13 +356,21 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
         scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600 , height: 100)
         
+        var numStars: Int!
+        
         if (score <= level.challengesArray.count - 3) {
             view.addSubview(scoreStar1ImageView)
+            numStars = 1
         } else if (score < level.challengesArray.count) {
             view.addSubview(scoreStars2ImageView)
+            numStars = 2
         } else if (score == level.challengesArray.count) {
             view.addSubview(scoreStars3ImageView)
+            numStars = 3
         }
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setInteger(numStars, forKey: level.keyForLevelScore())
     }
     
     func addBackButton() { // after winning level
