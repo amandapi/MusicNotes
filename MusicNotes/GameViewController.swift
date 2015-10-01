@@ -34,9 +34,9 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
     
-    var scoreStar1ImageView: UIImageView?
-    var scoreStar2ImageView: UIImageView?
-    var scoreStar3ImageView: UIImageView?
+    var scoreStars1ImageView: UIImageView?
+    var scoreStars2ImageView: UIImageView?
+    var scoreStars3ImageView: UIImageView?
     
     var selectedSong: NSArray?
     
@@ -48,8 +48,14 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     @IBAction func stop(sender: UIButton) {
 
         self.navigationController?.popViewControllerAnimated(true)
+//        if audioPlayer != nil {audioPlayer.stop()}  // make a do-try-catch block, if code is inside the catch block error will never be nil
+        
+        
+  //      audioPlayer.stop()
         
 /*      // how to make audioPlayer stop is reward song is playing
+        
+        check only if audioPlayer != nil
         if audioPlayer.playing == true { // or audioPlayer.rate != 0
             audioPlayer.stop() // or audioPlayer.volume = 0.0
         } else {
@@ -334,7 +340,6 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         audioPlayer = AVAudioPlayer()
         let path = NSBundle.mainBundle().pathForResource(selectedFilename, ofType:nil)
         let fileURL = NSURL(fileURLWithPath: path!)
-        //audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, error: nil)
                do {
             try audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, fileTypeHint: nil)
         } catch {
@@ -345,24 +350,38 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func addStars() {
-        let scoreStar1ImageView = UIImageView()
-        _ = UIImage(named: "scoreStar1.png")
+        //let scoreStars1ImageView = UIImageView()
+        //_ = UIImage(named: "scoreStars1.png")
+        let scoreStars1ImageView = UIImageView(image: UIImage(named: "scoreStars1.png")!)
         let scoreStars2ImageView = UIImageView(image: UIImage(named: "scoreStars2.png")!)
         let scoreStars3ImageView = UIImageView(image: UIImage(named: "scoreStars3.png")!)
-        scoreStar1ImageView.contentMode = .ScaleAspectFit
+        scoreStars1ImageView.contentMode = .ScaleAspectFit
         scoreStars2ImageView.contentMode = .ScaleAspectFit
         scoreStars3ImageView.contentMode = .ScaleAspectFit
-        scoreStar1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
-        scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
-        scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600 , height: 100)
+        scoreStars1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
+        scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
+        scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
+        //scoreStars1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
+        //scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
+        //scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600 , height: 100)
         
-        if (score <= level.challengesArray.count - 3) {
-            view.addSubview(scoreStar1ImageView)
-        } else if (score < level.challengesArray.count) {
-            view.addSubview(scoreStars2ImageView)
-        } else if (score == level.challengesArray.count) {
+        var numStars: Int!
+        
+        if (score == level.challengesArray.count) {
             view.addSubview(scoreStars3ImageView)
+            numStars = 3
+        } else if (score <= level.challengesArray.count - 2) {
+            view.addSubview(scoreStars1ImageView)
+            numStars = 1
+        } else {
+            view.addSubview(scoreStars2ImageView)
+            numStars = 2
         }
+
+        // save numStars to defaults
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setInteger(numStars, forKey: level.keyForLevelScore())
+        
     }
     
     func addBackButton() { // after winning level

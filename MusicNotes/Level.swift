@@ -10,16 +10,21 @@ import Foundation
 
 class Level {
     
+    let number: Int!
     let background: String!
     let timeLimit: Int!
     let challenges: NSDictionary!
     var challengesArray: NSMutableArray!
+
+    // add property with level # : Int
     
-    required init(background: String, timeLimit: Int, challenges: NSDictionary) {
+    required init(number: Int, background: String, timeLimit: Int, challenges: NSDictionary) {
         //fatalError("NSCoding not supported")
         self.background = background
         self.timeLimit = timeLimit
         self.challenges = challenges
+        self.number = number
+
        
         // create an array out of the challenges in a given level
         
@@ -44,7 +49,11 @@ class Level {
         }
 */
     }
-
+    
+    func keyForLevelScore() -> String {
+        return "Level\(self.number)Score"
+    }
+    
     func randomizeChallenges() {
         for _ in 0..<challengesArray.count {
             let randomNumber = Int(arc4random_uniform(UInt32(challengesArray.count)))

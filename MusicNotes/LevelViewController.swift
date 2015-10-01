@@ -22,8 +22,11 @@ class LevelViewController: UIViewController {
     var introductionNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
     var starImage = UIImage(named: "starsOutline.png")
-    var starImageView = UIImageView()
     var goButton: UIButton?
+    var starImageName: String!
+    var starImageView: UIImageView?
+    var levelButton = UIButton()
+    
     
     // could not put together a valid init method - does a viewController needs an init?
 
@@ -41,7 +44,7 @@ class LevelViewController: UIViewController {
         addChooseLevelLabel()
         
         // add buttons
-        var levelButton = UIButton()
+        //var levelButton = UIButton()
         let buttonWidth = self.view.frame.width / 5.8
         let buttonHeight = buttonWidth * 0.75
         let gap = buttonWidth / 8.0
@@ -53,8 +56,30 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 1...levels.count {
+            
+            // read numStars from defaults
+            let level = levels.objectAtIndex(i-1) as! Level
+            let numStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
+            
+ //           var starImageName: String!
+            if (numStars == 1) {
+                starImageName = "stars1.png"
+            } else if (numStars == 2) {
+                starImageName = "stars2.png"
+            } else if (numStars == 3) {
+                starImageName = "stars3.png"
+            } else {
+                starImageName = "starsOutline.png"
+            }
+            //how to refresh starImageView immediately, without having to re-open game?
+            
+            print("level \(i): \(level.keyForLevelScore())")
+            print("numStars: \(numStars)")
+            
             levelButton = UIButton(type: .Custom)
-            starImageView = UIImageView(image: starImage!)
+            //let starImageView = UIImageView(image: starImage!)
+            
+            let starImageView = UIImageView(image: UIImage(named: starImageName))
 
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
@@ -99,9 +124,28 @@ class LevelViewController: UIViewController {
             // add the 9 buttons and stars
             self.view.addSubview(levelButton)
             self.view.insertSubview(starImageView, aboveSubview: levelButton)
+            
+            // add resetStarsButton for temperary use
+            let resetStarsButton = UIButton(type: .System)
+            resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
+            resetStarsButton.backgroundColor = UIColor.redColor()
+            resetStarsButton.setTitle("resetStars", forState: .Normal)
+            resetStarsButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            resetStarsButton.addTarget(self, action: "resetStarsButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+            self.view.addSubview(resetStarsButton)
         }
-        
         addIntroduction()
+    }
+    
+    func resetStarsButtonPressed() {
+        print("keys.count: \(NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys.count)")
+        print("keys: \(NSUserDefaults.standardUserDefaults())")
+        for key in NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys {
+            NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+        }
+        // how to refresh starImageView immediately, without having to re-open game?
+        //self.view.reloadInputViews()
+       // self.view.insertSubview(starImageView!, aboveSubview: levelButton)
     }
     
     func addIntroduction() {
@@ -212,7 +256,7 @@ class LevelViewController: UIViewController {
                 let background = levelData["background"] as! String
                 let challenges = levelData["challenges"] as! NSDictionary
                 let timeLimit = levelData["timeLimit"] as! Int
-                levels!.addObject(Level(background: background, timeLimit: timeLimit, challenges: challenges ))
+                levels!.addObject(Level(number: i, background: background, timeLimit: timeLimit, challenges: challenges ))
             }
         }
         return levels!
