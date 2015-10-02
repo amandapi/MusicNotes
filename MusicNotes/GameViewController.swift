@@ -29,7 +29,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var audioPlayer = AVAudioPlayer()
     var fileNSURL = NSURL()  // today
     
-    var hintView: UIImageView?
+    var hintView: UIImageView? // for hint
     var returnButton: UIButton?  // for congratulations
     var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
@@ -37,6 +37,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var scoreStars1ImageView: UIImageView?
     var scoreStars2ImageView: UIImageView?
     var scoreStars3ImageView: UIImageView?
+    var numStars: Int!
     
     var selectedSong: NSArray?
     
@@ -48,13 +49,10 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     @IBAction func stop(sender: UIButton) {
 
         self.navigationController?.popViewControllerAnimated(true)
+        
 //        if audioPlayer != nil {audioPlayer.stop()}  // make a do-try-catch block, if code is inside the catch block error will never be nil
-        
-        
   //      audioPlayer.stop()
-        
 /*      // how to make audioPlayer stop is reward song is playing
-        
         check only if audioPlayer != nil
         if audioPlayer.playing == true { // or audioPlayer.rate != 0
             audioPlayer.stop() // or audioPlayer.volume = 0.0
@@ -262,7 +260,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     func gameOver() {
         scene.flashGameOver()
         scene.instructionLabel.removeFromParent()
-        scene.timer!.invalidate()         // stop timer
+        scene.timer!.invalidate()
         addTryAgainButton()
     }
     
@@ -276,7 +274,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         returnButton.addTarget(self, action: "hintViewReturnButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         hintView!.addSubview(returnButton)
         
-        // animate appearance of hintView
+        // animate hintView
         hintView!.center = self.view.center
         UIView.animateWithDuration(1.8, delay: 0.0, options: .CurveEaseOut, animations:{
             self.hintView!.alpha = 1.0
@@ -333,7 +331,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func playRewardSong() {
-        let soundFilenames = ["rewardMozartSymphony40.wav" , "rewardProkofievPeterWolf.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav" , "rewardChopinMazurkaE.wav" , "rewardVivaldiSpring.wav"]
+        let soundFilenames = ["rewardMozartSymphony40.wav" , "rewardProkofievPeter.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav" , "rewardChopinMazurkaE.wav" , "rewardVivaldiSpring.wav"]
         let randomIndex = Int(arc4random_uniform(UInt32(soundFilenames.count)))
         let selectedFilename = soundFilenames[randomIndex]
         // AVAudioPlayer play song
@@ -350,8 +348,6 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func addStars() {
-        //let scoreStars1ImageView = UIImageView()
-        //_ = UIImage(named: "scoreStars1.png")
         let scoreStars1ImageView = UIImageView(image: UIImage(named: "scoreStars1.png")!)
         let scoreStars2ImageView = UIImageView(image: UIImage(named: "scoreStars2.png")!)
         let scoreStars3ImageView = UIImageView(image: UIImage(named: "scoreStars3.png")!)
@@ -359,14 +355,9 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         scoreStars2ImageView.contentMode = .ScaleAspectFit
         scoreStars3ImageView.contentMode = .ScaleAspectFit
         scoreStars1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
-        scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
-        scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
-        //scoreStars1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
-        //scoreStars2ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600, height: 100)
-        //scoreStars3ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: 600 , height: 100)
-        
-        var numStars: Int!
-        
+        scoreStars2ImageView.frame = scoreStars1ImageView.frame
+        scoreStars3ImageView.frame = scoreStars1ImageView.frame
+ 
         if (score == level.challengesArray.count) {
             view.addSubview(scoreStars3ImageView)
             numStars = 3
@@ -387,14 +378,13 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     func addBackButton() { // after winning level
         let backButton = UIButton(type: .System)
         backButton.setTitle("More!", forState: UIControlState.Normal)
-        backButton.setTitleColor(UIColor.yellowColor(), forState: .Normal)
+        backButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+            backButton.titleLabel!.font = UIFont(name: "Komika Display - Shadow", size: 128)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 38)
+            backButton.titleLabel!.font = UIFont(name: "Komika Display - Shadow", size: 68)
         }
         //backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
-        backButton.backgroundColor = UIColor.clearColor()
         backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
         backButton.center.x = view.center.x
         backButton.addTarget(self, action: "wonMoreButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
@@ -411,4 +401,3 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
  }
-

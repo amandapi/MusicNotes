@@ -15,10 +15,13 @@ class LevelViewController: UIViewController {
     var currentLevel : Level?
     var levels: NSMutableArray?
     var chooseLevelLabel: UILabel?
-    //var introductionView1: UIView?
-    //var introductionView2: UIView?
     var introductionView1 = UIView(frame: CGRectMake(0, 0, 100, 100))
-    var introductionView2 = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var greenNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var yellowNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var pinkNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var greyNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var brownNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
+    var blueNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var introductionNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
     var starImage = UIImage(named: "starsOutline.png")
@@ -26,7 +29,6 @@ class LevelViewController: UIViewController {
     var starImageName: String!
     var starImageView: UIImageView?
     var levelButton = UIButton()
-    
     
     // could not put together a valid init method - does a viewController needs an init?
 
@@ -61,7 +63,6 @@ class LevelViewController: UIViewController {
             let level = levels.objectAtIndex(i-1) as! Level
             let numStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
             
- //           var starImageName: String!
             if (numStars == 1) {
                 starImageName = "stars1.png"
             } else if (numStars == 2) {
@@ -77,7 +78,6 @@ class LevelViewController: UIViewController {
             print("numStars: \(numStars)")
             
             levelButton = UIButton(type: .Custom)
-            //let starImageView = UIImageView(image: starImage!)
             
             let starImageView = UIImageView(image: UIImage(named: starImageName))
 
@@ -91,7 +91,7 @@ class LevelViewController: UIViewController {
             levelButton.setTitle("Level \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
             
-            // add stars
+            // add stars for all 9 levelButton
             starImageView.frame = CGRectMake(levelButton.frame.origin.x - buttonWidth/18, levelButton.frame.origin.y + buttonHeight/1.6, buttonWidth*1.1, buttonHeight/2.3)
             starImageView.tag = i
             
@@ -125,7 +125,7 @@ class LevelViewController: UIViewController {
             self.view.addSubview(levelButton)
             self.view.insertSubview(starImageView, aboveSubview: levelButton)
             
-            // add resetStarsButton for temperary use
+            // add resetStarsButton for temporary use
             let resetStarsButton = UIButton(type: .System)
             resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
             resetStarsButton.backgroundColor = UIColor.redColor()
@@ -133,9 +133,11 @@ class LevelViewController: UIViewController {
             resetStarsButton.titleLabel?.adjustsFontSizeToFitWidth = true
             resetStarsButton.addTarget(self, action: "resetStarsButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
             self.view.addSubview(resetStarsButton)
+
         }
         addIntroduction()
     }
+    
     
     func resetStarsButtonPressed() {
         print("keys.count: \(NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys.count)")
@@ -157,12 +159,53 @@ class LevelViewController: UIViewController {
         introductionView1.alpha = 0.0
         view.addSubview(introductionView1)
         
-        self.introductionView2 = UIImageView(image: UIImage(named: "introduction2.png"))
-        introductionView2.frame = view.frame
-        introductionView2.userInteractionEnabled = true
-        introductionView2.alpha = 0.0
-        view.addSubview(introductionView2)
+        // add 6 background noti
+        _ = UIImage(named: "notiGreenU.png")
+        self.greenNotiView = UIImageView(image: UIImage(named: "notiGreenU.png"))
+        greenNotiView.frame = CGRectMake(self.view.frame.width * 0.09, self.view.center.y/3, self.view.frame.width/5, self.view.frame.height/5)
+        greenNotiView.frame.size.width = view.frame.width * 0.1
+        print("greenNotiView: \(greenNotiView)")
+        print("self.view: \(self.view)")
+        greenNotiView.contentMode = UIViewContentMode.ScaleAspectFit
+        view.addSubview(greenNotiView)
+        greenNotiView.alpha = 0.0
+        _ = UIImage(named: "notiYellowU.png")
+        self.yellowNotiView = UIImageView(image: UIImage(named: "notiYellowU.png"))
+        yellowNotiView.frame = CGRectMake(self.view.frame.width * 0.232, self.view.center.y/5, self.view.frame.width/5, self.view.frame.height/5)
+        yellowNotiView.frame.size.width = view.frame.width * 0.1
+        yellowNotiView.contentMode = UIViewContentMode.ScaleAspectFit
+        view.addSubview(yellowNotiView)
+        yellowNotiView.alpha = 0.0
+        _ = UIImage(named: "notiPinkU.png")
+        self.pinkNotiView = UIImageView(image: UIImage(named: "notiPinkU.png"))
+        pinkNotiView.frame = CGRectMake(self.view.frame.width * 0.375, self.view.center.y/7, self.view.frame.width/5, self.view.frame.height/5)
+        pinkNotiView.frame.size.width = view.frame.width * 0.1
+        pinkNotiView.contentMode = UIViewContentMode.ScaleAspectFit
+        view.addSubview(pinkNotiView)
+        pinkNotiView.alpha = 0.0
+        _ = UIImage(named: "notiGreyU.png")
+        self.greyNotiView = UIImageView(image: UIImage(named: "notiGreyU.png"))
+        greyNotiView.frame = CGRectMake(self.view.frame.width * 0.519, self.view.center.y/7, self.view.frame.width/5, self.view.frame.height/5)
+        greyNotiView.frame.size.width = view.frame.width * 0.1
+        greyNotiView.contentMode = UIViewContentMode.ScaleAspectFit
+        view.addSubview(greyNotiView)
+        greyNotiView.alpha = 0.0
+        _ = UIImage(named: "notiBrownU.png")
+        self.brownNotiView = UIImageView(image: UIImage(named: "notiBrownU.png"))
+        brownNotiView.frame = CGRectMake(self.view.frame.width * 0.662, self.view.center.y/5, self.view.frame.width/5, self.view.frame.height/5)
+        brownNotiView.frame.size.width = view.frame.width * 0.1
+        brownNotiView.contentMode = UIViewContentMode.ScaleAspectFit
+        view.addSubview(brownNotiView)
+        brownNotiView.alpha = 0.0
+        _ = UIImage(named: "notiBlueU.png")
+        self.blueNotiView = UIImageView(image: UIImage(named: "notiBlueU.png"))
+        blueNotiView.frame = CGRectMake(self.view.frame.width * 0.805, self.view.center.y/3, self.view.frame.width/5, self.view.frame.height/5)
+        blueNotiView.frame.size.width = view.frame.width * 0.1
+        blueNotiView.contentMode = UIViewContentMode.ScaleAspectFit
+        view.addSubview(blueNotiView)
+        blueNotiView.alpha = 0.0
         
+        // add where-do-i-go noti
         let introductionNotiImage = UIImage(named: "introductionNoti.png")!
         self.introductionNotiView = UIImageView(image: introductionNotiImage)
         introductionNotiView.frame = CGRectMake(0, 0, introductionNotiImage.size.width/2, introductionNotiImage.size.height/2)
@@ -172,16 +215,54 @@ class LevelViewController: UIViewController {
         introductionNotiView.alpha = 0.0
         view.addSubview(introductionNotiView)
         
+        // animate introductionView1
         introductionView1.center = self.view.center
         UIView.animateWithDuration(0.0, delay: 0.0, options: .CurveEaseOut, animations:{
             self.introductionView1.alpha = 1.0
             }, completion: nil)
+
+        // animate 6 background noti
+        UIView.animateWithDuration(0.1,  delay: 0.0, // greenNoti appears
+            options: [],
+            animations: {
+                self.greenNotiView.alpha = 1.0
+            },
+            completion: {
+                (value: Bool ) in
+                UIView.animateWithDuration(0.1, delay: 0.06, // yellowNoti appears
+                    options: [] ,
+                    animations: {
+                        self.yellowNotiView.alpha = 1
+                    }, completion: {
+                        (value: Bool ) in
+                        UIView.animateWithDuration(0.1, delay: 0.12, // pinkNoti appears
+                            options: [] ,
+                            animations: {
+                                self.pinkNotiView.alpha = 1
+                            }, completion: {
+                                (value: Bool ) in
+                                UIView.animateWithDuration(0.1, delay: 0.16, // greyNoti appears
+                                    options: [] ,
+                                    animations: {
+                                        self.greyNotiView.alpha = 1
+                                    }, completion: {
+                                        (value: Bool ) in
+                                        UIView.animateWithDuration(0.1, delay: 0.18, // brownNoti appears
+                                            options: [] ,
+                                            animations: {
+                                                self.brownNotiView.alpha = 1
+                                            }, completion: {
+                                                (value: Bool ) in
+                                                UIView.animateWithDuration(0.1, delay: 0.22, // blueNoti appears
+                                                    options: [] ,
+                                                    animations: {
+                                                        self.blueNotiView.alpha = 1
+                                                    }, completion: {
+                                                        (value: Bool ) in
+                                                    })
+        } )  } )  } )  } )  } )
         
-        introductionView2.center = self.view.center
-        UIView.animateWithDuration(1.8, delay: 0.8, options: .CurveEaseOut, animations:{
-            self.introductionView2.alpha = 1.0
-            }, completion: nil)
-        
+        // animate where-do-i-go noti
         introductionNotiView.center = CGPointMake(self.view.frame.width/2 - introductionNotiView.frame.width/2 , self.view.frame.height/2)
         UIView.animateWithDuration(0.1,  delay: 1.8, // this got called first
             options: [],
@@ -211,14 +292,15 @@ class LevelViewController: UIViewController {
             goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         }
         goButton.backgroundColor = UIColor.clearColor()
-        goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView2.bounds.width, introductionView2.bounds.height/6)
+        goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView1.bounds.width, introductionView1.bounds.height/6)
         goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         goButton.userInteractionEnabled = true
-        introductionView2.addSubview(goButton)
+        introductionView1.addSubview(goButton)
         goButton.alpha = 0
         
         let bounds = goButton.bounds
         
+        // animate Ready! button
         UIView.animateWithDuration(0.0,  delay: 3.8, // this got called first
             options: [],
             animations: {
@@ -226,7 +308,7 @@ class LevelViewController: UIViewController {
             },
             completion: {  // then this got called
                 (value: Bool ) in
-                self.introductionView2.addSubview(goButton)
+                self.introductionView1.addSubview(goButton)
                 UIView.animateWithDuration(1.0, delay: 1.0, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: [], //.Repeat | .Autoreverse,
                     animations: {
                     goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
@@ -241,8 +323,13 @@ class LevelViewController: UIViewController {
     func goButtonPressed() {
         UIView.animateWithDuration(1.8, animations: { () -> Void in
             self.introductionView1.alpha = 0.0
-            self.introductionView2.alpha = 0.0
-            self.introductionNotiView.alpha = 0.0
+            self.greenNotiView.alpha = 0.0
+            self.yellowNotiView.alpha = 0.0
+            self.pinkNotiView.alpha = 0.0
+            self.greyNotiView.alpha = 0.0
+            self.brownNotiView.alpha = 0.0
+            self.blueNotiView.alpha = 0.0
+            self.introductionNotiView.alpha = 0.0 // should these be .removeFromSuperView to save memory
         })
     }
         

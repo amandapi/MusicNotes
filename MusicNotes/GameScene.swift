@@ -247,9 +247,7 @@ class GameScene: SKScene {
     
     func followRoamingPath() {
         let path = CGPathCreateMutable()
-        //CGPathAddArc(path!, nil, frame.width/2.0, frame.height*0.4, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
         CGPathAddArc(path, nil, frame.width/2.0, frame.height*0.5, frame.height*0.36, CGFloat(M_PI_2) , CGFloat(2*M_PI + M_PI_2) , false)
-        // CGPathAddArc(path, nil, x, y, r, startø , endø, clockwise?)
         let followArc = SKAction.followPath(path, asOffset: false, orientToPath: false, duration: 12.0)
         roamingNoti!.runAction(SKAction.repeatActionForever(followArc))
     }
