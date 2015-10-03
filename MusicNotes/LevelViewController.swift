@@ -164,8 +164,6 @@ class LevelViewController: UIViewController {
         self.greenNotiView = UIImageView(image: UIImage(named: "notiGreenU.png"))
         greenNotiView.frame = CGRectMake(self.view.frame.width * 0.09, self.view.center.y/3, self.view.frame.width/5, self.view.frame.height/5)
         greenNotiView.frame.size.width = view.frame.width * 0.1
-        print("greenNotiView: \(greenNotiView)")
-        print("self.view: \(self.view)")
         greenNotiView.contentMode = UIViewContentMode.ScaleAspectFit
         view.addSubview(greenNotiView)
         greenNotiView.alpha = 0.0

@@ -33,6 +33,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var returnButton: UIButton?  // for congratulations
     var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
+    var startButton: UIButton? // for scene
     
     var scoreStars1ImageView: UIImageView?
     var scoreStars2ImageView: UIImageView?
@@ -60,7 +61,6 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
              return
         }
 */
-        
     }
 
     @IBOutlet weak var playPause: UIButton!
@@ -162,6 +162,9 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         scene.updateClef(currentChallenge.clef)
         
         scene.gameSceneDelegate = self
+        
+        scene.startButton = self.startButton
+        addStartButton()
                 
         skView.presentScene(scene)
     }
@@ -264,11 +267,37 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         addTryAgainButton()
     }
     
+    func addStartButton() { // for scene
+        let startButton = UIButton(type: .System)
+        startButton.setTitle("Start!", forState: UIControlState.Normal)
+        startButton.setTitleColor(UIColor.yellowColor(), forState: .Normal)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            startButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            startButton.titleLabel!.font = UIFont(name: "Komika Display", size: 38)
+        }
+        startButton.backgroundColor = UIColor.clearColor()
+        startButton.frame = CGRectMake(view.frame.size.width/30, view.frame.size.height/1.38, view.bounds.width, view.bounds.height/50) // view.bounds.height/2
+        startButton.addTarget(self, action: "startButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        startButton.hidden = false
+        print("startButton1: \(startButton)")
+  //      startButton = scene.startButton!
+        view.addSubview(startButton)
+    }
+    
+    func startButtonPressed() {
+        print("startButtonPressed")
+    }
+    
     func addIGotItButton() {
         let returnButton = UIButton(type: .System)
         returnButton.setTitle("I got it!", forState: UIControlState.Normal)
         returnButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
-        returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+             returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+             returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+        }
         returnButton.backgroundColor = UIColor.clearColor()
         returnButton.frame = CGRectMake(0 , hintView!.bounds.height*3/4, hintView!.bounds.width, hintView!.bounds.height/6)
         returnButton.addTarget(self, action: "hintViewReturnButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
@@ -331,7 +360,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     func playRewardSong() {
-        let soundFilenames = ["rewardMozartSymphony40.wav" , "rewardProkofievPeter.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav" , "rewardChopinMazurkaE.wav" , "rewardVivaldiSpring.wav"]
+        let soundFilenames = ["rewardMozartSymphony40.wav" , "rewardProkofievPeter.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav" , "rewardChopinMazurkaE.wav" , "rewardVivaldiSpring.wav", "rewardBeethovenSym9.wav"]
         let randomIndex = Int(arc4random_uniform(UInt32(soundFilenames.count)))
         let selectedFilename = soundFilenames[randomIndex]
         // AVAudioPlayer play song

@@ -41,6 +41,7 @@ class GameScene: SKScene {
     var deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
     var deadCount = 0
     var startMsg = SKLabelNode()
+    var startButton: UIButton? //to replace startMsg = SKLabelNode()
     
     var challenge = NSArray()
     var instructionLabel = SKLabelNode(fontNamed: "Komika Display")
@@ -100,7 +101,7 @@ class GameScene: SKScene {
         addStaffLines()
         addNoti()
         addTrashcanAndTrashcanLid()
-        addStartMsg()
+        addStartMsg()  // now becomes a UIButton in gamesViewController
         setupCountLabels()
         setupTimerLabel()
         
@@ -116,6 +117,11 @@ class GameScene: SKScene {
             
             case .StartingLevel:
                 childNodeWithName("msgLabel")!.hidden = true
+                
+                self.startButton = UIButton()
+                print("startButton2: \(self.startButton)")
+                self.startButton!.hidden = true
+                
                 followRoamingPath()
                 setupInstructionLabel()
                 paused = false

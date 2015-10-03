@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A28DAB01BBF63A10077FD1B /* rewardBeethovenSym9.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A28DAAF1BBF63A10077FD1B /* rewardBeethovenSym9.wav */; settings = {ASSET_TAGS = (); }; };
 		0A2B3C211B279DAD005269BE /* Levels.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A2B3C201B279DAD005269BE /* Levels.plist */; };
 		0A41B6A01BA652C30019931F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A41B69F1BA652C30019931F /* Social.framework */; };
 		0A4C3B5B1BAC8AB400B4B97B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A4C3B5A1BAC8AB400B4B97B /* AVFoundation.framework */; };
@@ -106,6 +107,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A28DAAF1BBF63A10077FD1B /* rewardBeethovenSym9.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rewardBeethovenSym9.wav; sourceTree = "<group>"; };
 		0A2B3C201B279DAD005269BE /* Levels.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Levels.plist; sourceTree = "<group>"; };
 		0A41B69F1BA652C30019931F /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		0A4C3B5A1BAC8AB400B4B97B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -290,6 +292,7 @@
 				0A52B3021BB33338005356A3 /* soundA2.wav */,
 				0A52B3031BB33338005356A3 /* rewardBachBrandenburg3.wav */,
 				0A56FF961BB76A6E0063CC7E /* rewardChopinMazurkaE.wav */,
+				0A28DAAF1BBF63A10077FD1B /* rewardBeethovenSym9.wav */,
 				0A52B3051BB33338005356A3 /* rewardMozartSymphony40.wav */,
 				0A56FF991BB76A7C0063CC7E /* rewardProkofievPeter.wav */,
 				0A52B3071BB33338005356A3 /* rewardTchaikovskySugarplum.wav */,
@@ -535,6 +538,7 @@
 				0A6F26F51BB35FA90091D919 /* shareOnFacebook.png in Resources */,
 				0A52B30E1BB33338005356A3 /* soundG5.wav in Resources */,
 				0A5F78841B5AD18D00FF922B /* gamecenter.png in Resources */,
+				0A28DAB01BBF63A10077FD1B /* rewardBeethovenSym9.wav in Resources */,
 				0AD420291BA76295004616B8 /* hintContent.png in Resources */,
 				0AB9EF241BA641A9004B1967 /* introduction1.png in Resources */,
 				0AC83A881BB0A96C006EE344 /* play.png in Resources */,
