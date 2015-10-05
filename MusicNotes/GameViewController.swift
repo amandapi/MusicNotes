@@ -9,10 +9,10 @@
 import UIKit
 import SpriteKit
 import Social
-import MessageUI
 import AVFoundation
+import GameKit
 
-class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeViewControllerDelegate {
+class GameViewController: UIViewController, GameSceneDelegate {
     
     var scene: GameScene!
     var destinationNode = SKSpriteNode()
@@ -27,7 +27,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var deadCount: Int!
     
     var audioPlayer = AVAudioPlayer()
-    var fileNSURL = NSURL()  // today
+    var fileNSURL = NSURL()
     
     var hintView: UIImageView? // for hint
     var returnButton: UIButton?  // for congratulations
@@ -39,7 +39,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     var scoreStars2ImageView: UIImageView?
     var scoreStars3ImageView: UIImageView?
     var numStars: Int!
-    
+        
     var selectedSong: NSArray?
     
     var level: Level!
@@ -50,17 +50,11 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     @IBAction func stop(sender: UIButton) {
 
         self.navigationController?.popViewControllerAnimated(true)
-        
-//        if audioPlayer != nil {audioPlayer.stop()}  // make a do-try-catch block, if code is inside the catch block error will never be nil
-  //      audioPlayer.stop()
-/*      // how to make audioPlayer stop is reward song is playing
-        check only if audioPlayer != nil
-        if audioPlayer.playing == true { // or audioPlayer.rate != 0
-            audioPlayer.stop() // or audioPlayer.volume = 0.0
-        } else {
-             return
-        }
-*/
+        print("audioPlayer is \(audioPlayer)")
+//        if audioPlayer != 0 {
+            playRewardSong()  // it seems that audioPlayer needs something to play before it can .stop()
+            audioPlayer.stop()
+//        }
     }
 
     @IBOutlet weak var playPause: UIButton!
@@ -94,42 +88,45 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     }
     
     @IBAction func gameCenter(sender: UIButton) {
-        
+        let  localPlayer = GKLocalPlayer.localPlayer()
+//        let localPlayer = GKLocalPlayer.localPlayer()
+        localPlayer.authenticateHandler = {(viewController, error) -> Void in
+            
+            if (viewController != nil) {
+                self.presentViewController(viewController!, animated: true, completion: nil)
+            }
+            else {
+                print((GKLocalPlayer.localPlayer().authenticated))
+            }
+        }
     }
-    
+ 
     @IBAction func shareOnFacebook(sender: UIButton) {
-        let shareToFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-        shareToFacebook.setInitialText("I want to share this App called MusicNotes")
-        shareToFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
-        self.presentViewController(shareToFacebook, animated: true, completion: nil)
-    }
-    
-    @IBAction func shareOnEmail(sender: UIButton) {
-        // Check if Mail is available
-        if(MFMailComposeViewController.canSendMail()){
-            // Create the mail message
-            let mail = MFMailComposeViewController()
-            mail.mailComposeDelegate = self
-            mail.setSubject("Music Notes")
-            mail.setMessageBody("I want to share this App called MusicNotes", isHTML: false)
-            // Attach the image
-            let imageData = UIImagePNGRepresentation(UIImage(named: "MusicNotesAppIconSmall.png")!)
-            mail.addAttachmentData(imageData!, mimeType: "image/png", fileName: "Image")
-            self.presentViewController(mail, animated: true, completion: nil)
+        if SLComposeViewController.isAvailableForServiceType(SLServiceTypeFacebook) {
+            let shareOnFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+            shareOnFacebook.setInitialText("I want to share this App called MusicNotes") // new faceBook policy doesnot allow pre-set message
+            shareOnFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
+            self.presentViewController(shareOnFacebook, animated: true, completion: nil)
         } else {
-            // if mail not available. Show a warning
-            let alert = UIAlertController(title: "Email", message: "Email not available", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert = UIAlertController(title: "Accounts", message: "Please login to a Facebook account to share.", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+
+    @IBAction func shareOnTwitter(sender: UIButton) {
+        if SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
+            let shareOnTwitter : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
+            shareOnTwitter.setInitialText("I want to share this App called MusicNotes")
+            shareOnTwitter.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
+            self.presentViewController(shareOnTwitter, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Accounts", message: "Please login to a Twitter account to tweet.", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
         }
     }
     
-    // Required by interface MFMailComposeViewControllerDelegate
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        // Close the mail dialog
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-      
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -162,7 +159,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         scene.updateClef(currentChallenge.clef)
         
         scene.gameSceneDelegate = self
-        
+          
         scene.startButton = self.startButton
         addStartButton()
                 
@@ -313,7 +310,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     func addTryAgainButton() {
         let backButton = UIButton(type: .System)
         backButton.setTitle("Try again", forState: UIControlState.Normal)
-        backButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
+        backButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -357,6 +354,27 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         scene.timer!.invalidate()
         playRewardSong()
         addBackButton()
+        
+        // make a background using particles and to show text better
+        let textureManyStars = SKTexture(imageNamed: "particleManyStars")
+        let manyStars = SKEmitterNode()
+        manyStars.particleTexture = textureManyStars
+        manyStars.position = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2)
+        manyStars.particlePositionRange = CGVectorMake(self.view.frame.size.width*0.8, self.view.frame.size.height*0.8)
+        manyStars.particleBirthRate = 88
+        manyStars.numParticlesToEmit = 1680
+        manyStars.particleLifetime = 0.8
+        manyStars.particleLifetimeRange = 1.0
+        manyStars.particleSpeed = 20.0
+        manyStars.particleSpeedRange = 10.0
+        manyStars.particleAlpha = 0.75
+        manyStars.particleRotation = 3.0
+        manyStars.particleRotationRange = 1.0
+        manyStars.particleScale = 0.5
+        manyStars.particleScaleRange = 0.6
+        manyStars.particleScaleSpeed = 0.5
+        manyStars.emissionAngleRange = 360.0
+        scene.addChild(manyStars)
     }
     
     func playRewardSong() {
@@ -367,7 +385,7 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
         audioPlayer = AVAudioPlayer()
         let path = NSBundle.mainBundle().pathForResource(selectedFilename, ofType:nil)
         let fileURL = NSURL(fileURLWithPath: path!)
-               do {
+        do {
             try audioPlayer = AVAudioPlayer(contentsOfURL: fileURL, fileTypeHint: nil)
         } catch {
             print("error at audioPlayer")
@@ -407,11 +425,11 @@ class GameViewController: UIViewController, GameSceneDelegate, MFMailComposeView
     func addBackButton() { // after winning level
         let backButton = UIButton(type: .System)
         backButton.setTitle("More!", forState: UIControlState.Normal)
-        backButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        backButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display - Shadow", size: 128)
+            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 128)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display - Shadow", size: 68)
+            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         }
         //backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)

@@ -42,6 +42,7 @@ class GameScene: SKScene {
     var deadCount = 0
     var startMsg = SKLabelNode()
     var startButton: UIButton? //to replace startMsg = SKLabelNode()
+    //var startButton = UIButton()
     
     var challenge = NSArray()
     var instructionLabel = SKLabelNode(fontNamed: "Komika Display")
@@ -119,7 +120,7 @@ class GameScene: SKScene {
                 childNodeWithName("msgLabel")!.hidden = true
                 
                 self.startButton = UIButton()
-                print("startButton2: \(self.startButton)")
+                print("startButton2: \(self.startButton!)")
                 self.startButton!.hidden = true
                 
                 followRoamingPath()
@@ -511,7 +512,7 @@ class GameScene: SKScene {
     }
     
     func flashGameOver() {
-        let gameoverLabel = SKLabelNode(fontNamed: "Komika Display - Shadow")
+        let gameoverLabel = SKLabelNode(fontNamed: "Komika Display")
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"

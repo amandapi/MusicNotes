@@ -24,27 +24,19 @@ class LevelViewController: UIViewController {
     var blueNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var introductionNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
-    var starImage = UIImage(named: "starsOutline.png")
     var goButton: UIButton?
+    var levelButton = UIButton()
+//    var starImage = UIImage(named: "starsOutline.png")
     var starImageName: String!
     var starImageView: UIImageView?
-    var levelButton = UIButton()
     
     // could not put together a valid init method - does a viewController needs an init?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // add background
-        let backgroundImageView = UIImageView(image: UIImage(named: "introduction1.png"))
-        backgroundImageView.frame = view.frame
-        backgroundImageView.contentMode = .ScaleAspectFill
-        self.view.addSubview(backgroundImageView)
-        self.view.sendSubviewToBack(backgroundImageView)
-        
-        // add page title
+        addBackground()
         addChooseLevelLabel()
-        
+
         // add buttons
         //var levelButton = UIButton()
         let buttonWidth = self.view.frame.width / 5.8
@@ -62,7 +54,7 @@ class LevelViewController: UIViewController {
             // read numStars from defaults
             let level = levels.objectAtIndex(i-1) as! Level
             let numStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
-            
+
             if (numStars == 1) {
                 starImageName = "stars1.png"
             } else if (numStars == 2) {
@@ -72,14 +64,13 @@ class LevelViewController: UIViewController {
             } else {
                 starImageName = "starsOutline.png"
             }
+
             //how to refresh starImageView immediately, without having to re-open game?
             
             print("level \(i): \(level.keyForLevelScore())")
             print("numStars: \(numStars)")
             
             levelButton = UIButton(type: .Custom)
-            
-            let starImageView = UIImageView(image: UIImage(named: starImageName))
 
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
@@ -91,14 +82,10 @@ class LevelViewController: UIViewController {
             levelButton.setTitle("Level \(i)", forState: UIControlState.Normal)
             levelButton.tag = i
             
-            // add stars for all 9 levelButton
-            starImageView.frame = CGRectMake(levelButton.frame.origin.x - buttonWidth/18, levelButton.frame.origin.y + buttonHeight/1.6, buttonWidth*1.1, buttonHeight/2.3)
-            starImageView.tag = i
-            
-            // set background images
+            // set background images for each levelButton
             levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
             
-            // shadow for the 9 buttons
+            // set shadow for the 9 buttons
             levelButton.layer.shadowColor = UIColor.grayColor().CGColor;
             levelButton.layer.shadowOpacity = 0.8
             levelButton.layer.shadowRadius = 8
@@ -121,27 +108,49 @@ class LevelViewController: UIViewController {
             // set action target for each button
             levelButton.addTarget(self, action: "levelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             
+            // add stars for all 9 levelButton
+            let starImageView = UIImageView(image: UIImage(named: starImageName))
+            starImageView.frame = CGRectMake(levelButton.frame.origin.x - buttonWidth/18, levelButton.frame.origin.y + buttonHeight/1.6, buttonWidth*1.1, buttonHeight/2.3)
+            //starImageView.tag = i // useless
+            
             // add the 9 buttons and stars
             self.view.addSubview(levelButton)
             self.view.insertSubview(starImageView, aboveSubview: levelButton)
             
-            // add resetStarsButton for temporary use
-            let resetStarsButton = UIButton(type: .System)
-            resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
-            resetStarsButton.backgroundColor = UIColor.redColor()
-            resetStarsButton.setTitle("resetStars", forState: .Normal)
-            resetStarsButton.titleLabel?.adjustsFontSizeToFitWidth = true
-            resetStarsButton.addTarget(self, action: "resetStarsButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
-            self.view.addSubview(resetStarsButton)
-
+            addResetStarsButton() // may be temporarily
         }
         addIntroduction()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        print("viewWillAppear")
+//        let starImageView = UIImageView(image: UIImage(named: starImageName))
+//        self.view.insertSubview(starImageView, aboveSubview: levelButton)
+    }
     
+    func addBackground() {
+        let backgroundImageView = UIImageView(image: UIImage(named: "introduction1.png"))
+        backgroundImageView.frame = view.frame
+        backgroundImageView.contentMode = .ScaleAspectFill
+        self.view.addSubview(backgroundImageView)
+        self.view.sendSubviewToBack(backgroundImageView)
+    }
+    
+    func addResetStarsButton() {
+        // add resetStarsButton for temporary use
+        let resetStarsButton = UIButton(type: .System)
+        resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
+        resetStarsButton.backgroundColor = UIColor.redColor()
+        resetStarsButton.setTitle("resetStars", forState: .Normal)
+        resetStarsButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        resetStarsButton.addTarget(self, action: "resetStarsButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(resetStarsButton)
+    }
+
     func resetStarsButtonPressed() {
         print("keys.count: \(NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys.count)")
         print("keys: \(NSUserDefaults.standardUserDefaults())")
+        
         for key in NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys {
             NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
         }

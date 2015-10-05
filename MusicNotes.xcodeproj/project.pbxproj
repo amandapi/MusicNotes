@@ -41,7 +41,9 @@
 		0A52B31F1BB33338005356A3 /* soundC4.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A52B3011BB33338005356A3 /* soundC4.wav */; settings = {ASSET_TAGS = (); }; };
 		0A52B3201BB33338005356A3 /* soundA2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A52B3021BB33338005356A3 /* soundA2.wav */; settings = {ASSET_TAGS = (); }; };
 		0A52B3211BB33338005356A3 /* rewardBachBrandenburg3.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A52B3031BB33338005356A3 /* rewardBachBrandenburg3.wav */; settings = {ASSET_TAGS = (); }; };
+		0A532F6C1BC200B500343AF0 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A532F6B1BC200B500343AF0 /* GameKit.framework */; };
 		0A53C19A1BB7937F007ABFB1 /* starsOutline.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A53C1991BB7937F007ABFB1 /* starsOutline.png */; settings = {ASSET_TAGS = (); }; };
+		0A56F6BA1BC30E02004BDD2B /* shareOnTwitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A56F6B91BC30E02004BDD2B /* shareOnTwitter.png */; settings = {ASSET_TAGS = (); }; };
 		0A56FFA71BB76B780063CC7E /* stars2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A56FFA61BB76B780063CC7E /* stars2.png */; settings = {ASSET_TAGS = (); }; };
 		0A56FFA91BB76B810063CC7E /* stars3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A56FFA81BB76B810063CC7E /* stars3.png */; settings = {ASSET_TAGS = (); }; };
 		0A59646D1B5F022100CC86CC /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A59646C1B5F022100CC86CC /* Level.swift */; };
@@ -138,7 +140,9 @@
 		0A52B3031BB33338005356A3 /* rewardBachBrandenburg3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rewardBachBrandenburg3.wav; sourceTree = "<group>"; };
 		0A52B3051BB33338005356A3 /* rewardMozartSymphony40.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rewardMozartSymphony40.wav; sourceTree = "<group>"; };
 		0A52B3071BB33338005356A3 /* rewardTchaikovskySugarplum.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rewardTchaikovskySugarplum.wav; sourceTree = "<group>"; };
+		0A532F6B1BC200B500343AF0 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		0A53C1991BB7937F007ABFB1 /* starsOutline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = starsOutline.png; sourceTree = "<group>"; };
+		0A56F6B91BC30E02004BDD2B /* shareOnTwitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shareOnTwitter.png; sourceTree = "<group>"; };
 		0A56FF961BB76A6E0063CC7E /* rewardChopinMazurkaE.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rewardChopinMazurkaE.wav; sourceTree = "<group>"; };
 		0A56FF991BB76A7C0063CC7E /* rewardProkofievPeter.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rewardProkofievPeter.wav; sourceTree = "<group>"; };
 		0A56FF9B1BB76A7C0063CC7E /* rewardVivaldiSpring.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = rewardVivaldiSpring.wav; sourceTree = "<group>"; };
@@ -205,6 +209,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A532F6C1BC200B500343AF0 /* GameKit.framework in Frameworks */,
 				0A4C3B5B1BAC8AB400B4B97B /* AVFoundation.framework in Frameworks */,
 				0A41B6A01BA652C30019931F /* Social.framework in Frameworks */,
 			);
@@ -227,6 +232,7 @@
 				0AB9EF231BA641A9004B1967 /* introduction1.png */,
 				0A6EC20F1BB08B4C00055DA7 /* introductionNoti.png */,
 				0A6F26F61BB35FDE0091D919 /* shareOnEmail.png */,
+				0A56F6B91BC30E02004BDD2B /* shareOnTwitter.png */,
 				0A6F26F41BB35FA90091D919 /* shareOnFacebook.png */,
 				0AC83A891BB0A973006EE344 /* pause.png */,
 				0AC83A871BB0A96C006EE344 /* play.png */,
@@ -322,6 +328,7 @@
 		0A8EBD111B1BD2FA0075B37D = {
 			isa = PBXGroup;
 			children = (
+				0A532F6B1BC200B500343AF0 /* GameKit.framework */,
 				0A4C3B5A1BAC8AB400B4B97B /* AVFoundation.framework */,
 				0A41B69F1BA652C30019931F /* Social.framework */,
 				0A8EBD1C1B1BD2FA0075B37D /* MusicNotes */,
@@ -442,7 +449,7 @@
 						DevelopmentTeam = 9E27F94D9X;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -518,6 +525,7 @@
 				0A7285741B913C88006BB7C4 /* KMKDSPB_.ttf in Resources */,
 				0A52B30D1BB33338005356A3 /* soundG4.wav in Resources */,
 				0A52B3181BB33338005356A3 /* soundC5.wav in Resources */,
+				0A56F6BA1BC30E02004BDD2B /* shareOnTwitter.png in Resources */,
 				0ADA9E381BBDB4B0005A4DD4 /* notiBlueU.png in Resources */,
 				0A8CF4F61BA9DD7700C722BE /* scoreStars1.png in Resources */,
 				0A8CF4F41BA9DD7100C722BE /* scoreStars2.png in Resources */,

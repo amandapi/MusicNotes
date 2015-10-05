@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="IsU-3K-DEk">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="IsU-3K-DEk">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
@@ -77,9 +77,9 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="N8g-Tf-CNp" secondAttribute="height" multiplier="1:1" id="9VW-B4-KBs"/>
                                 </constraints>
-                                <state key="normal" image="shareOnEmail.png"/>
+                                <state key="normal" image="shareOnTwitter.png"/>
                                 <connections>
-                                    <action selector="shareOnEmail:" destination="BV1-FR-VrT" eventType="touchUpInside" id="P1p-tx-BZf"/>
+                                    <action selector="shareOnTwitter:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Bgd-ss-QOf"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FDF-O6-YQp">
@@ -160,8 +160,8 @@
         <image name="gamecenter.png" width="60" height="60"/>
         <image name="hint.png" width="57" height="57"/>
         <image name="pause.png" width="60" height="60"/>
-        <image name="shareOnEmail.png" width="60" height="60"/>
         <image name="shareOnFacebook.png" width="60" height="60"/>
+        <image name="shareOnTwitter.png" width="60" height="60"/>
         <image name="stop.png" width="60" height="60"/>
     </resources>
 </document>
