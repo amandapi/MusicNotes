@@ -12,6 +12,7 @@ import Foundation   // neccessary?
 import AVFoundation
 
 protocol GameSceneDelegate {
+    func levelDidBegin()
     func notiDidScore(didScore: Bool)
     func timesUpDelegateFunc()
 }
@@ -117,19 +118,7 @@ class GameScene: SKScene {
         switch gameState {
             
             case .StartingLevel:
-                childNodeWithName("msgLabel")!.hidden = true
-                
-                self.startButton = UIButton()
-                print("startButton2: \(self.startButton!)")
-                self.startButton!.hidden = true
-                
-                followRoamingPath()
-                setupInstructionLabel()
-                paused = false
-                startCountdown()
-        
-                gameState = .Playing
-        
+                startLevel()
             //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
             case .Playing:                
@@ -616,6 +605,21 @@ class GameScene: SKScene {
     
     func playSound(sound: String) {
         runAction(SKAction.playSoundFileNamed("\(sound).wav", waitForCompletion: false))
+    }
+    
+    func startLevel() {
+        childNodeWithName("msgLabel")!.hidden = true
+        
+        followRoamingPath()
+        setupInstructionLabel()
+        paused = false
+        startCountdown()
+        
+        gameState = .Playing
+        
+        if (gameSceneDelegate != nil) {
+            gameSceneDelegate!.levelDidBegin()
+        }
     }
 
 }

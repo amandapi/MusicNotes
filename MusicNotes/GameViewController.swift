@@ -33,6 +33,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var returnButton: UIButton?  // for congratulations
     var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
+    var isStarted: Bool = false
     var startButton: UIButton? // for scene
     
     var scoreStars1ImageView: UIImageView?
@@ -66,6 +67,11 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func setPaused(paused: Bool) {
         
         isPause = paused
+        
+        if (!isStarted) {
+            scene.startLevel()
+        }
+        
         if isPause {
             playPause.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
             if scene.timer != nil {
@@ -445,6 +451,11 @@ class GameViewController: UIViewController, GameSceneDelegate {
     
     func tryAgainButtonPressed() {  // after gameOver and after timesUp
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func levelDidBegin() {
+        isStarted = true
+        setPaused(false)
     }
     
  }
