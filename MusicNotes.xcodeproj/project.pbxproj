@@ -96,6 +96,7 @@
 		0ADA9E401BBDB523005A4DD4 /* notiPinkU.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ADA9E3F1BBDB523005A4DD4 /* notiPinkU.png */; settings = {ASSET_TAGS = (); }; };
 		0ADA9E421BBDB529005A4DD4 /* notiYellowU.png in Resources */ = {isa = PBXBuildFile; fileRef = 0ADA9E411BBDB529005A4DD4 /* notiYellowU.png */; settings = {ASSET_TAGS = (); }; };
 		0AF4D9EF1BA75426008A931D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AF4D9EE1BA75426008A931D /* Images.xcassets */; };
+		CC55368A1BC48E4D004C71AD /* LevelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5536891BC48E4D004C71AD /* LevelButton.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -202,6 +203,7 @@
 		0ADA9E3F1BBDB523005A4DD4 /* notiPinkU.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notiPinkU.png; sourceTree = "<group>"; };
 		0ADA9E411BBDB529005A4DD4 /* notiYellowU.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notiYellowU.png; sourceTree = "<group>"; };
 		0AF4D9EE1BA75426008A931D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Images/Images.xcassets; sourceTree = "<group>"; };
+		CC5536891BC48E4D004C71AD /* LevelButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -351,6 +353,7 @@
 			children = (
 				0A8EBD431B1BD3B40075B37D /* Main.storyboard */,
 				0A74175D1B261CAF00D17C83 /* LevelViewController.swift */,
+				CC5536891BC48E4D004C71AD /* LevelButton.swift */,
 				0A59646C1B5F022100CC86CC /* Level.swift */,
 				0A59646E1B5F063000CC86CC /* Challenge.swift */,
 				0A8EBD251B1BD2FA0075B37D /* GameViewController.swift */,
@@ -584,6 +587,7 @@
 				0A5EC1431B5C3E7D0007C734 /* Types.swift in Sources */,
 				0A59646F1B5F063000CC86CC /* Challenge.swift in Sources */,
 				0A8EBD261B1BD2FA0075B37D /* GameViewController.swift in Sources */,
+				CC55368A1BC48E4D004C71AD /* LevelButton.swift in Sources */,
 				0A8EBD201B1BD2FA0075B37D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

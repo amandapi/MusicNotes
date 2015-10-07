@@ -25,10 +25,7 @@ class LevelViewController: UIViewController {
     var introductionNotiView = UIView(frame: CGRectMake(0, 0, 100, 100))
     var backgroundImageView: UIView?
     var goButton: UIButton?
-    var levelButton = UIButton()
-//    var starImage = UIImage(named: "starsOutline.png")
-    var starImageName: String!
-    var starImageView: UIImageView?
+    var levelButtonArray: [LevelButton] = []
     
     // could not put together a valid init method - does a viewController needs an init?
 
@@ -51,26 +48,7 @@ class LevelViewController: UIViewController {
         
         for i in 1...levels.count {
             
-            // read numStars from defaults
-            let level = levels.objectAtIndex(i-1) as! Level
-            let numStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
-
-            if (numStars == 1) {
-                starImageName = "stars1.png"
-            } else if (numStars == 2) {
-                starImageName = "stars2.png"
-            } else if (numStars == 3) {
-                starImageName = "stars3.png"
-            } else {
-                starImageName = "starsOutline.png"
-            }
-
-            //how to refresh starImageView immediately, without having to re-open game?
-            
-            print("level \(i): \(level.keyForLevelScore())")
-            print("numStars: \(numStars)")
-            
-            levelButton = UIButton(type: .Custom)
+            let levelButton = LevelButton(type: .Custom)
 
             if i <= 3 {
                 levelButton.frame = CGRectMake(x5 + CGFloat(i)*dx - dx - dx , y5 - dy + gap*3, buttonWidth, buttonHeight)
@@ -108,14 +86,12 @@ class LevelViewController: UIViewController {
             // set action target for each button
             levelButton.addTarget(self, action: "levelButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             
-            // add stars for all 9 levelButton
-            let starImageView = UIImageView(image: UIImage(named: starImageName))
-            starImageView.frame = CGRectMake(levelButton.frame.origin.x - buttonWidth/18, levelButton.frame.origin.y + buttonHeight/1.6, buttonWidth*1.1, buttonHeight/2.3)
             //starImageView.tag = i // useless
             
             // add the 9 buttons and stars
             self.view.addSubview(levelButton)
-            self.view.insertSubview(starImageView, aboveSubview: levelButton)
+            
+            levelButtonArray.append(levelButton)
             
             addResetStarsButton() // may be temporarily
         }
@@ -123,9 +99,19 @@ class LevelViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         print("viewWillAppear")
-//        let starImageView = UIImageView(image: UIImage(named: starImageName))
-//        self.view.insertSubview(starImageView, aboveSubview: levelButton)
+        
+        let levels = getLevels()
+        
+        for i in 0..<levels.count {
+            // read numStars from defaults
+            let level = levels.objectAtIndex(i) as! Level
+            let numStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
+            let levelButton = levelButtonArray[i] as LevelButton!
+            
+            levelButton.setNumberOfStars(numStars)
+        }
     }
     
     func addBackground() {
