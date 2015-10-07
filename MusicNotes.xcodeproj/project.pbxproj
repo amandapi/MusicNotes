@@ -50,6 +50,7 @@
 		0A59646F1B5F063000CC86CC /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A59646E1B5F063000CC86CC /* Challenge.swift */; };
 		0A5EC1431B5C3E7D0007C734 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5EC1421B5C3E7D0007C734 /* Types.swift */; };
 		0A5F78841B5AD18D00FF922B /* gamecenter.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A5F78831B5AD18D00FF922B /* gamecenter.png */; };
+		0A61A7841BC56D4800003B5F /* LevelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A61A7831BC56D4800003B5F /* LevelButton.swift */; settings = {ASSET_TAGS = (); }; };
 		0A6A443B1BB0B43900EE3FE9 /* MusicNotesAppIconSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A6A443A1BB0B43900EE3FE9 /* MusicNotesAppIconSmall.png */; };
 		0A6EC2101BB08B4C00055DA7 /* introductionNoti.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A6EC20F1BB08B4C00055DA7 /* introductionNoti.png */; };
 		0A6F26F51BB35FA90091D919 /* shareOnFacebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A6F26F41BB35FA90091D919 /* shareOnFacebook.png */; settings = {ASSET_TAGS = (); }; };
@@ -152,6 +153,7 @@
 		0A59646E1B5F063000CC86CC /* Challenge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		0A5EC1421B5C3E7D0007C734 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		0A5F78831B5AD18D00FF922B /* gamecenter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gamecenter.png; sourceTree = "<group>"; };
+		0A61A7831BC56D4800003B5F /* LevelButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelButton.swift; sourceTree = "<group>"; };
 		0A6A443A1BB0B43900EE3FE9 /* MusicNotesAppIconSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MusicNotesAppIconSmall.png; sourceTree = "<group>"; };
 		0A6EC20F1BB08B4C00055DA7 /* introductionNoti.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = introductionNoti.png; sourceTree = "<group>"; };
 		0A6F26F41BB35FA90091D919 /* shareOnFacebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shareOnFacebook.png; sourceTree = "<group>"; };
@@ -350,13 +352,14 @@
 			isa = PBXGroup;
 			children = (
 				0A8EBD431B1BD3B40075B37D /* Main.storyboard */,
-				0A74175D1B261CAF00D17C83 /* LevelViewController.swift */,
-				0A59646C1B5F022100CC86CC /* Level.swift */,
-				0A59646E1B5F063000CC86CC /* Challenge.swift */,
 				0A8EBD251B1BD2FA0075B37D /* GameViewController.swift */,
 				0A8EBD231B1BD2FA0075B37D /* GameScene.swift */,
+				0A74175D1B261CAF00D17C83 /* LevelViewController.swift */,
 				0A8EBD451B1BD3E30075B37D /* MusicNotes.swift */,
+				0A59646C1B5F022100CC86CC /* Level.swift */,
+				0A59646E1B5F063000CC86CC /* Challenge.swift */,
 				0A5EC1421B5C3E7D0007C734 /* Types.swift */,
+				0A61A7831BC56D4800003B5F /* LevelButton.swift */,
 				0A2B3C201B279DAD005269BE /* Levels.plist */,
 				0AF4D9EE1BA75426008A931D /* Images.xcassets */,
 				0A52B2EA1BB332BE005356A3 /* Sounds */,
@@ -584,6 +587,7 @@
 				0A5EC1431B5C3E7D0007C734 /* Types.swift in Sources */,
 				0A59646F1B5F063000CC86CC /* Challenge.swift in Sources */,
 				0A8EBD261B1BD2FA0075B37D /* GameViewController.swift in Sources */,
+				0A61A7841BC56D4800003B5F /* LevelButton.swift in Sources */,
 				0A8EBD201B1BD2FA0075B37D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

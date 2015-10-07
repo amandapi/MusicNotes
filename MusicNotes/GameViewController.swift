@@ -33,7 +33,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var returnButton: UIButton?  // for congratulations
     var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
-    var startButton: UIButton? // for scene
+    var isStarted: Bool = false
     
     var scoreStars1ImageView: UIImageView?
     var scoreStars2ImageView: UIImageView?
@@ -51,10 +51,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
 
         self.navigationController?.popViewControllerAnimated(true)
         print("audioPlayer is \(audioPlayer)")
-//        if audioPlayer != 0 {
             playRewardSong()  // it seems that audioPlayer needs something to play before it can .stop()
             audioPlayer.stop()
-//        }
     }
 
     @IBOutlet weak var playPause: UIButton!
@@ -66,6 +64,11 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func setPaused(paused: Bool) {
         
         isPause = paused
+        
+        if (!isStarted) {
+            scene.startLevel()
+        }
+        
         if isPause {
             playPause.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
             if scene.timer != nil {
@@ -89,7 +92,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
     
     @IBAction func gameCenter(sender: UIButton) {
         let  localPlayer = GKLocalPlayer.localPlayer()
-//        let localPlayer = GKLocalPlayer.localPlayer()
         localPlayer.authenticateHandler = {(viewController, error) -> Void in
             
             if (viewController != nil) {
@@ -159,10 +161,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scene.updateClef(currentChallenge.clef)
         
         scene.gameSceneDelegate = self
-          
-        scene.startButton = self.startButton
-        addStartButton()
-                
+        
         skView.presentScene(scene)
     }
     
@@ -262,28 +261,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scene.instructionLabel.removeFromParent()
         scene.timer!.invalidate()
         addTryAgainButton()
-    }
-    
-    func addStartButton() { // for scene
-        let startButton = UIButton(type: .System)
-        startButton.setTitle("Start!", forState: UIControlState.Normal)
-        startButton.setTitleColor(UIColor.yellowColor(), forState: .Normal)
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            startButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
-        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            startButton.titleLabel!.font = UIFont(name: "Komika Display", size: 38)
-        }
-        startButton.backgroundColor = UIColor.clearColor()
-        startButton.frame = CGRectMake(view.frame.size.width/30, view.frame.size.height/1.38, view.bounds.width, view.bounds.height/50) // view.bounds.height/2
-        startButton.addTarget(self, action: "startButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
-        startButton.hidden = false
-        print("startButton1: \(startButton)")
-  //      startButton = scene.startButton!
-        view.addSubview(startButton)
-    }
-    
-    func startButtonPressed() {
-        print("startButtonPressed")
     }
     
     func addIGotItButton() {
@@ -419,7 +396,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         // save numStars to defaults
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setInteger(numStars, forKey: level.keyForLevelScore())
-        
+        defaults.synchronize()
     }
     
     func addBackButton() { // after winning level
@@ -431,7 +408,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
             backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         }
-        //backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
         backButton.center.x = view.center.x
         backButton.addTarget(self, action: "wonMoreButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
@@ -446,5 +422,10 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func tryAgainButtonPressed() {  // after gameOver and after timesUp
         self.navigationController?.popViewControllerAnimated(true)
     }
+    
+    func levelDidBegin() {
+        isStarted = true
+        setPaused(false)
+        }
     
  }

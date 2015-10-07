@@ -16,7 +16,6 @@ class MusicNotes: SKSpriteNode {
     var velocity = CGPoint(x: 0, y: 0)
     var textures: [SKTexture] = []
     
-   // init(imageNamed name: String) {
     init(imageNamed: String) {
         //create random noti's
         //var textures = [SKTexture]()

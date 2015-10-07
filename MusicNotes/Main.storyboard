@@ -97,7 +97,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="ZkF-ck-3wK" secondAttribute="height" multiplier="1:1" id="Xg0-hD-HeH"/>
                                 </constraints>
-                                <state key="normal" image="pause.png"/>
+                                <state key="normal" image="play.png"/>
                                 <connections>
                                     <action selector="playPause:" destination="BV1-FR-VrT" eventType="touchUpInside" id="4AC-7Z-SbT"/>
                                 </connections>
@@ -159,7 +159,7 @@
     <resources>
         <image name="gamecenter.png" width="60" height="60"/>
         <image name="hint.png" width="57" height="57"/>
-        <image name="pause.png" width="60" height="60"/>
+        <image name="play.png" width="60" height="60"/>
         <image name="shareOnFacebook.png" width="60" height="60"/>
         <image name="shareOnTwitter.png" width="60" height="60"/>
         <image name="stop.png" width="60" height="60"/>

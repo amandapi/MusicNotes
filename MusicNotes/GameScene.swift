@@ -12,6 +12,7 @@ import Foundation   // neccessary?
 import AVFoundation
 
 protocol GameSceneDelegate {
+    func levelDidBegin()
     func notiDidScore(didScore: Bool)
     func timesUpDelegateFunc()
 }
@@ -41,8 +42,6 @@ class GameScene: SKScene {
     var deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
     var deadCount = 0
     var startMsg = SKLabelNode()
-    var startButton: UIButton? //to replace startMsg = SKLabelNode()
-    //var startButton = UIButton()
     
     var challenge = NSArray()
     var instructionLabel = SKLabelNode(fontNamed: "Komika Display")
@@ -102,7 +101,7 @@ class GameScene: SKScene {
         addStaffLines()
         addNoti()
         addTrashcanAndTrashcanLid()
-        addStartMsg()  // now becomes a UIButton in gamesViewController
+        addStartMsg()
         setupCountLabels()
         setupTimerLabel()
         
@@ -117,19 +116,8 @@ class GameScene: SKScene {
         switch gameState {
             
             case .StartingLevel:
-                childNodeWithName("msgLabel")!.hidden = true
-                
-                self.startButton = UIButton()
-                print("startButton2: \(self.startButton!)")
-                self.startButton!.hidden = true
-                
-                followRoamingPath()
-                setupInstructionLabel()
-                paused = false
-                startCountdown()
-        
-                gameState = .Playing
-        
+                startLevel()
+  
             //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
             case .Playing:                
@@ -168,16 +156,9 @@ class GameScene: SKScene {
         let touch = touches.first
         let location = touch!.locationInNode(scene!)
         
-        // block newly added
         if let noti = movingNoti {
-              noti.position = location
+              noti.position = location // do not use noti.addMovingPoint(location)
         }
-       
-/*      // do not want to use wayPoints for dragging
-        if let noti = movingNoti {
-            noti.addMovingPoint(location)  // do not add moving point
-       }
-*/
     }
 
     //override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -232,8 +213,6 @@ class GameScene: SKScene {
                 self.gameSceneDelegate!.notiDidScore(didScore)
             }
         }
-                
-        //self.runAction(SKAction.sequence([SKAction.waitForDuration(1.8), SKAction.runBlock(self.addNoti), SKAction.runBlock(self.followRoamingPath)]))
     }
    
 /*    func destinationRect(destination: CGRect) -> CGRect {
@@ -282,16 +261,16 @@ class GameScene: SKScene {
             self.cf!.position = CGPoint(x: frame.width/5.2, y: frame.height/1.9) // y at L4.y
             self.cf!.setScale(frame.width/1880)
         }
-        self.insertChild(cf!, atIndex: 0) // self.addChild(self.cf!) works too
+        self.insertChild(cf!, atIndex: 0)
         clefRotating = self.cf!
     }
     
-    func updateBackground(background: String) { //func updateBackground() {
+    func updateBackground(background: String) {
         let bg = SKSpriteNode(imageNamed: "\(background).png")
         bg.anchorPoint = CGPoint(x: 0, y: 0)
         bg.size = self.frame.size
         bg.zPosition = -1
-        insertChild(bg, atIndex: 0)  //addChild(bg) works too
+        insertChild(bg, atIndex: 0)
     }
     
     func getSpriteNodeForString(name : String) -> SKSpriteNode {
@@ -314,7 +293,6 @@ class GameScene: SKScene {
     }
     
     func setupInstructionLabel() {
-        //var instructionLabel: SKLabelNode!
         instructionLabel.fontColor = SKColor.blackColor()
         instructionLabel.name = "instructionLabel"
         instructionLabel.alpha = 1
@@ -368,8 +346,7 @@ class GameScene: SKScene {
         timeLimit?--
         timerLabel.text = "Time: \(timeLimit!)"
         } else if timeLimit == 0 {
-            gameSceneDelegate!.timesUpDelegateFunc()  // get GameViewController to BACK one vc
-            // how to pause noti
+            gameSceneDelegate!.timesUpDelegateFunc()
         }
     }
 
@@ -387,7 +364,7 @@ class GameScene: SKScene {
         startMsg.name = "msgLabel"
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.blackColor()
-        startMsg.position = CGPoint(x: frame.width/2 , y: frame.height/1.38) // 1.58
+        startMsg.position = CGPoint(x: frame.width/2 , y: frame.height/1.38)
         startMsg.zPosition = 30
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             startMsg.fontSize = 88
@@ -399,7 +376,7 @@ class GameScene: SKScene {
 
     func addStaffLines() {
         let w = frame.width/2
-        let h = frame.height/1.9   //2.28
+        let h = frame.height/1.9
         let d = 68*frame.width/2300
         let yScale = frame.width/2300
         let xScale = frame.width/1680
@@ -483,7 +460,6 @@ class GameScene: SKScene {
     }
     
     func setupCountLabels() {
-        //var scoreLabel = SKLabelNode(fontNamed: "Komika Display")
         scoreLabel.fontColor = SKColor.redColor()
         scoreLabel.text = "Score: 0 / \(level.challengesArray.count)"
         scoreLabel.name = "scoreLabel"
@@ -496,7 +472,6 @@ class GameScene: SKScene {
         }
         addChild(scoreLabel)
         
-        //var deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
         deadCountLabel.fontColor = SKColor.redColor()
         deadCountLabel.text = "0"
         deadCountLabel.name = "deadCountLabel"
@@ -617,5 +592,19 @@ class GameScene: SKScene {
     func playSound(sound: String) {
         runAction(SKAction.playSoundFileNamed("\(sound).wav", waitForCompletion: false))
     }
+    
+    func startLevel() {
+        childNodeWithName("msgLabel")!.hidden = true
+        followRoamingPath()
+        setupInstructionLabel()
+        paused = false
+        startCountdown()
+   
+        gameState = .Playing
+         
+        if (gameSceneDelegate != nil) {
+            gameSceneDelegate!.levelDidBegin()
+            }
+        }
 
 }
