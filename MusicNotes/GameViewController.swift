@@ -29,11 +29,16 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var audioPlayer = AVAudioPlayer()
     var fileNSURL = NSURL()
     
+    var timer : NSTimer?
+    var timeLimit : Int?
+    var timerCount : Int?
+//    var timerRunning : Bool = false
+    
     var hintView: UIImageView? // for hint
     var returnButton: UIButton?  // for congratulations
     var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
-    var isStarted: Bool = false
+    var isStarted: Bool = false  // for playPauseButton
     
     var scoreStars1ImageView: UIImageView?
     var scoreStars2ImageView: UIImageView?
@@ -45,10 +50,10 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
+        timerCount = level.timeLimit
     }
 
     @IBAction func stop(sender: UIButton) {
-
         self.navigationController?.popViewControllerAnimated(true)
         print("audioPlayer is \(audioPlayer)")
             playRewardSong()  // it seems that audioPlayer needs something to play before it can .stop()
@@ -64,25 +69,26 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func setPaused(paused: Bool) {
         
         isPause = paused
-        
         if (!isStarted) {
             scene.startLevel()
-        }
-        
-        if isPause {
-            playPause.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
-            if scene.timer != nil {
-                scene.timer!.invalidate()
-            }
-            scene.instructionLabel.alpha = 0.38
-            scene.roamingNoti!.alpha = 0.38
-            scene.self.speed = 0
         } else {
-            playPause.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
-            scene.startCountdown()
-            scene.instructionLabel.alpha = 1.0
-            scene.roamingNoti!.alpha = 1.0
-            scene.self.speed = 1
+            if isPause {
+                playPause.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
+                scene.instructionLabel.alpha = 0.38
+                scene.roamingNoti!.alpha = 0.38
+                scene.self.speed = 0
+                if timer != nil  {
+                timer!.invalidate()
+                }
+            } else {
+                playPause.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
+                if (level.timeLimit > 0) {  // only for levels 7,8,9
+                    startCountdown()
+                }
+                scene.instructionLabel.alpha = 1.0
+                scene.roamingNoti!.alpha = 1.0
+                scene.self.speed = 1
+            }
         }
     }
     
@@ -212,12 +218,26 @@ class GameViewController: UIViewController, GameSceneDelegate {
         }
     }
     
-    func timesUpDelegateFunc() {  // when timesUp
+    func startCountdown() { // for countdown timer
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("tick"), userInfo: nil, repeats: true)
+    }
+    
+    func tick() {  // for countdown
+        if timerCount > 0 {
+            timerCount = timerCount! - 1
+            scene.timerLabel.text = "Countdown: \(timerCount!)"
+            print("\(timerCount!)")
+        } else {
+            timer!.invalidate()
+            timesUp()
+        }
+    }
+    
+    func timesUp() {  // when timesUp
         // add condition "if deadCount < 3"?
         flashTimesUp()
         scene.instructionLabel.alpha = 0.38
         scene.roamingNoti!.alpha = 0.38
-        scene.timer!.invalidate()
         scene.self.speed = 0
         addTryAgainButton()
     }
@@ -259,7 +279,9 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func gameOver() {
         scene.flashGameOver()
         scene.instructionLabel.removeFromParent()
-        scene.timer!.invalidate()
+        if timer != nil {
+            timer!.invalidate()
+        }
         addTryAgainButton()
     }
     
@@ -328,7 +350,9 @@ class GameViewController: UIViewController, GameSceneDelegate {
         UIView.animateWithDuration(2.0, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: .CurveLinear, animations: {
         congratulationsLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
             }, completion: nil)
-        scene.timer!.invalidate()
+        if timer != nil {
+            timer!.invalidate()
+        }
         playRewardSong()
         addBackButton()
         
@@ -426,6 +450,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func levelDidBegin() {
         isStarted = true
         setPaused(false)
-        }
+    }
     
  }

@@ -14,7 +14,6 @@ import AVFoundation
 protocol GameSceneDelegate {
     func levelDidBegin()
     func notiDidScore(didScore: Bool)
-    func timesUpDelegateFunc()
 }
 
 class GameScene: SKScene {
@@ -33,7 +32,6 @@ class GameScene: SKScene {
     var lastUpdateTime: NSTimeInterval = 0.0
     var dt: NSTimeInterval = 0.0
     var timerLabel: SKLabelNode!
-    var timer: NSTimer?
     var levelTimeLimit: Int?
     var timeLimit: Int!
     
@@ -171,7 +169,6 @@ class GameScene: SKScene {
         }
         
         // check intersaction
-        
         var didScore = false
         
         //if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) { // how much to relax destinationRect / scoringRect?
@@ -208,7 +205,6 @@ class GameScene: SKScene {
             die()
             deadCount++  // deadCount has been passed to GameViewController
             deadCountLabel.text = "\(deadCount)"
-
             if self.gameSceneDelegate != nil {
                 self.gameSceneDelegate!.notiDidScore(didScore)
             }
@@ -320,8 +316,8 @@ class GameScene: SKScene {
     
     func setupTimerLabel() {
         timerLabel = SKLabelNode(fontNamed: "Komika Display")
-        let levelTimeLimit = timeLimit
-        timerLabel.text = "Time: \(timeLimit!)"
+        levelTimeLimit = timeLimit
+        timerLabel.text = "Countdown: \(timeLimit!)"
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             timerLabel.fontSize = 38
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -330,23 +326,8 @@ class GameScene: SKScene {
         timerLabel.fontColor = SKColor.redColor()
         timerLabel.horizontalAlignmentMode = .Left
         timerLabel.position = CGPoint(x: frame.width/28 , y: frame.height*0.82)
-        timerLabel.zPosition = 30
-        if levelTimeLimit > 0 {
+        if timeLimit > 0 {  // label for levels 7,8,9 only
             addChild(timerLabel)
-        }
-    }
-
-    func startCountdown() { // for countdown timer
-        _ = timeLimit
-        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("tick:"), userInfo: nil, repeats: true)
-    }
-    
-    func tick(timer: NSTimer) {
-        if (timeLimit > 0) {
-        timeLimit?--
-        timerLabel.text = "Time: \(timeLimit!)"
-        } else if timeLimit == 0 {
-            gameSceneDelegate!.timesUpDelegateFunc()
         }
     }
 
@@ -365,7 +346,7 @@ class GameScene: SKScene {
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.blackColor()
         startMsg.position = CGPoint(x: frame.width/2 , y: frame.height/1.38)
-        startMsg.zPosition = 30
+//        startMsg.zPosition = 30
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             startMsg.fontSize = 88
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -491,7 +472,7 @@ class GameScene: SKScene {
         gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
         gameoverLabel.fontColor = SKColor.redColor()
         gameoverLabel.text = "Game Over"
-        gameoverLabel.zPosition = 4
+//        gameoverLabel.zPosition = 4
         gameoverLabel.alpha = 0
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             gameoverLabel.fontSize = 88
@@ -598,10 +579,7 @@ class GameScene: SKScene {
         followRoamingPath()
         setupInstructionLabel()
         paused = false
-        startCountdown()
-   
-        gameState = .Playing
-         
+        gameState = .Playing         
         if (gameSceneDelegate != nil) {
             gameSceneDelegate!.levelDidBegin()
             }
