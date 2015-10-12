@@ -10,15 +10,15 @@ import UIKit
 
 class LevelButton : UIButton {
     var starImageView: UIImageView?
+    var starImageName: String?
     
-    func setNumberOfStars(numStars: Int) {
-        let starImageName: String!
+    func setNumberOfStars(highNumStars: Int) {
     
-        if (numStars == 1) {
+        if (highNumStars == 1) {
             starImageName = "stars1.png"
-            } else if (numStars == 2) {
+            } else if (highNumStars == 2) {
             starImageName = "stars2.png"
-            } else if (numStars == 3) {
+            } else if (highNumStars == 3) {
             starImageName = "stars3.png"
             } else {
             starImageName = "starsOutline.png"
@@ -28,7 +28,7 @@ class LevelButton : UIButton {
             starImageView?.removeFromSuperview()
             }
         
-        starImageView = UIImageView(image: UIImage(named: starImageName))
+        starImageView = UIImageView(image: UIImage(named: starImageName!))
         
         let buttonHeight = self.frame.size.height
         let buttonWidth = self.frame.size.width

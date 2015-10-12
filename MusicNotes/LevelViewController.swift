@@ -27,6 +27,7 @@ class LevelViewController: UIViewController {
     var goButton: UIButton?
     var levelButtonArray : [LevelButton] = []
     var levelButton : UIButton?
+    var numStars: Int?
  
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,14 +100,16 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 0..<levels.count {
-            // read numStars from defaults
+            // read highNumStars from defaults
             let level = levels.objectAtIndex(i) as! Level
-            let numStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
+            let highNumStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
             let levelButton = levelButtonArray[i] as LevelButton!
             
-            levelButton.setNumberOfStars(numStars)
+            levelButton.setNumberOfStars(highNumStars)
+            print("highNumStarsLVC: \(highNumStars)")
             }
     }
+    
     
     func addBackground() {
         let backgroundImageView = UIImageView(image: UIImage(named: "introduction1.png"))
@@ -128,11 +131,13 @@ class LevelViewController: UIViewController {
     }
 
     func resetStarsButtonPressed() {
-        print("keys.count: \(NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys.count)")
-        print("keys: \(NSUserDefaults.standardUserDefaults())")        
+        print("keys.countLVC: \(NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys.count)")
+        print("keysLVC: \(NSUserDefaults.standardUserDefaults())")
         for key in NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys {
             NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
         }
+        numStars = 0
+        print("numStarsLVC: \(numStars!)")
         // how to refresh starImageView immediately, without having to re-open game?
         //self.view.reloadInputViews()
        // self.view.insertSubview(starImageView!, aboveSubview: levelButton)

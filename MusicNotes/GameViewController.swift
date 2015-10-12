@@ -32,7 +32,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var timer : NSTimer?
     var timeLimit : Int?
     var timerCount : Int?
-//    var timerRunning : Bool = false
     
     var hintView: UIImageView? // for hint
     var returnButton: UIButton?  // for congratulations
@@ -44,6 +43,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var scoreStars2ImageView: UIImageView?
     var scoreStars3ImageView: UIImageView?
     var numStars: Int!
+    var highNumStars = 0
         
     var selectedSong: NSArray?
     
@@ -405,21 +405,26 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scoreStars1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
         scoreStars2ImageView.frame = scoreStars1ImageView.frame
         scoreStars3ImageView.frame = scoreStars1ImageView.frame
- 
+        
+         // save highNumStars to defaults
+        let defaults = NSUserDefaults.standardUserDefaults()
+        var highNumStars = defaults.integerForKey(level.keyForLevelScore())
+        
         if (score == level.challengesArray.count) {
             view.addSubview(scoreStars3ImageView)
             numStars = 3
-        } else if (score <= level.challengesArray.count - 2) {
+        } else if (score == level.challengesArray.count - 1) {
+            view.addSubview(scoreStars2ImageView)
+            numStars = 2
+        } else if (score == level.challengesArray.count - 2) {
             view.addSubview(scoreStars1ImageView)
             numStars = 1
         } else {
-            view.addSubview(scoreStars2ImageView)
-            numStars = 2
+            numStars = 0
         }
-
-        // save numStars to defaults
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setInteger(numStars, forKey: level.keyForLevelScore())
+        highNumStars = max(numStars, highNumStars)
+        
+        defaults.setInteger(highNumStars, forKey: level.keyForLevelScore())
         defaults.synchronize()
     }
     
