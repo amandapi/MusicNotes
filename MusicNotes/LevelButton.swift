@@ -11,6 +11,7 @@ import UIKit
 class LevelButton : UIButton {
     var starImageView: UIImageView?
     var starImageName: String?
+    var lockView: UIImageView?
     
     func setNumberOfStars(highNumStars: Int) {
     
@@ -33,7 +34,17 @@ class LevelButton : UIButton {
         let buttonHeight = self.frame.size.height
         let buttonWidth = self.frame.size.width
         starImageView?.frame = CGRectMake(0 - buttonWidth*0.05, 0 + buttonHeight * 0.56, buttonWidth*1.1, buttonHeight/2.3)
-            
         self.addSubview(starImageView!)
-            }
     }
+    
+    func setLock() {
+        lockView = UIImageView(image: UIImage(named: "lock.png"))
+        
+        let buttonHeight = self.frame.size.height
+        let buttonWidth = self.frame.size.width
+        lockView?.frame = CGRectMake(buttonWidth*0.36, buttonHeight*0.18, buttonWidth*0.28, buttonHeight*0.28)
+        lockView!.contentMode = .ScaleAspectFill
+        self.addSubview(lockView!)
+    }
+    
+}

@@ -14,7 +14,7 @@ class LevelViewController: UIViewController {
 
     var currentLevel : Level?
     var levels: NSMutableArray?
-    var chooseLevelLabel : UILabel?
+    var selectLevelLabel : UILabel?
     var introductionView1 : UIView?
     var greenNotiView : UIView?
     var yellowNotiView : UIView?
@@ -28,11 +28,12 @@ class LevelViewController: UIViewController {
     var levelButtonArray : [LevelButton] = []
     var levelButton : UIButton?
     var numStars: Int?
+    var highNumStars: Int?
  
     override func viewDidLoad() {
         super.viewDidLoad()
         addBackground()
-        addChooseLevelLabel()
+        addSelectLevelLabel()
 
         // add buttons
         let buttonWidth = self.view.frame.width / 5.8
@@ -61,7 +62,7 @@ class LevelViewController: UIViewController {
             
             // set background images for each levelButton
             levelButton.setBackgroundImage(UIImage(named: "bg\(i).png"), forState: UIControlState.Normal)
-            
+          
             //set shadow
             levelButton.layer.shadowColor = UIColor.grayColor().CGColor;
             levelButton.layer.shadowOpacity = 0.8
@@ -89,13 +90,20 @@ class LevelViewController: UIViewController {
             self.view.addSubview(levelButton)
             levelButtonArray.append(levelButton)
         }
+        
+        // add lock
+        for i in 1..<levels.count {
+            let levelButton = levelButtonArray[i] as LevelButton!
+            levelButton.setLock()
+            levelButton.userInteractionEnabled = false
+        }
+        
         addResetStarsButton() // may be temporarily
         addIntroduction()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        print("viewWillAppear")
         
         let levels = getLevels()
         
@@ -104,12 +112,15 @@ class LevelViewController: UIViewController {
             let level = levels.objectAtIndex(i) as! Level
             let highNumStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
             let levelButton = levelButtonArray[i] as LevelButton!
-            
             levelButton.setNumberOfStars(highNumStars)
-            print("highNumStarsLVC: \(highNumStars)")
+            
+            // criteria to unlock
+            if (highNumStars > 0) {
+                levelButtonArray[i+1].userInteractionEnabled = true
+                levelButtonArray[i+1].lockView!.removeFromSuperview()
             }
+        }
     }
-    
     
     func addBackground() {
         let backgroundImageView = UIImageView(image: UIImage(named: "introduction1.png"))
@@ -119,8 +130,7 @@ class LevelViewController: UIViewController {
         self.view.sendSubviewToBack(backgroundImageView)
     }
     
-    func addResetStarsButton() {
-        // add resetStarsButton for temporary use
+    func addResetStarsButton() {  // temporary use
         let resetStarsButton = UIButton(type: .System)
         resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
         resetStarsButton.backgroundColor = UIColor.redColor()
@@ -130,17 +140,11 @@ class LevelViewController: UIViewController {
         self.view.addSubview(resetStarsButton)
     }
 
-    func resetStarsButtonPressed() {
-        print("keys.countLVC: \(NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys.count)")
-        print("keysLVC: \(NSUserDefaults.standardUserDefaults())")
+    func resetStarsButtonPressed() {  // temporary use
         for key in NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys {
             NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
         }
         numStars = 0
-        print("numStarsLVC: \(numStars!)")
-        // how to refresh starImageView immediately, without having to re-open game?
-        //self.view.reloadInputViews()
-       // self.view.insertSubview(starImageView!, aboveSubview: levelButton)
     }
     
     func addIntroduction() {
@@ -352,17 +356,17 @@ class LevelViewController: UIViewController {
         destinationViewController.setLevel(currentLevel!)
     }
     
-    func addChooseLevelLabel() {
-        let chooseLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.01 , self.view.frame.width/2.3, self.view.frame.height/8))
+    func addSelectLevelLabel() {
+        let selectLevelLabel = UILabel(frame: CGRectMake(self.view.frame.width/3.3 , self.view.frame.height*0.01 , self.view.frame.width/2.3, self.view.frame.height/8))
         
         self.view.frame.height/2.0
-        chooseLevelLabel.textAlignment = NSTextAlignment.Center
-        chooseLevelLabel.text = "Choose Your Level"
-        chooseLevelLabel.textColor = UIColor.blackColor()
-        chooseLevelLabel.font = UIFont(name: "Komika Display", size: 48)
-        chooseLevelLabel.adjustsFontSizeToFitWidth = true
-        chooseLevelLabel.backgroundColor = UIColor.clearColor()
-        self.view.addSubview(chooseLevelLabel)
+        selectLevelLabel.textAlignment = NSTextAlignment.Center
+        selectLevelLabel.text = "Select Level"
+        selectLevelLabel.textColor = UIColor.blackColor()
+        selectLevelLabel.font = UIFont(name: "Komika Display", size: 48)
+        selectLevelLabel.adjustsFontSizeToFitWidth = true
+        selectLevelLabel.backgroundColor = UIColor.clearColor()
+        self.view.addSubview(selectLevelLabel)
     }
     
     /*    required init(currentLevel: Level()) {

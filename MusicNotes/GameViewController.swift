@@ -55,9 +55,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
 
     @IBAction func stop(sender: UIButton) {
         self.navigationController?.popViewControllerAnimated(true)
-        print("audioPlayer is \(audioPlayer)")
-            playRewardSong()  // it seems that audioPlayer needs something to play before it can .stop()
-            audioPlayer.stop()
+        playRewardSong()  // it seems that audioPlayer needs something to play before it can .stop()
+        audioPlayer.stop()
     }
 
     @IBOutlet weak var playPause: UIButton!
@@ -226,7 +225,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         if timerCount > 0 {
             timerCount = timerCount! - 1
             scene.timerLabel.text = "Countdown: \(timerCount!)"
-            print("\(timerCount!)")
         } else {
             timer!.invalidate()
             timesUp()
