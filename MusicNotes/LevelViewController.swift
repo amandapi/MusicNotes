@@ -46,7 +46,7 @@ class LevelViewController: UIViewController {
         
         let levels = getLevels()
       
-        for i in 1...levels.count {
+        for i in 1...levels.count {  // count from 1 to 9
             
             let levelButton = LevelButton(type: .Custom)
             
@@ -91,7 +91,7 @@ class LevelViewController: UIViewController {
             levelButtonArray.append(levelButton)
         }
         
-        // add lock
+        // add lock from levels 2 to 9
         for i in 1..<levels.count {
             let levelButton = levelButtonArray[i] as LevelButton!
             levelButton.setLock()
@@ -108,16 +108,29 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         
         for i in 0..<levels.count {
+            
             // read highNumStars from defaults
             let level = levels.objectAtIndex(i) as! Level
             let highNumStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
             let levelButton = levelButtonArray[i] as LevelButton!
             levelButton.setNumberOfStars(highNumStars)
+            print("i1 is \(i)")
             
             // criteria to unlock
-            if (highNumStars > 0) {
-                levelButtonArray[i+1].userInteractionEnabled = true
-                levelButtonArray[i+1].lockView!.removeFromSuperview()
+            if (highNumStars > 0)  {
+                
+                switch i {
+                case 0..<(levels.count - 1):
+                    levelButtonArray[i+1].userInteractionEnabled = true
+                    levelButtonArray[i+1].lockView!.removeFromSuperview()
+                    print("i2 is \(i)")  //fatal error: Array index out of range
+                case (levels.count - 1):
+                    print("end whole game")
+                    //levelButtonArray[i+1] = levelButtonArray[0]
+                default:
+                    //viewDidLoad()
+                    print("default")
+                }
             }
         }
     }
@@ -296,7 +309,7 @@ class LevelViewController: UIViewController {
         let bounds = goButton.bounds
         
         // animate Ready! button
-        UIView.animateWithDuration(0.0,  delay: 3.8, // this got called first
+        UIView.animateWithDuration(0.0,  delay: 2.8, // this got called first
             options: [],
             animations: {
                 goButton.alpha = 1

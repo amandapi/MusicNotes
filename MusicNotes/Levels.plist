@@ -398,7 +398,7 @@
 			<key>background</key>
 			<string>bg7</string>
 			<key>timeLimit</key>
-			<integer>60</integer>
+			<integer>50</integer>
 			<key>challenges</key>
 			<dict>
 				<key>12</key>
@@ -491,7 +491,7 @@
 			<key>background</key>
 			<string>bg8</string>
 			<key>timeLimit</key>
-			<integer>60</integer>
+			<integer>50</integer>
 			<key>challenges</key>
 			<dict>
 				<key>12</key>
@@ -584,7 +584,7 @@
 			<key>background</key>
 			<string>bg9</string>
 			<key>timeLimit</key>
-			<integer>120</integer>
+			<integer>100</integer>
 			<key>challenges</key>
 			<dict>
 				<key>24</key>
