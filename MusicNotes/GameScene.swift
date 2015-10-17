@@ -35,7 +35,7 @@ class GameScene: SKScene {
     var levelTimeLimit: Int?
     var timeLimit: Int!
     
-    var scoreLabel = SKLabelNode(fontNamed: "Komika Display")
+    var scoreLabel = SKLabelNode(fontNamed: "Komika Display Tight")
     var score = 0
     var deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
     var deadCount = 0
@@ -108,7 +108,6 @@ class GameScene: SKScene {
         }
     }
     
- //   override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent?) {  // old syntax
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         switch gameState {
@@ -119,7 +118,6 @@ class GameScene: SKScene {
             //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
             case .Playing:                
-  //              let touch = touches.first as? UITouch  // old syntax
                 let touch = touches.first
                 let location = touch!.locationInNode(scene!)
                 let node = nodeAtPoint(location)
@@ -144,13 +142,11 @@ class GameScene: SKScene {
         }
     }
     
-    //override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
     
     if (draggingNoti == false ) {
             return
         }
-        //let touch = touches.first as? UITouch
         let touch = touches.first
         let location = touch!.locationInNode(scene!)
         
@@ -159,7 +155,6 @@ class GameScene: SKScene {
         }
     }
 
-    //override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         if (draggingNoti == false ) {
@@ -190,7 +185,7 @@ class GameScene: SKScene {
             }
             
             score++  // score has been passed to GameViewController
-            scoreLabel.text = "Score: \(score) / \(level.challengesArray.count)"
+            scoreLabel.text = "Score : \(score)/\(level.challengesArray.count)"
             didScore = true
  
             celebrate({
@@ -315,17 +310,17 @@ class GameScene: SKScene {
     }
     
     func setupTimerLabel() {
-        timerLabel = SKLabelNode(fontNamed: "Komika Display")
+        timerLabel = SKLabelNode(fontNamed: "Komika Display Tight")
         levelTimeLimit = timeLimit
-        timerLabel.text = "Countdown: \(timeLimit!)"
+        timerLabel.text = "Time : \(timeLimit!)"
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            timerLabel.fontSize = 38
+            timerLabel.fontSize = 46
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            timerLabel.fontSize = 18
+            timerLabel.fontSize = 26
         }
-        timerLabel.fontColor = SKColor.redColor()
+        timerLabel.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
         timerLabel.horizontalAlignmentMode = .Left
-        timerLabel.position = CGPoint(x: frame.width/28 , y: frame.height*0.82)
+        timerLabel.position = CGPoint(x: frame.width*0.023 , y: frame.height*0.82)
         if timeLimit > 0 {  // label for levels 7,8,9 only
             addChild(timerLabel)
         }
@@ -346,7 +341,6 @@ class GameScene: SKScene {
         startMsg.text = "Start!"
         startMsg.fontColor = SKColor.blackColor()
         startMsg.position = CGPoint(x: frame.width/2 , y: frame.height/1.38)
-//        startMsg.zPosition = 30
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             startMsg.fontSize = 88
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -441,19 +435,19 @@ class GameScene: SKScene {
     }
     
     func setupCountLabels() {
-        scoreLabel.fontColor = SKColor.redColor()
-        scoreLabel.text = "Score: 0 / \(level.challengesArray.count)"
+        scoreLabel.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
+        scoreLabel.text = "Score : 0/\(level.challengesArray.count)"
         scoreLabel.name = "scoreLabel"
         scoreLabel.horizontalAlignmentMode = .Left
-        scoreLabel.position = CGPoint(x: frame.width/28 , y: frame.height*9/10)
+        scoreLabel.position = CGPoint(x: frame.width*0.023 , y: frame.height*0.9)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            scoreLabel.fontSize = 38
+            scoreLabel.fontSize = 46
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            scoreLabel.fontSize = 18
+            scoreLabel.fontSize = 26
         }
         addChild(scoreLabel)
         
-        deadCountLabel.fontColor = SKColor.redColor()
+        deadCountLabel.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
         deadCountLabel.text = "0"
         deadCountLabel.name = "deadCountLabel"
         deadCountLabel.verticalAlignmentMode = .Center
@@ -469,17 +463,16 @@ class GameScene: SKScene {
     
     func flashGameOver() {
         let gameoverLabel = SKLabelNode(fontNamed: "Komika Display")
-        gameoverLabel.position = CGPoint(x: frame.width/2 , y: frame.height/1.42)
-        gameoverLabel.fontColor = SKColor.redColor()
+        gameoverLabel.position = CGPoint(x: frame.width*0.5 , y: frame.height*0.56)
+        gameoverLabel.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
         gameoverLabel.text = "Game Over"
-//        gameoverLabel.zPosition = 4
         gameoverLabel.alpha = 0
+        gameoverLabel.zPosition = 10
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            gameoverLabel.fontSize = 88
+            gameoverLabel.fontSize = 128
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            gameoverLabel.fontSize = 38
+            gameoverLabel.fontSize = 68
         }
-
         // animate label
         let fadeinAction = SKAction.fadeInWithDuration(0.5)
         let fadeoutAction = SKAction.fadeOutWithDuration(0.5)

@@ -18,7 +18,6 @@ class MusicNotes: SKSpriteNode {
     
     init(imageNamed: String) {
         //create random noti's
-        //var textures = [SKTexture]()
         textures.append(SKTexture(imageNamed: "notiPinkU.png"))
         textures.append(SKTexture(imageNamed: "notiBlueU.png"))
         textures.append(SKTexture(imageNamed: "notiGreenU.png"))
@@ -28,7 +27,6 @@ class MusicNotes: SKSpriteNode {
         textures.append(SKTexture(imageNamed: "notiBrownU.png"))
         let rand = Int(arc4random_uniform(UInt32(textures.count)))
         let texture = textures[rand] as SKTexture
-//        _ = textures[rand] as SKTexture
         super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
     }
     

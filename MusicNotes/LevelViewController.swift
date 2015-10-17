@@ -114,16 +114,13 @@ class LevelViewController: UIViewController {
             let highNumStars = NSUserDefaults.standardUserDefaults().integerForKey(level.keyForLevelScore())
             let levelButton = levelButtonArray[i] as LevelButton!
             levelButton.setNumberOfStars(highNumStars)
-            print("i1 is \(i)")
             
             // criteria to unlock
             if (highNumStars > 0)  {
-                
                 switch i {
                 case 0..<(levels.count - 1):
                     levelButtonArray[i+1].userInteractionEnabled = true
                     levelButtonArray[i+1].lockView!.removeFromSuperview()
-                    print("i2 is \(i)")  //fatal error: Array index out of range
                 case (levels.count - 1):
                     print("end whole game")
                     //levelButtonArray[i+1] = levelButtonArray[0]
@@ -219,10 +216,10 @@ class LevelViewController: UIViewController {
         introductionNotiView!.frame = CGRectMake(0, 0, introductionNotiImage.size.width/2, introductionNotiImage.size.height/2)
         introductionNotiView!.frame.size.width = view.frame.width * 0.38
         introductionNotiView!.contentMode = UIViewContentMode.ScaleAspectFit
-        introductionNotiView!.userInteractionEnabled = true
         introductionNotiView!.alpha = 0.0
         view.addSubview(introductionNotiView!)
-        
+        introductionNotiView!.userInteractionEnabled = false  // yes, it's false, not true
+
         // animate introductionView1
         introductionView1!.center = self.view.center
         UIView.animateWithDuration(0.0, delay: 0.0, options: .CurveEaseOut, animations:{
@@ -272,15 +269,15 @@ class LevelViewController: UIViewController {
         
         // animate where-do-i-go noti
         introductionNotiView!.center = CGPointMake(self.view.frame.width/2 - introductionNotiView!.frame.width/2 , self.view.frame.height/2)
+
         UIView.animateWithDuration(0.1,  delay: 1.8, // this got called first
-            options: [],
+            options: [.AllowUserInteraction],  // howcome this is useless?
             animations: {
                 self.introductionNotiView!.alpha = 1.0
             },
             completion: {  // then this got called
                 (value: Bool ) in
                 UIView.animateWithDuration(2.8, delay: 0.0,
-                  //  options: UIViewAnimationOptions.Repeat | .CurveEaseInOut | .Autoreverse ,
                     options: [.Repeat, .CurveEaseInOut, .Autoreverse] ,
                     animations: {
                         self.introductionNotiView!.layer.position.x += self.view.frame.width/5
@@ -292,42 +289,35 @@ class LevelViewController: UIViewController {
         
         // create "Ready!" button in introductionView
         let goButton = UIButton(type: .System)
+        goButton.frame = CGRectMake(0 , self.view.frame.height*0.1 , introductionView1!.bounds.width, introductionView1!.bounds.height*0.8)
         goButton.setTitle("Ready!", forState: UIControlState.Normal)
-        goButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+        goButton.contentVerticalAlignment = .Bottom
+        goButton.setTitleColor(UIColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0), forState: .Normal)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 128)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
             goButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         }
         goButton.backgroundColor = UIColor.clearColor()
-        goButton.frame = CGRectMake(0 , self.view.frame.height/1.38 , introductionView1!.bounds.width, introductionView1!.bounds.height/6)
         goButton.addTarget(self, action: "goButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         goButton.userInteractionEnabled = true
         introductionView1!.addSubview(goButton)
         goButton.alpha = 0
-        
-        let bounds = goButton.bounds
-        
-        // animate Ready! button
-        UIView.animateWithDuration(0.0,  delay: 2.8, // this got called first
-            options: [],
+
+        // animate button
+        goButton.transform = CGAffineTransformMakeScale(0.1, 0.1)
+        UIView.animateWithDuration(2.0,
+            delay: 3.2,
+            usingSpringWithDamping: 0.2,
+            initialSpringVelocity: 3.8,
+            options: UIViewAnimationOptions.AllowUserInteraction,
             animations: {
                 goButton.alpha = 1
-            },
-            completion: {  // then this got called
-                (value: Bool ) in
-                self.introductionView1!.addSubview(goButton)
-                UIView.animateWithDuration(1.0, delay: 1.0, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options: [], //.Repeat | .Autoreverse,
-                    animations: {
-                    goButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
-                    goButton.enabled = true
-                    }, completion: {
-                        (value: Bool ) in
-                    }
-                )
-        } )
+                goButton.transform = CGAffineTransformIdentity
+            }, completion: nil)
+        
     }
-    
+        
     func goButtonPressed() {
         UIView.animateWithDuration(1.8, animations: { () -> Void in
             self.introductionView1!.alpha = 0.0
@@ -376,7 +366,11 @@ class LevelViewController: UIViewController {
         selectLevelLabel.textAlignment = NSTextAlignment.Center
         selectLevelLabel.text = "Select Level"
         selectLevelLabel.textColor = UIColor.blackColor()
-        selectLevelLabel.font = UIFont(name: "Komika Display", size: 48)
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            selectLevelLabel.font = UIFont(name: "Komika Display", size: 78)
+        } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            selectLevelLabel.font = UIFont(name: "Komika Display", size: 48)
+        }
         selectLevelLabel.adjustsFontSizeToFitWidth = true
         selectLevelLabel.backgroundColor = UIColor.clearColor()
         self.view.addSubview(selectLevelLabel)

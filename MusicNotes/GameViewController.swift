@@ -25,7 +25,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var score: Int!
     var congratulationsLabel: UILabel?
     var deadCount: Int!
-    
+    var timesUpLabel: UILabel?
+
     var audioPlayer = AVAudioPlayer()
     var fileNSURL = NSURL()
     
@@ -34,8 +35,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var timerCount : Int?
     
     var hintView: UIImageView? // for hint
-    var returnButton: UIButton?  // for congratulations
-    var backButton: UIButton?  // for gameOver
+//    var returnButton: UIButton?  // for congratulations
+//    var backButton: UIButton?  // for gameOver
     var isPause: Bool = false // for playPauseButton
     var isStarted: Bool = false  // for playPauseButton
     
@@ -224,14 +225,14 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func tick() {  // for countdown
         if timerCount > 0 {
             timerCount = timerCount! - 1
-            scene.timerLabel.text = "Countdown: \(timerCount!)"
+            scene.timerLabel.text = "Time : \(timerCount!)"
         } else {
             timer!.invalidate()
             timesUp()
         }
     }
     
-    func timesUp() {  // when timesUp
+    func timesUp() {
         // add condition "if deadCount < 3"?
         flashTimesUp()
         scene.instructionLabel.alpha = 0.38
@@ -240,22 +241,24 @@ class GameViewController: UIViewController, GameSceneDelegate {
         addTryAgainButton()
     }
  
-    func flashTimesUp() {  // moved from gameScene to here
-        let timesUpLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
+    func flashTimesUp() {
+        let timesUpLabel = UILabel(frame: CGRectMake(self.view.frame.size.width*0.2 , self.view.frame.size.height*0.26 , self.view.frame.size.width, self.view.frame.size.height*0.2))
         timesUpLabel.textAlignment = NSTextAlignment.Center
-        timesUpLabel.numberOfLines = 0
-        timesUpLabel.text = "Time's Up!"
-        timesUpLabel.textColor = UIColor.redColor()
+        timesUpLabel.text = "Time's Up"
+        timesUpLabel.alpha = 1.0
+        timesUpLabel.textColor = UIColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            timesUpLabel.font = UIFont(name: "Komika Display", size: 88)
+            timesUpLabel.font = UIFont(name: "Komika Display", size: 128)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            timesUpLabel.font = UIFont(name: "Komika Display", size: 38)
+            timesUpLabel.font = UIFont(name: "Komika Display", size: 68)
         }
         timesUpLabel.sizeToFit()
         self.view.addSubview(timesUpLabel)
         // animate label
-        UIView.animateWithDuration(2.0, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: .CurveLinear, animations: {
-            timesUpLabel.center = CGPoint(x: self.view.frame.size.width/2, y:self.view.frame.size.height/4.3 )
+        timesUpLabel.alpha = 0
+        UIView.animateWithDuration(0.38, delay: 0, options: [UIViewAnimationOptions.Autoreverse, UIViewAnimationOptions.Repeat], animations:
+            {UIView.setAnimationRepeatCount(2)
+            timesUpLabel.alpha = 1
             }, completion: nil)
     }
     
@@ -296,7 +299,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         returnButton.frame = CGRectMake(0 , hintView!.bounds.height*3/4, hintView!.bounds.width, hintView!.bounds.height/6)
         returnButton.addTarget(self, action: "hintViewReturnButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
         hintView!.addSubview(returnButton)
-        
         // animate hintView
         hintView!.center = self.view.center
         UIView.animateWithDuration(1.8, delay: 0.0, options: .CurveEaseOut, animations:{
@@ -305,25 +307,25 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
     func addTryAgainButton() {
-        let backButton = UIButton(type: .System)
-        backButton.setTitle("Try again", forState: UIControlState.Normal)
-        backButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+        let tryAgainButton = UIButton(type: .System)
+        tryAgainButton.setTitle("Try again", forState: UIControlState.Normal)
+        tryAgainButton.setTitleColor(UIColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0), forState: .Normal)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+            tryAgainButton.titleLabel!.font = UIFont(name: "Komika Display", size: 128)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 38)
+            tryAgainButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         }
-        backButton.backgroundColor = UIColor.clearColor()
-        backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
-        backButton.center.x = view.center.x
-        backButton.addTarget(self, action: "tryAgainButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
-        view.addSubview(backButton)
-        
+        tryAgainButton.contentVerticalAlignment = .Center
+        tryAgainButton.frame = CGRectMake(view.frame.size.width*0.5 , self.view.frame.size.height*0.3, view.bounds.width, view.bounds.height*0.58)
+        tryAgainButton.backgroundColor = UIColor.clearColor()
+        tryAgainButton.center.x = view.center.x
+        tryAgainButton.addTarget(self, action: "tryAgainButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(tryAgainButton)
         // animate button
-        let bounds = backButton.bounds
-        UIView.animateWithDuration(2.0, delay: 1.5, usingSpringWithDamping: 0.08, initialSpringVelocity: 13, options:[], animations: {
-            backButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y - 80, width: bounds.size.width, height: bounds.size.height + 100)
-            backButton.enabled = true
+        let bounds = tryAgainButton.bounds
+        UIView.animateWithDuration(2.0, delay: 2.3, usingSpringWithDamping: 0.28, initialSpringVelocity: 3.8, options:[], animations: {
+            tryAgainButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y + 600, width: bounds.size.width, height: bounds.size.height)
+            tryAgainButton.enabled = true
             }, completion: nil)        
     }
     
@@ -332,15 +334,15 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
     func congratulations() {
-        let congratulationsLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height/6 , self.view.frame.size.width/1.2, self.view.frame.size.width/10))
+        let congratulationsLabel = UILabel(frame: CGRectMake(800 , self.view.frame.size.height*0.167 , self.view.frame.size.width*0.83, self.view.frame.size.width*0.1))
         congratulationsLabel.textAlignment = NSTextAlignment.Center
         congratulationsLabel.numberOfLines = 0
         congratulationsLabel.text = "Congratulations! \n You scored \(score) out of \(level.challengesArray.count)"
         congratulationsLabel.textColor = UIColor.redColor()
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            congratulationsLabel.font = UIFont(name: "Komika Display", size: 68)
+            congratulationsLabel.font = UIFont(name: "Komika Display Tight", size: 78)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            congratulationsLabel.font = UIFont(name: "Komika Display", size: 38)
+            congratulationsLabel.font = UIFont(name: "Komika Display Tight", size: 38)
         }
         congratulationsLabel.sizeToFit()
         self.view.addSubview(congratulationsLabel)
@@ -352,7 +354,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
             timer!.invalidate()
         }
         playRewardSong()
-        addBackButton()
+        addNextButton()
         
         // make a background using particles and to show text better
         let textureManyStars = SKTexture(imageNamed: "particleManyStars")
@@ -400,7 +402,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scoreStars1ImageView.contentMode = .ScaleAspectFit
         scoreStars2ImageView.contentMode = .ScaleAspectFit
         scoreStars3ImageView.contentMode = .ScaleAspectFit
-        scoreStars1ImageView.frame = CGRect(x: self.view.frame.size.width/4, y:self.view.frame.size.height/3, width: self.view.frame.size.width/2, height: self.view.frame.size.height/5)
+        scoreStars1ImageView.frame = CGRect(x: self.view.frame.size.width*0.25, y:self.view.frame.size.height*0.38, width: self.view.frame.size.width*0.5, height: self.view.frame.size.height*0.2)
         scoreStars2ImageView.frame = scoreStars1ImageView.frame
         scoreStars3ImageView.frame = scoreStars1ImageView.frame
         
@@ -426,22 +428,30 @@ class GameViewController: UIViewController, GameSceneDelegate {
         defaults.synchronize()
     }
     
-    func addBackButton() { // after winning level
-        let backButton = UIButton(type: .System)
-        backButton.setTitle("More!", forState: UIControlState.Normal)
-        backButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+    func addNextButton() {
+        let nextButton = UIButton(type: .System)
+        nextButton.setTitle("Next", forState: UIControlState.Normal)
+        nextButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 128)
+            nextButton.titleLabel!.font = UIFont(name: "Komika Display", size: 128)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            backButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+            nextButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         }
-        backButton.frame = CGRectMake(view.frame.size.width/2 , view.frame.size.height/2, view.bounds.width, view.bounds.height/6)
-        backButton.center.x = view.center.x
-        backButton.addTarget(self, action: "wonMoreButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
-        view.addSubview(backButton)
+        nextButton.contentVerticalAlignment = .Center
+        nextButton.frame = CGRectMake(view.frame.size.width*0.5 , self.view.frame.size.height*0.4, view.bounds.width, view.bounds.height*0.58)
+        nextButton.center.x = view.center.x
+        nextButton.backgroundColor = UIColor.clearColor()
+        nextButton.addTarget(self, action: "nextButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(nextButton)
+        // animate button
+        let bounds = nextButton.bounds
+        UIView.animateWithDuration(2.0, delay: 2.3, usingSpringWithDamping: 0.28, initialSpringVelocity: 3.8, options:[], animations: {
+            nextButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y + 600, width: bounds.size.width, height: bounds.size.height)
+            nextButton.enabled = true
+            }, completion: nil)
     }
     
-    func wonMoreButtonPressed() { // after winning level
+    func nextButtonPressed() { // after winning level
         audioPlayer.stop()
         self.navigationController?.popViewControllerAnimated(true)
     }

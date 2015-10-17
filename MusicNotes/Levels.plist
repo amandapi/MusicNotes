@@ -64,57 +64,6 @@
 			<dict>
 				<key>6</key>
 				<array>
-					<string>G on a Line</string>
-					<string>L1</string>
-					<string>soundG2</string>
-					<string>clefBass</string>
-				</array>
-				<key>5</key>
-				<array>
-					<string>B on a Line</string>
-					<string>L2</string>
-					<string>soundB2</string>
-					<string>clefBass</string>
-				</array>
-				<key>4</key>
-				<array>
-					<string>D on a Line</string>
-					<string>L3</string>
-					<string>soundD3</string>
-					<string>clefBass</string>
-				</array>
-				<key>3</key>
-				<array>
-					<string>F on a Line</string>
-					<string>L4</string>
-					<string>soundF3</string>
-					<string>clefBass</string>
-				</array>
-				<key>2</key>
-				<array>
-					<string>A on a Line</string>
-					<string>L5</string>
-					<string>soundA3</string>
-					<string>clefBass</string>
-				</array>
-				<key>1</key>
-				<array>
-					<string>C on a Line</string>
-					<string>L6</string>
-					<string>soundC4</string>
-					<string>clefBass</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>background</key>
-			<string>bg3</string>
-			<key>timeLimit</key>
-			<integer>-10</integer>
-			<key>challenges</key>
-			<dict>
-				<key>6</key>
-				<array>
 					<string>F on a Line</string>
 					<string>L5</string>
 					<string>soundF5</string>
@@ -159,7 +108,7 @@
 		</dict>
 		<dict>
 			<key>background</key>
-			<string>bg4</string>
+			<string>bg3</string>
 			<key>timeLimit</key>
 			<integer>-10</integer>
 			<key>challenges</key>
@@ -204,6 +153,57 @@
 					<string>F in a Space</string>
 					<string>S0</string>
 					<string>soundF2</string>
+					<string>clefBass</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>background</key>
+			<string>bg4</string>
+			<key>timeLimit</key>
+			<integer>-10</integer>
+			<key>challenges</key>
+			<dict>
+				<key>6</key>
+				<array>
+					<string>G on a Line</string>
+					<string>L1</string>
+					<string>soundG2</string>
+					<string>clefBass</string>
+				</array>
+				<key>5</key>
+				<array>
+					<string>B on a Line</string>
+					<string>L2</string>
+					<string>soundB2</string>
+					<string>clefBass</string>
+				</array>
+				<key>4</key>
+				<array>
+					<string>D on a Line</string>
+					<string>L3</string>
+					<string>soundD3</string>
+					<string>clefBass</string>
+				</array>
+				<key>3</key>
+				<array>
+					<string>F on a Line</string>
+					<string>L4</string>
+					<string>soundF3</string>
+					<string>clefBass</string>
+				</array>
+				<key>2</key>
+				<array>
+					<string>A on a Line</string>
+					<string>L5</string>
+					<string>soundA3</string>
+					<string>clefBass</string>
+				</array>
+				<key>1</key>
+				<array>
+					<string>C on a Line</string>
+					<string>L6</string>
+					<string>soundC4</string>
 					<string>clefBass</string>
 				</array>
 			</dict>
@@ -398,7 +398,7 @@
 			<key>background</key>
 			<string>bg7</string>
 			<key>timeLimit</key>
-			<integer>50</integer>
+			<integer>5</integer>
 			<key>challenges</key>
 			<dict>
 				<key>12</key>
