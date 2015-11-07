@@ -56,9 +56,9 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="1vx-ea-1L8" secondAttribute="height" multiplier="1:1" id="sEj-8w-cVw"/>
                                 </constraints>
-                                <state key="normal" image="gamecenter.png"/>
+                                <state key="normal" image="camera.png"/>
                                 <connections>
-                                    <action selector="gameCenter:" destination="BV1-FR-VrT" eventType="touchUpInside" id="OwM-EL-ZjH"/>
+                                    <action selector="camera:" destination="BV1-FR-VrT" eventType="touchUpInside" id="TQm-at-lXf"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r69-YQ-kem">
@@ -157,7 +157,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="gamecenter.png" width="60" height="60"/>
+        <image name="camera.png" width="60" height="60"/>
         <image name="hint.png" width="57" height="57"/>
         <image name="play.png" width="60" height="60"/>
         <image name="shareOnFacebook.png" width="60" height="60"/>

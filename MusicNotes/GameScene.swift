@@ -26,7 +26,7 @@ class GameScene: SKScene {
     var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
-    var scoringNoti: MusicNotes?
+    //var scoringNoti: MusicNotes?
     var scoringNotiArray = [SKSpriteNode]()
     
     var lastUpdateTime: NSTimeInterval = 0.0
@@ -312,7 +312,7 @@ class GameScene: SKScene {
     func setupTimerLabel() {
         timerLabel = SKLabelNode(fontNamed: "Komika Display Tight")
         levelTimeLimit = timeLimit
-        timerLabel.text = "Time : \(timeLimit!)"
+        timerLabel.text = "Timeleft : \(timeLimit!)"
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             timerLabel.fontSize = 46
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {

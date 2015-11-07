@@ -217,99 +217,6 @@
 			<dict>
 				<key>12</key>
 				<array>
-					<string>C on a Line</string>
-					<string>L6</string>
-					<string>soundC4</string>
-					<string>clefBass</string>
-				</array>
-				<key>11</key>
-				<array>
-					<string>A on a Line</string>
-					<string>L5</string>
-					<string>soundA3</string>
-					<string>clefBass</string>
-				</array>
-				<key>10</key>
-				<array>
-					<string>F on a Line</string>
-					<string>L4</string>
-					<string>soundF3</string>
-					<string>clefBass</string>
-				</array>
-				<key>9</key>
-				<array>
-					<string>D on a Line</string>
-					<string>L3</string>
-					<string>soundD3</string>
-					<string>clefBass</string>
-				</array>
-				<key>8</key>
-				<array>
-					<string>B on a Line</string>
-					<string>L2</string>
-					<string>soundB2</string>
-					<string>clefBass</string>
-				</array>
-				<key>7</key>
-				<array>
-					<string>G on a Line</string>
-					<string>L1</string>
-					<string>soundG2</string>
-					<string>clefBass</string>
-				</array>
-				<key>6</key>
-				<array>
-					<string>B in a Space</string>
-					<string>S5</string>
-					<string>soundB3</string>
-					<string>clefBass</string>
-				</array>
-				<key>5</key>
-				<array>
-					<string>G in a Space</string>
-					<string>S4</string>
-					<string>soundG3</string>
-					<string>clefBass</string>
-				</array>
-				<key>4</key>
-				<array>
-					<string>E in a Space</string>
-					<string>S3</string>
-					<string>soundE3</string>
-					<string>clefBass</string>
-				</array>
-				<key>3</key>
-				<array>
-					<string>C in a Space</string>
-					<string>S2</string>
-					<string>soundC3</string>
-					<string>clefBass</string>
-				</array>
-				<key>2</key>
-				<array>
-					<string>A in a Space</string>
-					<string>S1</string>
-					<string>soundA2</string>
-					<string>clefBass</string>
-				</array>
-				<key>1</key>
-				<array>
-					<string>F in a Space</string>
-					<string>S0</string>
-					<string>soundF2</string>
-					<string>clefBass</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>background</key>
-			<string>bg6</string>
-			<key>timeLimit</key>
-			<integer>-10</integer>
-			<key>challenges</key>
-			<dict>
-				<key>12</key>
-				<array>
 					<string>F on a Line</string>
 					<string>L5</string>
 					<string>soundF5</string>
@@ -396,9 +303,9 @@
 		</dict>
 		<dict>
 			<key>background</key>
-			<string>bg7</string>
+			<string>bg6</string>
 			<key>timeLimit</key>
-			<integer>5</integer>
+			<integer>-10</integer>
 			<key>challenges</key>
 			<dict>
 				<key>12</key>
@@ -489,7 +396,7 @@
 		</dict>
 		<dict>
 			<key>background</key>
-			<string>bg8</string>
+			<string>bg7</string>
 			<key>timeLimit</key>
 			<integer>50</integer>
 			<key>challenges</key>
@@ -577,6 +484,99 @@
 					<string>S0</string>
 					<string>soundD4</string>
 					<string>clefTreble</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>background</key>
+			<string>bg8</string>
+			<key>timeLimit</key>
+			<integer>50</integer>
+			<key>challenges</key>
+			<dict>
+				<key>12</key>
+				<array>
+					<string>C on a Line</string>
+					<string>L6</string>
+					<string>soundC4</string>
+					<string>clefBass</string>
+				</array>
+				<key>11</key>
+				<array>
+					<string>A on a Line</string>
+					<string>L5</string>
+					<string>soundA3</string>
+					<string>clefBass</string>
+				</array>
+				<key>10</key>
+				<array>
+					<string>F on a Line</string>
+					<string>L4</string>
+					<string>soundF3</string>
+					<string>clefBass</string>
+				</array>
+				<key>9</key>
+				<array>
+					<string>D on a Line</string>
+					<string>L3</string>
+					<string>soundD3</string>
+					<string>clefBass</string>
+				</array>
+				<key>8</key>
+				<array>
+					<string>B on a Line</string>
+					<string>L2</string>
+					<string>soundB2</string>
+					<string>clefBass</string>
+				</array>
+				<key>7</key>
+				<array>
+					<string>G on a Line</string>
+					<string>L1</string>
+					<string>soundG2</string>
+					<string>clefBass</string>
+				</array>
+				<key>6</key>
+				<array>
+					<string>B in a Space</string>
+					<string>S5</string>
+					<string>soundB3</string>
+					<string>clefBass</string>
+				</array>
+				<key>5</key>
+				<array>
+					<string>G in a Space</string>
+					<string>S4</string>
+					<string>soundG3</string>
+					<string>clefBass</string>
+				</array>
+				<key>4</key>
+				<array>
+					<string>E in a Space</string>
+					<string>S3</string>
+					<string>soundE3</string>
+					<string>clefBass</string>
+				</array>
+				<key>3</key>
+				<array>
+					<string>C in a Space</string>
+					<string>S2</string>
+					<string>soundC3</string>
+					<string>clefBass</string>
+				</array>
+				<key>2</key>
+				<array>
+					<string>A in a Space</string>
+					<string>S1</string>
+					<string>soundA2</string>
+					<string>clefBass</string>
+				</array>
+				<key>1</key>
+				<array>
+					<string>F in a Space</string>
+					<string>S0</string>
+					<string>soundF2</string>
+					<string>clefBass</string>
 				</array>
 			</dict>
 		</dict>

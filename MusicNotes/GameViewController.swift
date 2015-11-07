@@ -10,7 +10,7 @@ import UIKit
 import SpriteKit
 import Social
 import AVFoundation
-import GameKit
+//import GameKit
 
 class GameViewController: UIViewController, GameSceneDelegate {
     
@@ -18,8 +18,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var destinationNode = SKSpriteNode()
     var challengesArray: [NSArray] = []
     var currentChallengeIndex: Int = 0
-    var instruction: String!
-    var destination: String!
+    //var instruction: String!
+    //var destination: String!
     var sound: String!
     var clef: String!
     var score: Int!
@@ -37,6 +37,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     var hintView: UIImageView? // for hint
 //    var returnButton: UIButton?  // for congratulations
 //    var backButton: UIButton?  // for gameOver
+    var centerPlayButton: UIButton?
     var isPause: Bool = false // for playPauseButton
     var isStarted: Bool = false  // for playPauseButton
     
@@ -56,6 +57,9 @@ class GameViewController: UIViewController, GameSceneDelegate {
 
     @IBAction func stop(sender: UIButton) {
         self.navigationController?.popViewControllerAnimated(true)
+        if timer != nil  {
+            timer!.invalidate()
+        }
         playRewardSong()  // it seems that audioPlayer needs something to play before it can .stop()
         audioPlayer.stop()
     }
@@ -67,46 +71,58 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
     func setPaused(paused: Bool) {
-        
+ 
         isPause = paused
         if (!isStarted) {
             scene.startLevel()
         } else {
             if isPause {
-                playPause.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
-                scene.instructionLabel.alpha = 0.38
-                scene.roamingNoti!.alpha = 0.38
+                playPause.setImage(UIImage(named: "play.png"), forState: UIControlState.Normal)
+                scene.instructionLabel.hidden = true  // so no cheating
+                scene.roamingNoti!.hidden = true // so no cheating
+                showPlayCenterButton()
                 scene.self.speed = 0
                 if timer != nil  {
                 timer!.invalidate()
                 }
             } else {
-                playPause.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
+                playPause.setImage(UIImage(named: "pause.png"), forState: UIControlState.Normal)
                 if (level.timeLimit > 0) {  // only for levels 7,8,9
                     startCountdown()
                 }
-                scene.instructionLabel.alpha = 1.0
-                scene.roamingNoti!.alpha = 1.0
+                scene.instructionLabel.hidden = false
+                scene.roamingNoti!.hidden = false
+                if centerPlayButton != nil {
+                    centerPlayButton!.removeFromSuperview()
+                }
                 scene.self.speed = 1
             }
         }
+    }
+    
+    func showPlayCenterButton() {
+        let image = UIImage(named: "playCenter.png")?.imageWithRenderingMode(.AlwaysOriginal)
+        centerPlayButton = UIButton(type: UIButtonType.Custom)
+        centerPlayButton!.setImage(image, forState: .Normal)
+        centerPlayButton!.frame = CGRectMake(0, 0, view.bounds.height*0.8, view.bounds.height*0.8)
+        centerPlayButton!.center = CGPoint(x: view.bounds.width*0.5, y: view.bounds.height*0.5)
+        centerPlayButton!.alpha = 0.5
+        centerPlayButton!.addTarget(self, action: "centerPlayButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view?.addSubview(centerPlayButton!)
+    }
+    
+    func centerPlayButtonPressed() {
+        setPaused(!isPause)
     }
     
     @IBAction func hint(sender: UIButton) {
         showHint()
     }
     
-    @IBAction func gameCenter(sender: UIButton) {
-        let  localPlayer = GKLocalPlayer.localPlayer()
-        localPlayer.authenticateHandler = {(viewController, error) -> Void in
-            
-            if (viewController != nil) {
-                self.presentViewController(viewController!, animated: true, completion: nil)
-            }
-            else {
-                print((GKLocalPlayer.localPlayer().authenticated))
-            }
-        }
+    @IBAction func camera(sender: UIButton) {
+        scene.playSound("shutter")
+        let screenshot = self.view?.pb_takeSnapshot()
+        UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
     }
  
     @IBAction func shareOnFacebook(sender: UIButton) {
@@ -225,7 +241,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func tick() {  // for countdown
         if timerCount > 0 {
             timerCount = timerCount! - 1
-            scene.timerLabel.text = "Time : \(timerCount!)"
+            scene.timerLabel.text = "Timeleft : \(timerCount!)"
+            scene.playSound("tick")
         } else {
             timer!.invalidate()
             timesUp()
@@ -338,7 +355,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         congratulationsLabel.textAlignment = NSTextAlignment.Center
         congratulationsLabel.numberOfLines = 0
         congratulationsLabel.text = "Congratulations! \n You scored \(score) out of \(level.challengesArray.count)"
-        congratulationsLabel.textColor = UIColor.redColor()
+        congratulationsLabel.textColor = UIColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             congratulationsLabel.font = UIFont(name: "Komika Display Tight", size: 78)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -431,7 +448,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     func addNextButton() {
         let nextButton = UIButton(type: .System)
         nextButton.setTitle("Next", forState: UIControlState.Normal)
-        nextButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+        nextButton.setTitleColor(UIColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0), forState: .Normal)        
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             nextButton.titleLabel!.font = UIFont(name: "Komika Display", size: 128)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
@@ -445,7 +462,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         view.addSubview(nextButton)
         // animate button
         let bounds = nextButton.bounds
-        UIView.animateWithDuration(2.0, delay: 2.3, usingSpringWithDamping: 0.28, initialSpringVelocity: 3.8, options:[], animations: {
+        UIView.animateWithDuration(2.0, delay: 6.3, usingSpringWithDamping: 0.28, initialSpringVelocity: 3.8, options:[], animations: {
             nextButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y + 600, width: bounds.size.width, height: bounds.size.height)
             nextButton.enabled = true
             }, completion: nil)
@@ -466,3 +483,14 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
  }
+
+
+extension UIView { // for camera button
+    func pb_takeSnapshot() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.mainScreen().scale)
+        drawViewHierarchyInRect(self.bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+}
