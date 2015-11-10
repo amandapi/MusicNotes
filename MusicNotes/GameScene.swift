@@ -7,8 +7,6 @@
 //
 
 import SpriteKit
-import UIKit  // neccessary?
-import Foundation   // neccessary?
 import AVFoundation
 
 protocol GameSceneDelegate {
@@ -19,47 +17,36 @@ protocol GameSceneDelegate {
 class GameScene: SKScene {
     
     var gameSceneDelegate: GameSceneDelegate?
-    
     var level: Level!
     
-    var noti = MusicNotes(imageNamed: String())
+    var noti: SKSpriteNode?
     var roamingNoti: MusicNotes?
     var draggingNoti: Bool = false
     var movingNoti: MusicNotes?
-    //var scoringNoti: MusicNotes?
     var scoringNotiArray = [SKSpriteNode]()
     
-    var lastUpdateTime: NSTimeInterval = 0.0
     var dt: NSTimeInterval = 0.0
+    
     var timerLabel: SKLabelNode!
-    var levelTimeLimit: Int?
     var timeLimit: Int!
-    
-    var scoreLabel = SKLabelNode(fontNamed: "Komika Display Tight")
+    var scoreLabel: SKLabelNode?
     var score = 0
-    var deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
+    var deadCountLabel: SKLabelNode?
     var deadCount = 0
+    
     var startMsg = SKLabelNode()
-    
-    var challenge = NSArray()
     var instructionLabel = SKLabelNode(fontNamed: "Komika Display")
-    var instruction: String?
-    var destination: String?
-    var destinationNode = SKSpriteNode()
-    var sound = String()
-    var clef = String()
+    var destinationNode: SKSpriteNode?
     
-    var background = SKSpriteNode()
-    
-    var clefTreble = SKSpriteNode()
-    var clefBass = SKSpriteNode()
+    var sound: String?
+    var clef: String?
     var cf: SKSpriteNode?
-    var clefRotating = SKSpriteNode()
+    var clefRotating: SKSpriteNode?
     var playPause: UIButton?
     
     var gameState = GameState.StartingLevel
     
-    // these are the "destinations" defined by sizes of "staffLines"
+    // these are the "destinations" defined by the property of each staff/Line/Space
     let L0 = SKSpriteNode(imageNamed: "L0") // middle C with clefTreble
     let L0leger = SKSpriteNode(imageNamed: "Lleger") // leger line for middle C
     let S0 = SKSpriteNode(imageNamed: "S0")
@@ -76,8 +63,8 @@ class GameScene: SKScene {
     let L6 = SKSpriteNode(imageNamed: "L6")  // middle C with clefBass
     let L6leger = SKSpriteNode(imageNamed: "Lleger") // leger line for middle C
     
-    let trashcan = SKSpriteNode(imageNamed: "trashcan")
-    let trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
+    var trashcan: SKSpriteNode?
+    var trashcanLid: SKSpriteNode?
     
     required init(coder aDecoder: NSCoder) {
         fatalError("NSCoding not supported")
@@ -91,7 +78,7 @@ class GameScene: SKScene {
         gameSceneDelegate = delegate
     }
 
-    func setLevel(level: Level) { // This block will be called by GameViewController's scene.setLevel(level) before skView.presentScene
+    func setLevel(level: Level) { // This block is called by GameViewController's scene.setLevel(level) before skView.presentScene
         self.level = level
     }
     
@@ -128,7 +115,6 @@ class GameScene: SKScene {
                     
                     draggingNoti = true
                     let noti = node as! MusicNotes
-        //            noti.addMovingPoint(location)  // do not want to use wayPoints for dragging
                   
                     movingNoti = noti
                     // animate noti at pick up
@@ -151,7 +137,7 @@ class GameScene: SKScene {
         let location = touch!.locationInNode(scene!)
         
         if let noti = movingNoti {
-              noti.position = location // do not use noti.addMovingPoint(location)
+              noti.position = location
         }
     }
 
@@ -165,12 +151,9 @@ class GameScene: SKScene {
         
         // check intersaction
         var didScore = false
-        
-        //if CGRectIntersectsRect(destinationRect(destinationNode.frame), roamingNoti!.scoringRect()) { // how much to relax destinationRect / scoringRect?
-        if CGRectIntersectsRect((destinationNode.frame), roamingNoti!.scoringRect()) {
+        if CGRectIntersectsRect((destinationNode!.frame), roamingNoti!.scoringRect()) {
             
-            movingNoti?.position.y = destinationNode.position.y
-           
+            movingNoti?.position.y = destinationNode!.position.y
             scoringNotiArray.append(movingNoti!)
             
             // add leger for Middle C
@@ -185,7 +168,7 @@ class GameScene: SKScene {
             }
             
             score++  // score has been passed to GameViewController
-            scoreLabel.text = "Score : \(score)/\(level.challengesArray.count)"
+            scoreLabel!.text = "Score : \(score)/\(level.challengesArray.count)"
             didScore = true
  
             celebrate({
@@ -199,24 +182,19 @@ class GameScene: SKScene {
         } else {
             die()
             deadCount++  // deadCount has been passed to GameViewController
-            deadCountLabel.text = "\(deadCount)"
+            deadCountLabel!.text = "\(deadCount)"
             if self.gameSceneDelegate != nil {
                 self.gameSceneDelegate!.notiDidScore(didScore)
             }
         }
     }
-   
-/*    func destinationRect(destination: CGRect) -> CGRect {
-        return CGRectMake(destination.origin.x, destination.origin.y + destination.size.height/4, destination.size.width, destination.size.height/2)
-    }
-*/
     
     func addNoti() {
         let noti = MusicNotes(imageNamed: String())
         noti.name = "noti"
         noti.setScale(S5.yScale * 0.9)
         roamingNoti = noti
-        noti.anchorPoint = CGPointMake(0.38, 0.28)  // should this line be here or in MusicNotes?
+        noti.anchorPoint = CGPointMake(0.38, 0.28)
         noti.zPosition = 3
         noti.position = CGPoint(x: frame.width/2, y: frame.height*0.86)
         addChild(noti)
@@ -305,13 +283,11 @@ class GameScene: SKScene {
     }
     
     func updateTimeLimit(timeLimit: Int) {
-        _ = timeLimit
         self.timeLimit = timeLimit
     }
     
     func setupTimerLabel() {
         timerLabel = SKLabelNode(fontNamed: "Komika Display Tight")
-        levelTimeLimit = timeLimit
         timerLabel.text = "Timeleft : \(timeLimit!)"
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
             timerLabel.fontSize = 46
@@ -327,6 +303,7 @@ class GameScene: SKScene {
     }
 
      override func update(currentTime: CFTimeInterval) {     // for movingNoti
+        var lastUpdateTime: NSTimeInterval = 0.0
         dt = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
         enumerateChildNodesWithName("noti", usingBlock: {node, stop in
@@ -422,43 +399,47 @@ class GameScene: SKScene {
     }
 
     func addTrashcanAndTrashcanLid() {
-        trashcan.position = CGPoint(x: frame.width - frame.width*0.12 , y: 0)
-        trashcan.anchorPoint = CGPointMake(0.5, 0)
-        trashcan.setScale(frame.width/900)
-        trashcan.zPosition = 10
-        self.addChild(trashcan)
-        trashcanLid.position = CGPoint(x: frame.width - frame.width*0.095 + trashcanLid.frame.width/10 , y: trashcan.frame.height - trashcan.frame.height/4)
-        trashcanLid.setScale(frame.width/900)
-        trashcanLid.anchorPoint = CGPointMake(1, 0)
-        trashcanLid.zPosition = 10
-        addChild(trashcanLid)
+        trashcan = SKSpriteNode(imageNamed: "trashcan")
+        trashcan!.position = CGPoint(x: frame.width - frame.width*0.12 , y: 0)
+        trashcan!.anchorPoint = CGPointMake(0.5, 0)
+        trashcan!.setScale(frame.width/800)
+        trashcan!.zPosition = 6
+        self.addChild(trashcan!)
+        trashcanLid = SKSpriteNode(imageNamed: "trashcanLid")
+        trashcanLid!.position = CGPoint(x: frame.width - frame.width*0.09 + trashcanLid!.frame.width*0.1 , y: trashcan!.frame.height - trashcan!.frame.height*0.25)
+        trashcanLid!.setScale(frame.width/800)
+        trashcanLid!.anchorPoint = CGPointMake(1, 0)
+        trashcanLid!.zPosition = 6
+        addChild(trashcanLid!)
     }
     
     func setupCountLabels() {
-        scoreLabel.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
-        scoreLabel.text = "Score : 0/\(level.challengesArray.count)"
-        scoreLabel.name = "scoreLabel"
-        scoreLabel.horizontalAlignmentMode = .Left
-        scoreLabel.position = CGPoint(x: frame.width*0.023 , y: frame.height*0.9)
+        scoreLabel = SKLabelNode(fontNamed: "Komika Display Tight")
+        scoreLabel!.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
+        scoreLabel!.text = "Score : 0/\(level.challengesArray.count)"
+        scoreLabel!.name = "scoreLabel"
+        scoreLabel!.horizontalAlignmentMode = .Left
+        scoreLabel!.position = CGPoint(x: frame.width*0.023 , y: frame.height*0.9)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            scoreLabel.fontSize = 46
+            scoreLabel!.fontSize = 46
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            scoreLabel.fontSize = 26
+            scoreLabel!.fontSize = 26
         }
-        addChild(scoreLabel)
+        addChild(scoreLabel!)
         
-        deadCountLabel.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
-        deadCountLabel.text = "0"
-        deadCountLabel.name = "deadCountLabel"
-        deadCountLabel.verticalAlignmentMode = .Center
-        deadCountLabel.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan.frame.height/2.3)  // at trashcan.position
-        deadCountLabel.zPosition = 20
+        deadCountLabel = SKLabelNode(fontNamed: "Komika Display Bold")
+        deadCountLabel!.fontColor = SKColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0)
+        deadCountLabel!.text = "0"
+        deadCountLabel!.name = "deadCountLabel"
+        deadCountLabel!.verticalAlignmentMode = .Center
+        deadCountLabel!.position = CGPoint(x: frame.width - frame.width*0.12 , y: trashcan!.frame.height/2.3)  // at trashcan.position
+        deadCountLabel!.zPosition = 9
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-            deadCountLabel.fontSize = 42
+            deadCountLabel!.fontSize = 60
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            deadCountLabel.fontSize = 21
+            deadCountLabel!.fontSize = 30  
         }
-        addChild(deadCountLabel)
+        addChild(deadCountLabel!)
     }
     
     func flashGameOver() {
@@ -483,8 +464,8 @@ class GameScene: SKScene {
     func celebrate(completionHandler: () -> ()) {
         
         rotateClef(completionHandler)
-        playSound(sound)
-        
+        playSound(sound!)
+    
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
         let twinkle1 = SKEmitterNode()
         twinkle1.particleTexture = texture1
@@ -542,7 +523,7 @@ class GameScene: SKScene {
     }
     
     func rotateClef(completionHandler: () -> ()) {   // closure
-        clefRotating.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8), completion: completionHandler)
+        clefRotating!.runAction(SKAction.rotateByAngle (CGFloat(2*M_PI), duration: 1.8), completion: completionHandler)
     }
     
     func die() {
@@ -551,7 +532,7 @@ class GameScene: SKScene {
         let shrinkAction = SKAction.scaleBy(0.38, duration: 0.8)
         let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 0.8)
         let group1Action = SKAction.group([shrinkAction, rotateAction])
-        let recycleAction = SKAction.moveTo(CGPoint( x: trashcan.position.x , y: trashcan.position.y + trashcan.frame.height*1.2) , duration: 0.8)
+        let recycleAction = SKAction.moveTo(CGPoint( x: trashcan!.position.x , y: trashcan!.position.y + trashcan!.frame.height*1.2) , duration: 0.8)
         let fallAction = SKAction.moveToY(30.0, duration: 0.8)
         
         let removeAction = SKAction.removeFromParent()
@@ -560,7 +541,7 @@ class GameScene: SKScene {
         let openAction = SKAction.rotateByAngle(CGFloat(-M_PI / 2), duration: 0.8)
         let waitAction1 = SKAction.waitForDuration(3.0)
         let closeAction = SKAction.rotateByAngle(CGFloat(M_PI / 2), duration: 1.0)
-        trashcanLid.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
+        trashcanLid!.runAction(SKAction.sequence([openAction, waitAction1, closeAction]))
     }    
     
     func playSound(sound: String) {

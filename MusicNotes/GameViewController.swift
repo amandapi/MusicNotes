@@ -10,49 +10,40 @@ import UIKit
 import SpriteKit
 import Social
 import AVFoundation
-//import GameKit
 
 class GameViewController: UIViewController, GameSceneDelegate {
     
     var scene: GameScene!
-    var destinationNode = SKSpriteNode()
     var challengesArray: [NSArray] = []
     var currentChallengeIndex: Int = 0
-    //var instruction: String!
-    //var destination: String!
-    var sound: String!
-    var clef: String!
+
     var score: Int!
-    var congratulationsLabel: UILabel?
     var deadCount: Int!
-    var timesUpLabel: UILabel?
 
     var audioPlayer = AVAudioPlayer()
-    var fileNSURL = NSURL()
     
     var timer : NSTimer?
     var timeLimit : Int?
     var timerCount : Int?
     
     var hintView: UIImageView? // for hint
-//    var returnButton: UIButton?  // for congratulations
-//    var backButton: UIButton?  // for gameOver
+
     var centerPlayButton: UIButton?
     var isPause: Bool = false // for playPauseButton
     var isStarted: Bool = false  // for playPauseButton
     
-    var scoreStars1ImageView: UIImageView?
-    var scoreStars2ImageView: UIImageView?
-    var scoreStars3ImageView: UIImageView?
     var numStars: Int!
     var highNumStars = 0
-        
-    var selectedSong: NSArray?
     
     var level: Level!
     func setLevel(level: Level) {
         self.level = level
         timerCount = level.timeLimit
+    }
+    
+    func levelDidBegin() {
+        isStarted = true
+        setPaused(false)
     }
 
     @IBAction func stop(sender: UIButton) {
@@ -160,7 +151,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         let skView = self.view as! SKView
         skView.showsFPS = true
         skView.showsNodeCount = true
-        skView.showsPhysics = true
+        skView.showsPhysics = false // this game needs no physics
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = false
             
@@ -193,24 +184,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         let skView = self.view as! SKView
         _ = skView.scene as! GameScene
     }
-    
-    override func shouldAutorotate() -> Bool {
-        return true
-    }
-    
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        let orientation: UIInterfaceOrientationMask = [UIInterfaceOrientationMask.Portrait, UIInterfaceOrientationMask.PortraitUpsideDown]
-        return orientation
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
-    }
-    
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
 
     func notiDidScore(didScore: Bool) {
         deadCount = scene.deadCount  // get deadCount from GameScene
@@ -231,6 +204,11 @@ class GameViewController: UIViewController, GameSceneDelegate {
             }
         } else {
             gameOver()
+            scene.deadCountLabel!.fontSize = scene.deadCountLabel!.fontSize*2
+            scene.deadCountLabel!.fontColor = SKColor.darkGrayColor()
+            scene.trashcanLid!.removeFromParent()
+            scene.playSound("blast")
+            trashcanBlast()
         }
     }
     
@@ -250,12 +228,14 @@ class GameViewController: UIViewController, GameSceneDelegate {
     }
     
     func timesUp() {
-        // add condition "if deadCount < 3"?
+        if deadCount < 3 { // so to avoid conflict between timesUp and deadCount=3
         flashTimesUp()
         scene.instructionLabel.alpha = 0.38
         scene.roamingNoti!.alpha = 0.38
         scene.self.speed = 0
         addTryAgainButton()
+        playPause.enabled = false
+        }
     }
  
     func flashTimesUp() {
@@ -294,23 +274,14 @@ class GameViewController: UIViewController, GameSceneDelegate {
         })
     }
     
-    func gameOver() {
-        scene.flashGameOver()
-        scene.instructionLabel.removeFromParent()
-        if timer != nil {
-            timer!.invalidate()
-        }
-        addTryAgainButton()
-    }
-    
     func addIGotItButton() {
         let returnButton = UIButton(type: .System)
         returnButton.setTitle("I got it!", forState: UIControlState.Normal)
-        returnButton.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        returnButton.setTitleColor(UIColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0), forState: .Normal)
         if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
-             returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
+            returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 88)
         } else if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-             returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
+            returnButton.titleLabel!.font = UIFont(name: "Komika Display", size: 68)
         }
         returnButton.backgroundColor = UIColor.clearColor()
         returnButton.frame = CGRectMake(0 , hintView!.bounds.height*3/4, hintView!.bounds.width, hintView!.bounds.height/6)
@@ -321,6 +292,38 @@ class GameViewController: UIViewController, GameSceneDelegate {
         UIView.animateWithDuration(1.8, delay: 0.0, options: .CurveEaseOut, animations:{
             self.hintView!.alpha = 1.0
             }, completion: nil)
+    }
+    
+    func gameOver() {
+        scene.flashGameOver()
+        scene.instructionLabel.removeFromParent()
+        if timer != nil {
+            timer!.invalidate()
+        }
+        addTryAgainButton()
+        playPause.enabled = false
+    }
+    
+    func trashcanBlast() {
+        let textureBlast = SKTexture(imageNamed: "blast")
+        let blast = SKEmitterNode()
+        blast.particleTexture = textureBlast
+        blast.position = scene.trashcan!.position
+        blast.particlePositionRange = CGVectorMake(self.view.frame.size.width*0.2, self.view.frame.size.height*0.3)
+        blast.particleBirthRate = 68
+        blast.numParticlesToEmit = 68
+        blast.particleLifetime = 1.28
+        blast.particleLifetimeRange = 0.88
+        blast.particleSpeed = 6.8
+        blast.particleSpeedRange = 6.8
+        blast.particleAlpha = 0.3
+        blast.particleRotation = 3.8
+        blast.particleRotationRange = 1.8
+        blast.particleScale = 0.68
+        blast.particleScaleRange = 0.68
+        blast.particleScaleSpeed = 0.6
+        blast.emissionAngleRange = 360.0
+        scene.addChild(blast)
     }
     
     func addTryAgainButton() {
@@ -372,6 +375,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         }
         playRewardSong()
         addNextButton()
+        playPause.enabled = false
         
         // make a background using particles and to show text better
         let textureManyStars = SKTexture(imageNamed: "particleManyStars")
@@ -380,7 +384,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         manyStars.position = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2)
         manyStars.particlePositionRange = CGVectorMake(self.view.frame.size.width*0.8, self.view.frame.size.height*0.8)
         manyStars.particleBirthRate = 88
-        manyStars.numParticlesToEmit = 1680
+        manyStars.numParticlesToEmit = 880
         manyStars.particleLifetime = 0.8
         manyStars.particleLifetimeRange = 1.0
         manyStars.particleSpeed = 20.0
@@ -477,13 +481,24 @@ class GameViewController: UIViewController, GameSceneDelegate {
         self.navigationController?.popViewControllerAnimated(true)
     }
     
-    func levelDidBegin() {
-        isStarted = true
-        setPaused(false)
+    override func shouldAutorotate() -> Bool {
+        return true
     }
     
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        let orientation: UIInterfaceOrientationMask = [UIInterfaceOrientationMask.Portrait, UIInterfaceOrientationMask.PortraitUpsideDown]
+        return orientation
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Release any cached data, images, etc that aren't in use.
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
  }
-
 
 extension UIView { // for camera button
     func pb_takeSnapshot() -> UIImage {

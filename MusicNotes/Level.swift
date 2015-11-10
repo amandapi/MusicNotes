@@ -15,11 +15,8 @@ class Level {
     let timeLimit: Int!
     let challenges: NSDictionary!
     var challengesArray: NSMutableArray!
-
-    // add property with level # : Int
     
     required init(number: Int, background: String, timeLimit: Int, challenges: NSDictionary) {
-        //fatalError("NSCoding not supported")
         self.background = background
         self.timeLimit = timeLimit
         self.challenges = challenges
@@ -27,7 +24,6 @@ class Level {
 
        
         // create an array out of the challenges in a given level
-        
         challengesArray = NSMutableArray()
         for key in challenges.allKeys{
             let value = challenges.objectForKey(key) as! NSArray
@@ -37,17 +33,6 @@ class Level {
             let clef = value[3] as! String
             challengesArray.addObject(Challenge(instruction: instruction, destination: destination, sound: sound, clef: clef))
         }
-
-/*
-        // take an inspiring look inside Challenge
-        for challenge in challengesArray {
-            var c = challenge as! Challenge
-        //println("take a look: \(c.instruction)")
-        println("take a look: \(c.clef)")
-        //println("take a look: \(c.destination)")
-        //println("take a look: \(c.sound)")
-        }
-*/
     }
     
     func keyForLevelScore() -> String {

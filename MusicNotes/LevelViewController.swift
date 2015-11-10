@@ -8,7 +8,6 @@
 
 import UIKit
 import SpriteKit
-import Foundation
 
 class LevelViewController: UIViewController {
 
@@ -23,7 +22,6 @@ class LevelViewController: UIViewController {
     var brownNotiView : UIView?
     var blueNotiView : UIView?
     var introductionNotiView : UIView?
-    var backgroundImageView: UIView?
     var goButton: UIButton?
     var levelButtonArray : [LevelButton] = []
     var levelButton : UIButton?
@@ -98,7 +96,7 @@ class LevelViewController: UIViewController {
             levelButton.userInteractionEnabled = false
         }
         
-        addResetStarsButton() // may be temporarily
+        addResetStarsButton() // temporary use
         addIntroduction()
     }
     
@@ -118,14 +116,12 @@ class LevelViewController: UIViewController {
             // criteria to unlock
             if (highNumStars > 0)  {
                 switch i {
-                case 0..<(levels.count - 1):
+                case 0..<(levels.count - 1):  // for levels 1 to 8
                     levelButtonArray[i+1].userInteractionEnabled = true
                     levelButtonArray[i+1].lockView!.removeFromSuperview()
-                case (levels.count - 1):
-                    print("end whole game")
-                    //levelButtonArray[i+1] = levelButtonArray[0]
+                case (levels.count - 1):  // for level 9
+                    print("end level 9")
                 default:
-                    //viewDidLoad()
                     print("default")
                 }
             }
@@ -140,25 +136,7 @@ class LevelViewController: UIViewController {
         self.view.sendSubviewToBack(backgroundImageView)
     }
     
-    func addResetStarsButton() {  // temporary use
-        let resetStarsButton = UIButton(type: .System)
-        resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
-        resetStarsButton.backgroundColor = UIColor.redColor()
-        resetStarsButton.setTitle("resetStars", forState: .Normal)
-        resetStarsButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        resetStarsButton.addTarget(self, action: "resetStarsButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(resetStarsButton)
-    }
-
-    func resetStarsButtonPressed() {  // temporary use
-        for key in NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys {
-            NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
-        }
-        numStars = 0
-    }
-    
-    func addIntroduction() {
-        
+    func addIntroduction() {        
         // create introductionView
         self.introductionView1 = UIImageView(image: UIImage(named: "introduction1.png"))
         introductionView1!.frame = view.frame
@@ -322,6 +300,7 @@ class LevelViewController: UIViewController {
         UIView.animateWithDuration(1.8, animations: { () -> Void in
             self.introductionView1!.alpha = 0.0
             self.greenNotiView!.alpha = 0.0
+            //self.greenNotiView!.removeFromSuperview()
             self.yellowNotiView!.alpha = 0.0
             self.pinkNotiView!.alpha = 0.0
             self.greyNotiView!.alpha = 0.0
@@ -352,6 +331,7 @@ class LevelViewController: UIViewController {
         let levels = getLevels()
         currentLevel = levels.objectAtIndex(levelNumber - 1) as? Level 
         self.performSegueWithIdentifier("levelViewToGameView", sender: self)
+        self.introductionNotiView!.removeFromSuperview() // trying to save some memory
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -376,30 +356,26 @@ class LevelViewController: UIViewController {
         self.view.addSubview(selectLevelLabel)
     }
     
-    /*    required init(currentLevel: Level()) {
-    //fatalError("NSCoding not supported")
-    self.currentLevel = currentLevel
-    super.init(size : NSSize)
+    func addResetStarsButton() {  // temporary use
+        let resetStarsButton = UIButton(type: .System)
+        resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
+        resetStarsButton.backgroundColor = UIColor.redColor()
+        resetStarsButton.setTitle("resetStars", forState: .Normal)
+        resetStarsButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        resetStarsButton.addTarget(self, action: "resetStarsButtonPressed", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(resetStarsButton)
     }
     
-    required init(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+    func resetStarsButtonPressed() {  // temporary use
+        for key in NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys {
+            NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+        }
+        numStars = 0
     }
-    */
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-/*
-    MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-*/    
 
 }
