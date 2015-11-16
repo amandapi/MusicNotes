@@ -33,7 +33,7 @@ class LevelViewController: UIViewController {
         addBackground()
         addSelectLevelLabel()
 
-        // add buttons
+        // add 9 buttons for each level
         let buttonWidth = self.view.frame.width / 5.8
         let buttonHeight = buttonWidth * 0.75
         let gap = buttonWidth / 8.0
@@ -96,7 +96,8 @@ class LevelViewController: UIViewController {
             levelButton.userInteractionEnabled = false
         }
         
-        addResetStarsButton() // temporary use
+        // uncomment the following line will add a red button for resetting all stars
+        //addResetStarsButton() // temporary use
         addIntroduction()
     }
     
@@ -136,7 +137,7 @@ class LevelViewController: UIViewController {
         self.view.sendSubviewToBack(backgroundImageView)
     }
     
-    func addIntroduction() {        
+    func addIntroduction() {  // the "story" before the game
         // create introductionView
         self.introductionView1 = UIImageView(image: UIImage(named: "introduction1.png"))
         introductionView1!.frame = view.frame
@@ -196,7 +197,7 @@ class LevelViewController: UIViewController {
         introductionNotiView!.contentMode = UIViewContentMode.ScaleAspectFit
         introductionNotiView!.alpha = 0.0
         view.addSubview(introductionNotiView!)
-        introductionNotiView!.userInteractionEnabled = false  // yes, it's false, not true
+        introductionNotiView!.userInteractionEnabled = false
 
         // animate introductionView1
         introductionView1!.center = self.view.center
@@ -249,7 +250,7 @@ class LevelViewController: UIViewController {
         introductionNotiView!.center = CGPointMake(self.view.frame.width/2 - introductionNotiView!.frame.width/2 , self.view.frame.height/2)
 
         UIView.animateWithDuration(0.1,  delay: 1.8, // this got called first
-            options: [.AllowUserInteraction],  // howcome this is useless?
+            options: [.AllowUserInteraction],
             animations: {
                 self.introductionNotiView!.alpha = 1.0
             },
@@ -265,7 +266,7 @@ class LevelViewController: UIViewController {
                 )
             } )
         
-        // create "Ready!" button in introductionView
+        // create Ready! button in introductionView
         let goButton = UIButton(type: .System)
         goButton.frame = CGRectMake(0 , self.view.frame.height*0.1 , introductionView1!.bounds.width, introductionView1!.bounds.height*0.8)
         goButton.setTitle("Ready!", forState: UIControlState.Normal)
@@ -282,7 +283,7 @@ class LevelViewController: UIViewController {
         introductionView1!.addSubview(goButton)
         goButton.alpha = 0
 
-        // animate button
+        // animate Ready! button
         goButton.transform = CGAffineTransformMakeScale(0.1, 0.1)
         UIView.animateWithDuration(2.0,
             delay: 3.2,
@@ -310,7 +311,7 @@ class LevelViewController: UIViewController {
         })
     }
         
-    func getLevels() -> NSArray {
+    func getLevels() -> NSArray { // get info from plist
         if levels == nil {
             let myPlist = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Levels", ofType: "plist")!)!
             let plistLevels = myPlist["levels"] as! [[String:AnyObject]] // the array of levels
@@ -335,6 +336,7 @@ class LevelViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // from levelViewController to GameScene
         let destinationViewController: GameViewController = segue.destinationViewController as! GameViewController
         destinationViewController.setLevel(currentLevel!)
     }
@@ -356,7 +358,7 @@ class LevelViewController: UIViewController {
         self.view.addSubview(selectLevelLabel)
     }
     
-    func addResetStarsButton() {  // temporary use
+    func addResetStarsButton() {  // suppressed for normal game
         let resetStarsButton = UIButton(type: .System)
         resetStarsButton.frame = CGRectMake(0, 0, self.view.frame.width/6, self.view.frame.height/8)
         resetStarsButton.backgroundColor = UIColor.redColor()
@@ -366,7 +368,7 @@ class LevelViewController: UIViewController {
         self.view.addSubview(resetStarsButton)
     }
     
-    func resetStarsButtonPressed() {  // temporary use
+    func resetStarsButtonPressed() {  // suppressed for normal game
         for key in NSUserDefaults.standardUserDefaults().dictionaryRepresentation().keys {
             NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
         }

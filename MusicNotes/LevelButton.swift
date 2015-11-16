@@ -13,7 +13,7 @@ class LevelButton : UIButton {
     var starImageName: String?
     var lockView: UIImageView?
     
-    func setNumberOfStars(highNumStars: Int) {
+    func setNumberOfStars(highNumStars: Int) { // so player is rewarded with the appropriate number of stars
     
         if (highNumStars == 1) {
             starImageName = "stars1.png"
@@ -37,7 +37,7 @@ class LevelButton : UIButton {
         self.addSubview(starImageView!)
     }
     
-    func setLock() {
+    func setLock() { // so player has to play in order from level 1 to 9
         lockView = UIImageView(image: UIImage(named: "lock.png"))
         
         let buttonHeight = self.frame.size.height

@@ -35,11 +35,11 @@ class Level {
         }
     }
     
-    func keyForLevelScore() -> String {
+    func keyForLevelScore() -> String {  // for tracking and retaining high number of stars to defaults
         return "Level\(self.number)Score"
     }
     
-    func randomizeChallenges() {
+    func randomizeChallenges() {  // so challenges come out randomly
         for _ in 0..<challengesArray.count {
             let randomNumber = Int(arc4random_uniform(UInt32(challengesArray.count)))
             let object: AnyObject = challengesArray[randomNumber]

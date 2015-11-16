@@ -61,8 +61,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         setPaused(!isPause)
     }
     
-    func setPaused(paused: Bool) {
- 
+    func setPaused(paused: Bool) { // playPause button logic
         isPause = paused
         if (!isStarted) {
             scene.startLevel()
@@ -91,7 +90,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         }
     }
     
-    func showPlayCenterButton() {
+    func showPlayCenterButton() { // part of playPause logic
         let image = UIImage(named: "playCenter.png")?.imageWithRenderingMode(.AlwaysOriginal)
         centerPlayButton = UIButton(type: UIButtonType.Custom)
         centerPlayButton!.setImage(image, forState: .Normal)
@@ -102,7 +101,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         self.view?.addSubview(centerPlayButton!)
     }
     
-    func centerPlayButtonPressed() {
+    func centerPlayButtonPressed() {  // part of playPause logic
         setPaused(!isPause)
     }
     
@@ -119,7 +118,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
     @IBAction func shareOnFacebook(sender: UIButton) {
         if SLComposeViewController.isAvailableForServiceType(SLServiceTypeFacebook) {
             let shareOnFacebook : SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-            shareOnFacebook.setInitialText("I want to share this App called MusicNotes") // new faceBook policy doesnot allow pre-set message
+            shareOnFacebook.setInitialText("I want to share this App called MusicNotes") // new faceBook policy doesn't allow pre-set message
             shareOnFacebook.addImage(UIImage(named: "MusicNotesAppIconSmall.png"))
             self.presentViewController(shareOnFacebook, animated: true, completion: nil)
         } else {
@@ -149,16 +148,14 @@ class GameViewController: UIViewController, GameSceneDelegate {
         
         // Configure the view
         let skView = self.view as! SKView
-        skView.showsFPS = true
-        skView.showsNodeCount = true
-        skView.showsPhysics = false // this game needs no physics
-        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.showsFPS = false
+        skView.showsNodeCount = false
+        skView.showsPhysics = false
         skView.ignoresSiblingOrder = false
-            
-        /* Set the scale mode to scale to fit the window */
+        
         scene.scaleMode = .AspectFill
         
-        // pass information about the level to the GameScene Object
+        // pass level information to GameScene
         scene.setLevel(level)
         
         // pass background to GameScene
@@ -167,7 +164,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         // pass timeLimit to GameScene
         scene.updateTimeLimit(level.timeLimit)
         
-        // randomize challenges and pass challenges and clef to GameScene
+        // randomize challenges and pass challenges and clefs to GameScene
         level.randomizeChallenges()
         let currentChallenge = level.challengesArray[currentChallengeIndex] as! Challenge
         scene.updateChallenge(currentChallenge)
@@ -185,9 +182,8 @@ class GameViewController: UIViewController, GameSceneDelegate {
         _ = skView.scene as! GameScene
     }
 
-    func notiDidScore(didScore: Bool) {
+    func notiDidScore(didScore: Bool) {  // protocol function
         deadCount = scene.deadCount  // get deadCount from GameScene
-        
         if deadCount < 3  {
             currentChallengeIndex++
             if (currentChallengeIndex < level.challengesArray.count){
@@ -198,9 +194,11 @@ class GameViewController: UIViewController, GameSceneDelegate {
                 scene.followRoamingPath()
             } else {
                 score = scene.score // get score from GameScene
-                congratulations()
-                addStars()
-                endLevelWithSuccess()
+                if (timerCount != 0)  { // to avoid conflict between congratulations and timesUp
+                    congratulations()
+                    addStars()
+                    scene.instructionLabel.removeFromParent()
+                }
             }
         } else {
             gameOver()
@@ -223,19 +221,19 @@ class GameViewController: UIViewController, GameSceneDelegate {
             scene.playSound("tick")
         } else {
             timer!.invalidate()
+            if (deadCount < 3) { // to avoid conflict between timesUp and deadCount=3
             timesUp()
+            }
         }
     }
     
     func timesUp() {
-        if deadCount < 3 { // so to avoid conflict between timesUp and deadCount=3
         flashTimesUp()
         scene.instructionLabel.alpha = 0.38
         scene.roamingNoti!.alpha = 0.38
         scene.self.speed = 0
         addTryAgainButton()
         playPause.enabled = false
-        }
     }
  
     func flashTimesUp() {
@@ -326,7 +324,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scene.addChild(blast)
     }
     
-    func addTryAgainButton() {
+    func addTryAgainButton() {  // for both timesUp and gameOver
         let tryAgainButton = UIButton(type: .System)
         tryAgainButton.setTitle("Try again", forState: UIControlState.Normal)
         tryAgainButton.setTitleColor(UIColor(red: 0.871, green: 0.282, blue: 0.228, alpha: 1.0), forState: .Normal)
@@ -347,10 +345,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
             tryAgainButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y + 600, width: bounds.size.width, height: bounds.size.height)
             tryAgainButton.enabled = true
             }, completion: nil)        
-    }
-    
-    func endLevelWithSuccess() {
-        scene.instructionLabel.removeFromParent()
     }
     
     func congratulations() {
@@ -377,7 +371,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         addNextButton()
         playPause.enabled = false
         
-        // make a background using particles and to show text better
+        // make a celebrating background
         let textureManyStars = SKTexture(imageNamed: "particleManyStars")
         let manyStars = SKEmitterNode()
         manyStars.particleTexture = textureManyStars
@@ -399,7 +393,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         scene.addChild(manyStars)
     }
     
-    func playRewardSong() {
+    func playRewardSong() { // when game ends successfully
         let soundFilenames = ["rewardMozartSymphony40.wav" , "rewardProkofievPeter.wav" , "rewardTchaikovskySugarplum.wav" , "rewardBachBrandenburg3.wav" , "rewardChopinMazurkaE.wav" , "rewardVivaldiSpring.wav", "rewardBeethovenSym9.wav"]
         let randomIndex = Int(arc4random_uniform(UInt32(soundFilenames.count)))
         let selectedFilename = soundFilenames[randomIndex]
@@ -416,7 +410,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         audioPlayer.play()
     }
     
-    func addStars() {
+    func addStars() {  // to reward player with numStars
         let scoreStars1ImageView = UIImageView(image: UIImage(named: "scoreStars1.png")!)
         let scoreStars2ImageView = UIImageView(image: UIImage(named: "scoreStars2.png")!)
         let scoreStars3ImageView = UIImageView(image: UIImage(named: "scoreStars3.png")!)
@@ -477,7 +471,7 @@ class GameViewController: UIViewController, GameSceneDelegate {
         self.navigationController?.popViewControllerAnimated(true)
     }
     
-    func tryAgainButtonPressed() {  // after gameOver and after timesUp
+    func tryAgainButtonPressed() {  // for both timeUp and gameOver
         self.navigationController?.popViewControllerAnimated(true)
     }
     

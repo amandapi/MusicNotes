@@ -46,7 +46,6 @@ class GameScene: SKScene {
     
     var gameState = GameState.StartingLevel
     
-    // these are the "destinations" defined by the property of each staff/Line/Space
     let L0 = SKSpriteNode(imageNamed: "L0") // middle C with clefTreble
     let L0leger = SKSpriteNode(imageNamed: "Lleger") // leger line for middle C
     let S0 = SKSpriteNode(imageNamed: "S0")
@@ -78,7 +77,7 @@ class GameScene: SKScene {
         gameSceneDelegate = delegate
     }
 
-    func setLevel(level: Level) { // This block is called by GameViewController's scene.setLevel(level) before skView.presentScene
+    func setLevel(level: Level) { // called by GameViewController's scene.setLevel(level) before skView.presentScene
         self.level = level
     }
     
@@ -98,24 +97,18 @@ class GameScene: SKScene {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
         switch gameState {
-            
             case .StartingLevel:
                 startLevel()
-  
-            //fallthrough  //suppressing this line prevents initial phantom notes to appear
             
             case .Playing:                
                 let touch = touches.first
                 let location = touch!.locationInNode(scene!)
                 let node = nodeAtPoint(location)
-
                 if node.name == "noti" && !scoringNotiArray.contains(node as! SKSpriteNode) {
                     roamingNoti!.removeAllActions()
                     roamingNoti?.name = "noti"
-                    
                     draggingNoti = true
                     let noti = node as! MusicNotes
-                  
                     movingNoti = noti
                     // animate noti at pick up
                     let expand = SKAction.scaleBy(1.18, duration: 0.1)
@@ -129,7 +122,6 @@ class GameScene: SKScene {
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-    
     if (draggingNoti == false ) {
             return
         }
@@ -142,20 +134,16 @@ class GameScene: SKScene {
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        
         if (draggingNoti == false ) {
             return
         } else {
             draggingNoti = false
         }
-        
         // check intersaction
         var didScore = false
         if CGRectIntersectsRect((destinationNode!.frame), roamingNoti!.scoringRect()) {
-            
             movingNoti?.position.y = destinationNode!.position.y
             scoringNotiArray.append(movingNoti!)
-            
             // add leger for Middle C
             if (destinationNode == L0)   {
                 L0leger.alpha = 1
@@ -166,22 +154,18 @@ class GameScene: SKScene {
                 L6leger.position.x = movingNoti!.position.x
                 L6leger.position.y = L6.position.y
             }
-            
-            score++  // score has been passed to GameViewController
+            score++  // score passed to GameViewController
             scoreLabel!.text = "Score : \(score)/\(level.challengesArray.count)"
             didScore = true
- 
             celebrate({
                 if self.gameSceneDelegate != nil {
                     self.gameSceneDelegate!.notiDidScore(didScore)
                 }
             })
-            
             animateInstructionLabel() // delay instructionLabel to be in sync with noti appearance
-
         } else {
             die()
-            deadCount++  // deadCount has been passed to GameViewController
+            deadCount++  // deadCount passed to GameViewController
             deadCountLabel!.text = "\(deadCount)"
             if self.gameSceneDelegate != nil {
                 self.gameSceneDelegate!.notiDidScore(didScore)
@@ -302,7 +286,7 @@ class GameScene: SKScene {
         }
     }
 
-     override func update(currentTime: CFTimeInterval) {     // for movingNoti
+     override func update(currentTime: CFTimeInterval) { // for movingNoti
         var lastUpdateTime: NSTimeInterval = 0.0
         dt = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
@@ -464,8 +448,7 @@ class GameScene: SKScene {
     func celebrate(completionHandler: () -> ()) {
         
         rotateClef(completionHandler)
-        playSound(sound!)
-    
+        playSound(sound!)  // each note at own pitch
         let texture1 = SKTexture(imageNamed: "particleRedHeart")
         let twinkle1 = SKEmitterNode()
         twinkle1.particleTexture = texture1
@@ -528,7 +511,7 @@ class GameScene: SKScene {
     
     func die() {
         playSound("soundNoGood")
-        
+        // noti shrinks, rotates, falls into trashcan
         let shrinkAction = SKAction.scaleBy(0.38, duration: 0.8)
         let rotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 0.8)
         let group1Action = SKAction.group([shrinkAction, rotateAction])
